@@ -1,4 +1,4 @@
-package io.cloudflight.gradle.autoconfigure.gradle.api.plugins
+package io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins
 
 import org.gradle.api.plugins.ExtensionContainer
 import kotlin.reflect.KClass

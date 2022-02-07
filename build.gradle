@@ -13,6 +13,7 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.apache.maven:maven-artifact")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.1.21")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.assertj:assertj-core")
@@ -37,6 +38,7 @@ tasks.named("compileTestKotlin").configure {
 
 test {
     useJUnitPlatform()
+    inputs.dir(layout.projectDirectory.dir("./src/test/fixtures"))
 }
 
 java {

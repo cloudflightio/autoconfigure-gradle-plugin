@@ -19,6 +19,7 @@ data class TestOptions(
     val fixtureName: String,
     val javaVersion: String,
     val encoding: String,
+    val testPlatformMessage: String,
     val createsSourceJar: Boolean,
     val implementationVendor: String,
     val inferModulePath: Boolean,
@@ -35,7 +36,6 @@ class JavaConfigurePluginTest {
         val result = runCleanBuild()
         assertThat(result.normalizedOutput).contains(
             """
-                > Task :compileJava
                 javaPluginExtension.modularity.inferModulePath: ${options.inferModulePath}
                 javaPluginExtension.sourceCompatibility: ${options.javaVersion}
                 javaPluginExtension.targetCompatibility: ${options.javaVersion}
@@ -43,10 +43,9 @@ class JavaConfigurePluginTest {
             """.trimIndent()
         ).contains(
             """
-                > Task :compileTestJava
                 compileTestJava.options.encoding: ${options.encoding}
             """.trimIndent()
-        )
+        ).contains(options.testPlatformMessage)
 
         val outJarDirPath = fixtureDir.resolve("build/libs")
         val outJarLibPath = outJarDirPath.resolve("$fixtureName-1.0.0.jar")
@@ -82,6 +81,7 @@ class JavaConfigurePluginTest {
                         fixtureName = "single-java-module-library",
                         javaVersion = "11",
                         encoding = "UTF-8",
+                        testPlatformMessage = "Enabled Junit5 as test platform",
                         createsSourceJar = true,
                         implementationVendor = "Cloudflight Test Vendor",
                         inferModulePath = true
@@ -92,6 +92,7 @@ class JavaConfigurePluginTest {
                         fixtureName = "single-java-module-default",
                         javaVersion = JavaVersion.toVersion(systemJavaVersion).toString(),
                         encoding = "UTF-8",
+                        testPlatformMessage = "Enabled Junit5 as test platform",
                         createsSourceJar = true,
                         implementationVendor = "",
                         inferModulePath = true
@@ -102,6 +103,7 @@ class JavaConfigurePluginTest {
                         fixtureName = "single-java-module-application",
                         javaVersion = "11",
                         encoding = "UTF-8",
+                        testPlatformMessage = "Enabled Junit5 as test platform",
                         createsSourceJar = false,
                         implementationVendor = "Cloudflight Test Vendor",
                         inferModulePath = true
@@ -112,10 +114,55 @@ class JavaConfigurePluginTest {
                         fixtureName = "single-java-module-default",
                         javaVersion = JavaVersion.toVersion(systemJavaVersion).toString(),
                         encoding = "UTF-8",
+                        testPlatformMessage = "Enabled Junit5 as test platform",
                         createsSourceJar = true,
                         implementationVendor = "",
                         inferModulePath = false,
                         gradleVersion = "6.3"
+                    )
+                ),
+                arguments(
+                    TestOptions(
+                        fixtureName = "single-java-module-junit4",
+                        javaVersion = JavaVersion.toVersion(systemJavaVersion).toString(),
+                        encoding = "UTF-8",
+                        testPlatformMessage = "Enabled Junit4 as test platform",
+                        createsSourceJar = true,
+                        implementationVendor = "",
+                        inferModulePath = true
+                    )
+                ),
+                arguments(
+                    TestOptions(
+                        fixtureName = "single-java-module-testNG",
+                        javaVersion = JavaVersion.toVersion(systemJavaVersion).toString(),
+                        encoding = "UTF-8",
+                        testPlatformMessage = "Enabled TestNG as test platform",
+                        createsSourceJar = true,
+                        implementationVendor = "",
+                        inferModulePath = true
+                    )
+                ),
+                arguments(
+                    TestOptions(
+                        fixtureName = "single-java-module-junit4&testNG",
+                        javaVersion = JavaVersion.toVersion(systemJavaVersion).toString(),
+                        encoding = "UTF-8",
+                        testPlatformMessage = "Multiple testing frameworks detected in runtime dependencies.",
+                        createsSourceJar = true,
+                        implementationVendor = "",
+                        inferModulePath = true
+                    )
+                ),
+                arguments(
+                    TestOptions(
+                        fixtureName = "single-java-module-no-test-framework",
+                        javaVersion = JavaVersion.toVersion(systemJavaVersion).toString(),
+                        encoding = "UTF-8",
+                        testPlatformMessage = "No testing framework detected in runtime dependencies.",
+                        createsSourceJar = true,
+                        implementationVendor = "",
+                        inferModulePath = true
                     )
                 ),
             )

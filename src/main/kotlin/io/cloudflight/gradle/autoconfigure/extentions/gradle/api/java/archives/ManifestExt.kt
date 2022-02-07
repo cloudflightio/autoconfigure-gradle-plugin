@@ -1,4 +1,4 @@
-package io.cloudflight.gradle.autoconfigure.gradle.api.java.archives
+package io.cloudflight.gradle.autoconfigure.extentions.gradle.api.java.archives
 
 import org.gradle.api.java.archives.Manifest
 

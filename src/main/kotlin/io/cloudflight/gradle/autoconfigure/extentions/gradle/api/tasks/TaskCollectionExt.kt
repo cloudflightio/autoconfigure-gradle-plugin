@@ -1,4 +1,4 @@
-package io.cloudflight.gradle.autoconfigure.gradle.api.tasks
+package io.cloudflight.gradle.autoconfigure.extentions.gradle.api.tasks
 
 import org.gradle.api.Task
 import org.gradle.api.tasks.TaskCollection

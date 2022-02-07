@@ -15,7 +15,7 @@ internal class ProjectFixture(fixtureBaseDir: Path, val fixtureName: String, val
     fun runBuild(): BuildResult = run("build")
 
     fun run(first: String, vararg tasks: String): BuildResult {
-        val runner = createRunner(first, *tasks, "--stacktrace", "--rerun-tasks")
+        val runner = createRunner(first, *tasks, "--stacktrace", "--info", "--rerun-tasks")
         return runner.build()
     }
 
