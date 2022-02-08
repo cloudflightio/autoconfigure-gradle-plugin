@@ -8,18 +8,19 @@ import java.util.*
 
 private val LOG = LoggerFactory.getLogger("io.cloudflight.gradle.autoconfigure.util.loadDefaults")
 
-internal fun loadDefaultsToRoot(project: Project, defaultsUrl: URL) {
+internal fun loadDefaults(project: Project, defaultsUrl: URL) {
     val defaults = Properties()
     defaultsUrl.openStream().use {
         defaults.load(it)
     }
 
-    val root = project.rootProject
-    val extraProperties = root.extensions.extraProperties
+    val extraProperties = project.extensions.extraProperties
+    LOG.warn("properties:\n{}", defaults)
 
     for (entry in defaults) {
         val key = entry.key as String
         val value = entry.value as String
+        LOG.warn("entry: {}, {}", entry, key in extraProperties)
 
         if (key !in extraProperties) {
             LOG.debug("setting global default for $key: $value")

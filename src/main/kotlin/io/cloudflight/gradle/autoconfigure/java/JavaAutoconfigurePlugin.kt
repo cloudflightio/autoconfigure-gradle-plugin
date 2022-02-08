@@ -4,14 +4,14 @@ import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.apply
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getValue
 import io.cloudflight.gradle.autoconfigure.util.isServerProject
-import io.cloudflight.gradle.autoconfigure.util.loadDefaultsToRoot
+import io.cloudflight.gradle.autoconfigure.util.loadDefaults
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class JavaAutoconfigurePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         val defaultResource = javaClass.getResource("/java/defaults.properties")!!
-        loadDefaultsToRoot(project, defaultResource)
+        loadDefaults(project, defaultResource)
 
         val plugins = project.plugins
         val extensions = project.extensions

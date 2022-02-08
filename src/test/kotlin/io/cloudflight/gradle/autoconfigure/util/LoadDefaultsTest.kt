@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class LoadDefaultsToRootTest {
+class LoadDefaultsTest {
 
     private val resourceUrl = javaClass.getResource("defaults.properties")!!
     private lateinit var defaultProperties: Properties
@@ -21,23 +21,12 @@ class LoadDefaultsToRootTest {
     }
 
     @Test
-    fun `loads default values to the root project for single-module projects`() {
+    fun `loads default values to the current project`() {
         val project = ProjectBuilder.builder().build()
 
-        loadDefaultsToRoot(project, resourceUrl)
+        loadDefaults(project, resourceUrl)
 
         assertThat(project.extensions.extraProperties.properties).containsAllEntriesOf(defaultProperties.withStringKeys)
-    }
-
-    @Test
-    fun `loads default values to the root project for nested-module projects`() {
-        val root = ProjectBuilder.builder().build()
-        val subProject = ProjectBuilder.builder().withParent(root).build()
-        val subSubProject = ProjectBuilder.builder().withParent(subProject).build()
-
-        loadDefaultsToRoot(subSubProject, resourceUrl)
-
-        assertThat(root.extensions.extraProperties.properties).containsAllEntriesOf(defaultProperties.withStringKeys)
     }
 
     @Test
@@ -46,7 +35,7 @@ class LoadDefaultsToRootTest {
         val extraProperties = project.extensions.extraProperties
         extraProperties.set("someProperty", "overridden")
 
-        loadDefaultsToRoot(project, resourceUrl)
+        loadDefaults(project, resourceUrl)
 
         val expectedProperties = mapOf<String, Any>("someProperty" to "overridden", "someOtherProperty" to "someOtherValue")
         assertThat(project.extensions.extraProperties.properties).containsAllEntriesOf(expectedProperties)

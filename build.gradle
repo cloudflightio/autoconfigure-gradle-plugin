@@ -49,6 +49,10 @@ java {
 
 gradlePlugin {
     plugins {
+        create("autoconfigure-gradle") {
+            id = "io.cloudflight.autoconfigure-gradle"
+            implementationClass = "io.cloudflight.gradle.autoconfigure.AutoconfigureGradlePlugin"
+        }
         create("java-configure") {
             id = "io.cloudflight.autoconfigure.java-configure"
             implementationClass = "io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin"
