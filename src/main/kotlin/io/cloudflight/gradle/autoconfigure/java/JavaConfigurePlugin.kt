@@ -33,7 +33,7 @@ class JavaConfigurePlugin : Plugin<Project> {
         val extensions = project.extensions
         val tasks = project.tasks
 
-        val javaConfigureExtension = extensions.create("javaConfigure", JavaConfigurePluginExtension::class)
+        val javaConfigureExtension = extensions.create(EXTENSION_NAME, JavaConfigurePluginExtension::class)
 
         project.afterEvaluate {
             val javaPluginExtension = extensions.getByType(JavaPluginExtension::class)
@@ -49,11 +49,15 @@ class JavaConfigurePlugin : Plugin<Project> {
                 javaPluginExtension.withSourcesJar()
             }
 
-            val compileJava = tasks.named(JavaPlugin.COMPILE_JAVA_TASK_NAME, JavaCompile::class).get()
-            compileJava.options.encoding = javaConfigureExtension.encoding.get()
+            val compileJava = tasks.named(JavaPlugin.COMPILE_JAVA_TASK_NAME, JavaCompile::class)
+            compileJava.configure {
+                it.options.encoding = javaConfigureExtension.encoding.get()
+            }
 
-            val compileTest = tasks.named(JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME, JavaCompile::class).get()
-            compileTest.options.encoding = javaConfigureExtension.encoding.get()
+            val compileTest = tasks.named(JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME, JavaCompile::class)
+            compileTest.configure {
+                it.options.encoding = javaConfigureExtension.encoding.get()
+            }
 
             val jar = tasks.named(JavaPlugin.JAR_TASK_NAME, Jar::class).get()
             jar.doFirst {
@@ -103,6 +107,8 @@ class JavaConfigurePlugin : Plugin<Project> {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(JavaConfigurePlugin::class.java)
+
+        const val EXTENSION_NAME = "javaConfigure"
     }
 
 

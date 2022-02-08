@@ -11,6 +11,10 @@ abstract class JavaConfigurePluginExtension {
 
     abstract val vendorName: Property<String>
 
+    fun javaVersion(version: String) {
+        javaVersion.set(JavaVersion.toVersion(version))
+    }
+
     init {
         applicationBuild.convention(false)
         javaVersion.convention(JavaVersion.toVersion(System.getProperty("java.version")))
