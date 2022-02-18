@@ -2,6 +2,7 @@ package io.cloudflight.gradle.autoconfigure
 
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.apply
 import io.cloudflight.gradle.autoconfigure.java.JavaAutoconfigurePlugin
+import io.cloudflight.gradle.autoconfigure.java.isJavaProject
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -22,9 +23,4 @@ class AutoconfigureGradlePlugin: Plugin<Project> {
             plugins.apply(JavaAutoconfigurePlugin::class)
         }
     }
-}
-
-private fun isJavaProject(project: Project): Boolean {
-    return project.layout.projectDirectory.dir("src/main/java/").asFile.exists() ||
-            project.layout.projectDirectory.dir("src/test/java/").asFile.exists()
 }
