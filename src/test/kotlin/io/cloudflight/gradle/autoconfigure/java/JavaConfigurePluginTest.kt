@@ -111,18 +111,6 @@ class JavaConfigurePluginTest {
                 ),
                 arguments(
                     TestOptions(
-                        fixtureName = "single-java-module-default",
-                        javaVersion = JavaVersion.toVersion(systemJavaVersion).toString(),
-                        encoding = "UTF-8",
-                        testPlatformMessage = "Enabled Junit5 as test platform",
-                        createsSourceJar = true,
-                        implementationVendor = "",
-                        inferModulePath = false,
-                        gradleVersion = "6.3"
-                    )
-                ),
-                arguments(
-                    TestOptions(
                         fixtureName = "single-java-module-junit4",
                         javaVersion = JavaVersion.toVersion(systemJavaVersion).toString(),
                         encoding = "UTF-8",
