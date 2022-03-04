@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/github-workflow.json
+
+name: Plugin CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Build Plugin
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: assemble
+      - name: Test Plugin
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: check
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: plugin-artifact
+          path: build/libs/*.jar
+          if-no-files-found: error
