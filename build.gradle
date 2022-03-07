@@ -1,10 +1,11 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     id 'java-gradle-plugin'
+    id 'maven-publish'
+    id 'com.gradle.plugin-publish' version '0.20.0'
 }
 
 group 'io.cloudflight.gradle'
-version '0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -37,19 +38,64 @@ java {
     withSourcesJar()
 }
 
+pluginBundle {
+    website = "https://github.com/cloudflightio/autoconfigure-gradle-plugin"
+    vcsUrl = "https://github.com/cloudflightio/autoconfigure-gradle-plugin"
+    tags = ["project", "configuration"]
+}
+
 gradlePlugin {
     plugins {
-        create("autoconfigure-gradle") {
+        "autoconfigure-gradle" {
             id = "io.cloudflight.autoconfigure-gradle"
+            displayName = "Autoconfigure-Gradle"
+            description = "A opinionated approach to configure a gradle project automatically by convention. It supports to automatically configure various plugins to reduce boilerplate code in gradle projects."
             implementationClass = "io.cloudflight.gradle.autoconfigure.AutoconfigureGradlePlugin"
         }
-        create("java-configure") {
+        "java-configure" {
             id = "io.cloudflight.autoconfigure.java-configure"
+            description = "Used by 'io.cloudflight.autoconfigure.java-autoconfigure' to configure a java project."
             implementationClass = "io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin"
         }
-        create("java-autoconfigure") {
+        "java-autoconfigure" {
             id = "io.cloudflight.autoconfigure.java-autoconfigure"
+            description = "Used by 'io.cloudflight.autoconfigure-gradle' to configure a java project by naming conventions and configurations from 'gradle.properties'"
             implementationClass = "io.cloudflight.gradle.autoconfigure.java.JavaAutoconfigurePlugin"
+        }
+    }
+}
+
+tasks.withType(Jar) {
+    String createdBy = "${System.getProperty("java.version")} (${System.getProperty("java.vendor")})"
+
+    manifest.attributes(
+            "Created-By": createdBy,
+            "Implementation-Vendor": project.vendorName,
+            "Implementation-Title": project.name,
+            "Implementation-Version": project.version,
+    )
+
+    from(layout.projectDirectory.file("LICENSE"))
+    from(layout.projectDirectory.file("NOTICE"))
+}
+
+publishing {
+    // afterEvaluate is necessary because java-gradle-plugin
+    // creates its publications in an afterEvaluate callback
+    afterEvaluate {
+        publications {
+            withType(MavenPublication) {
+                pom {
+                    licenses {
+                        // TODO add license when the topic is resolved
+                    }
+                    developers {
+                        developer {
+                            name.set("Cloudflight GmbH")
+                        }
+                    }
+                }
+            }
         }
     }
 }
