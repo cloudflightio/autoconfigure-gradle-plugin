@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+    alias(libs.plugins.kotlin.jvm)
     id 'java-gradle-plugin'
 }
 
@@ -11,11 +11,45 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation(libs.maven.artifact)
+    implementation(libs.kotlin.logging)
+
+    testImplementation(libs.bundles.testImplementationDependencies)
+
+    testRuntimeOnly(libs.junit.engine)
+}
+
+tasks.named("compileTestKotlin").configure {
+    kotlinOptions {
+        freeCompilerArgs += "-opt-in=kotlin.io.path.ExperimentalPathApi"
+    }
 }
 
 test {
     useJUnitPlatform()
+    inputs.dir(layout.projectDirectory.dir("./src/test/fixtures"))
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    withSourcesJar()
+}
+
+gradlePlugin {
+    plugins {
+        create("autoconfigure-gradle") {
+            id = "io.cloudflight.autoconfigure-gradle"
+            implementationClass = "io.cloudflight.gradle.autoconfigure.AutoconfigureGradlePlugin"
+        }
+        create("java-configure") {
+            id = "io.cloudflight.autoconfigure.java-configure"
+            implementationClass = "io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin"
+        }
+        create("java-autoconfigure") {
+            id = "io.cloudflight.autoconfigure.java-autoconfigure"
+            implementationClass = "io.cloudflight.gradle.autoconfigure.java.JavaAutoconfigurePlugin"
+        }
+    }
 }

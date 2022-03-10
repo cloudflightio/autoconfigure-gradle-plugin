@@ -1,0 +1,23 @@
+[versions]
+kotlin = "1.6.10"
+kotlin-logging = "2.1.21"
+maven-artifact = "3.5.0"
+jupiter = "5.8.1"
+assertj = "3.22.0"
+
+[libraries]
+kotlin-logging = { module = "io.github.microutils:kotlin-logging-jvm", version.ref = "kotlin-logging" }
+
+maven-artifact = { module = "org.apache.maven:maven-artifact", version.ref = "maven-artifact" }
+
+junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jupiter" }
+junit-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "jupiter" }
+junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "jupiter" }
+
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+
+[bundles]
+testImplementationDependencies = ["junit-api", "junit-params", "assertj-core"]
