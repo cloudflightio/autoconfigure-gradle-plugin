@@ -1,16 +1,12 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/github-workflow.json
 
-name: Plugin CI
+name: CI
 
 on:
-  pull_request:
-    branches:
-      - "main"
   push:
     branches:
-      - "**"
-    tags:
-      - "v*.*.*"
+      - 'main'
+  pull_request:
 
 jobs:
   build:
@@ -19,10 +15,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Setup current release version
-        id: release_version
-        if: startsWith(github.ref, 'refs/tags/')
-        run: echo ::set-output name=release_version::${GITHUB_REF:11}
       - name: Prepare gradle version param
         id: version_param
         run: echo ::set-output name=version_param::${{ (steps.release_version.outputs.release_version != null && format('-Pversion={0}', steps.release_version.outputs.release_version)) || '' }}
@@ -38,14 +30,14 @@ jobs:
       - name: Build Plugin
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: ${{ steps.version_param.outputs.version_param }} assemble
+          arguments: assemble
           # Only write to the cache for builds on the 'main' branch.
           # Builds on other branches will only read existing entries from the cache.
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
       - name: Test Plugin
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: ${{ steps.version_param.outputs.version_param }} check
+          arguments: check
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
       - name: Publish Artifact
         uses: actions/upload-artifact@v3
@@ -55,32 +47,3 @@ jobs:
           if-no-files-found: error
     outputs:
       version_param: ${{ steps.version_param.outputs.version_param }}
-
-  publish:
-    name: Publish
-    runs-on: ubuntu-latest
-
-    if: startsWith(github.ref, 'refs/tags/')
-    needs:
-      - build
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Java
-        uses: actions/setup-java@v2
-        with:
-          distribution: "temurin"
-          java-version: "17"
-      - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-      - name: Publish Plugin
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: | 
-            ${{ steps.version_param.outputs.version_param }}
-            ${{ format('-Pgradle.publish.key={0}', secrets.GRADLE_PUBLISH_KEY) }}
-            ${{ format('-Pgradle.publish.secret={0}', secrets.GRADLE_PUBLISH_SECRET) }}
-            publishPlugins
-          cache-read-only: true
