@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/github-workflow.json
+
+name: CI
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare gradle version param
+        id: version_param
+        run: echo ::set-output name=version_param::${{ (steps.release_version.outputs.release_version != null && format('-Pversion={0}', steps.release_version.outputs.release_version)) || '' }}
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: "17"
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Build Plugin
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: assemble
+          # Only write to the cache for builds on the 'main' branch.
+          # Builds on other branches will only read existing entries from the cache.
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+      - name: Test Plugin
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: check
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: plugin-artifact
+          path: build/libs/*.jar
+          if-no-files-found: error
+    outputs:
+      version_param: ${{ steps.version_param.outputs.version_param }}
