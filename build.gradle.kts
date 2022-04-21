@@ -7,6 +7,9 @@ plugins {
 }
 
 group = "io.cloudflight.gradle"
+if (System.getenv("RELEASE") == null) {
+    version = "$version-SNAPSHOT"
+}
 
 repositories {
     mavenCentral()

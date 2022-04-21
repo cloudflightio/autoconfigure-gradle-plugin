@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/github-workflow.json
 
-name: CI
+name: Build
 
 on:
   push:
@@ -15,9 +15,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Prepare gradle version param
-        id: version_param
-        run: echo ::set-output name=version_param::${{ (steps.release_version.outputs.release_version != null && format('-Pversion={0}', steps.release_version.outputs.release_version)) || '' }}
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
@@ -45,5 +42,3 @@ jobs:
           name: plugin-artifact
           path: build/libs/*.jar
           if-no-files-found: error
-    outputs:
-      version_param: ${{ steps.version_param.outputs.version_param }}
