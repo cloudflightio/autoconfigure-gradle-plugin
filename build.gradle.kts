@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.cloudflight.gradle"
-if (System.getenv("RELEASE") == null) {
+if (System.getenv("RELEASE") != "true") {
     version = "$version-SNAPSHOT"
 }
 
