@@ -44,6 +44,7 @@ java {
 }
 
 gradlePlugin {
+    isAutomatedPublishing = false // disable normal plugin publish configuration as long as we publish on MavenCentral
     plugins {
         create("autoconfigure-gradle") {
             id = "io.cloudflight.autoconfigure-gradle"
