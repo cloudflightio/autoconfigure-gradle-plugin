@@ -6,6 +6,7 @@ plugins {
     id("signing")
 }
 
+description = "A opinionated approach to configure a gradle project automatically by convention. It supports to automatically configure various plugins to reduce boilerplate code in gradle projects."
 group = "io.cloudflight.gradle"
 if (System.getenv("RELEASE") != "true") {
     version = "$version-SNAPSHOT"
