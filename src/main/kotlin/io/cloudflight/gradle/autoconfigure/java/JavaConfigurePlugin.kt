@@ -2,8 +2,8 @@ package io.cloudflight.gradle.autoconfigure.java
 
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.java.archives.attributes
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.apply
-import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
+import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.tasks.named
 import io.cloudflight.gradle.autoconfigure.extentions.kotlin.collections.contains
 import org.gradle.api.Plugin
@@ -55,12 +55,12 @@ class JavaConfigurePlugin : Plugin<Project> {
             }
 
             val jar = tasks.named(JavaPlugin.JAR_TASK_NAME, Jar::class).get()
-            jar.doFirst {
+            jar.manifest {
                 val configuration = project.configurations.getByName(JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME)
                 val classpath = configuration.files.joinToString(" ") { it.name }
                 val createdBy = "${System.getProperty("java.version")} (${System.getProperty("java.vendor")})"
 
-                jar.manifest.attributes(
+                it.attributes(
                     "Class-Path" to classpath,
                     "Created-By" to createdBy,
                     "Implementation-Vendor" to javaConfigureExtension.vendorName.get(),
@@ -83,13 +83,13 @@ class JavaConfigurePlugin : Plugin<Project> {
 
                 if (arrayOf(useJunit, useJunitPlatform, useTestNG).filter { enabled -> enabled }.size > 1) {
                     LOG.warn("Multiple testing frameworks detected in runtime dependencies. No framework enabled automatically. junit4: $useJunit, junit5: $useJunitPlatform, testNg: $useTestNG")
-                } else if(useJunit) {
+                } else if (useJunit) {
                     it.useJUnit()
                     LOG.info("Enabled Junit4 as test platform")
-                } else if(useJunitPlatform) {
+                } else if (useJunitPlatform) {
                     it.useJUnitPlatform()
                     LOG.info("Enabled Junit5 as test platform")
-                } else if(useTestNG) {
+                } else if (useTestNG) {
                     it.useTestNG()
                     LOG.info("Enabled TestNG as test platform")
                 } else {
