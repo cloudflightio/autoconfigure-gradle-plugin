@@ -31,7 +31,7 @@ applies the `java-library` plugin and applies the following configuration:
 
 ### Configuration
 
-You can provide some configuratoin to this plugin by adding the following block to 
+You can provide some configuration to this plugin by adding the following block to 
 your `build.gradle.kts`:
 
 ````kotlin
