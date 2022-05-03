@@ -82,18 +82,29 @@ class JavaConfigurePluginTest {
                     arguments(
                             TestOptions(
                                     fixtureName = "single-java-module-library",
-                                    javaVersion = "11",
+                                    javaVersion = "1.8",
                                     encoding = "UTF-8",
                                     testPlatformMessage = "Enabled Junit5 as test platform",
                                     createsSourceJar = true,
-                                    implementationVendor = "Cloudflight Test Vendor",
+                                    implementationVendor = "Cloudflight XYZ",
+                                    inferModulePath = true
+                            )
+                    ),
+                    arguments(
+                            TestOptions(
+                                    fixtureName = "single-java-module-library-autoconfigure",
+                                    javaVersion = "1.8",
+                                    encoding = "UTF-8",
+                                    testPlatformMessage = "Enabled Junit5 as test platform",
+                                    createsSourceJar = true,
+                                    implementationVendor = "Cloudflight XYZ",
                                     inferModulePath = true
                             )
                     ),
                     arguments(
                             TestOptions(
                                     fixtureName = "single-java-module-default",
-                                    javaVersion = JavaVersion.toVersion(systemJavaVersion).toString(),
+                                    javaVersion = "11",
                                     encoding = "UTF-8",
                                     testPlatformMessage = "Enabled Junit5 as test platform",
                                     createsSourceJar = true,
@@ -104,11 +115,35 @@ class JavaConfigurePluginTest {
                     arguments(
                             TestOptions(
                                     fixtureName = "single-java-module-default-kts",
-                                    javaVersion = JavaVersion.toVersion(systemJavaVersion).toString(),
+                                    javaVersion = "11",
                                     encoding = "UTF-8",
                                     testPlatformMessage = "Runs the module with Kotlin DSL",
                                     createsSourceJar = true,
                                     implementationVendor = "",
+                                    inferModulePath = true,
+                                    checkConfigurationInTestOutput = false
+                            )
+                    ),
+                    arguments(
+                            TestOptions(
+                                    fixtureName = "single-java-module-default-kts-autoconfigure",
+                                    javaVersion = "1.8",
+                                    encoding = "UTF-8",
+                                    testPlatformMessage = "Runs the module with Kotlin DSL",
+                                    createsSourceJar = true,
+                                    implementationVendor = "Cloudflight",
+                                    inferModulePath = true,
+                                    checkConfigurationInTestOutput = false
+                            )
+                    ),
+                    arguments(
+                            TestOptions(
+                                    fixtureName = "single-java-module-default-kts-configure",
+                                    javaVersion = "1.8",
+                                    encoding = "UTF-8",
+                                    testPlatformMessage = "Runs the module with Kotlin DSL",
+                                    createsSourceJar = true,
+                                    implementationVendor = "Cloudflight",
                                     inferModulePath = true,
                                     checkConfigurationInTestOutput = false
                             )
@@ -127,7 +162,7 @@ class JavaConfigurePluginTest {
                     arguments(
                             TestOptions(
                                     fixtureName = "single-java-module-junit4",
-                                    javaVersion = JavaVersion.toVersion(systemJavaVersion).toString(),
+                                    javaVersion = "11",
                                     encoding = "UTF-8",
                                     testPlatformMessage = "Enabled Junit4 as test platform",
                                     createsSourceJar = true,
@@ -138,7 +173,7 @@ class JavaConfigurePluginTest {
                     arguments(
                             TestOptions(
                                     fixtureName = "single-java-module-testNG",
-                                    javaVersion = JavaVersion.toVersion(systemJavaVersion).toString(),
+                                    javaVersion = "11",
                                     encoding = "UTF-8",
                                     testPlatformMessage = "Enabled TestNG as test platform",
                                     createsSourceJar = true,
@@ -149,7 +184,7 @@ class JavaConfigurePluginTest {
                     arguments(
                             TestOptions(
                                     fixtureName = "single-java-module-junit4&testNG",
-                                    javaVersion = JavaVersion.toVersion(systemJavaVersion).toString(),
+                                    javaVersion = "11",
                                     encoding = "UTF-8",
                                     testPlatformMessage = "Multiple testing frameworks detected in runtime dependencies.",
                                     createsSourceJar = true,
@@ -160,7 +195,7 @@ class JavaConfigurePluginTest {
                     arguments(
                             TestOptions(
                                     fixtureName = "single-java-module-no-test-framework",
-                                    javaVersion = JavaVersion.toVersion(systemJavaVersion).toString(),
+                                    javaVersion = "11",
                                     encoding = "UTF-8",
                                     testPlatformMessage = "No testing framework detected in runtime dependencies.",
                                     createsSourceJar = true,
