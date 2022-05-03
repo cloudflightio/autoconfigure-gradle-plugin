@@ -9,7 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.jar.Attributes.Name
 import java.util.jar.Manifest
 import java.util.stream.Stream
@@ -171,9 +171,8 @@ class JavaConfigurePluginTest {
             )
         }
     }
-
 }
 
-private val JAVA_FIXTURE_PATH = Path.of("java")
+private val JAVA_FIXTURE_PATH = Paths.get("java")
 private fun <T : Any> javaFixture(fixtureName: String, gradleVersion: String?, testWork: ProjectFixture.() -> T): T =
         useFixture(JAVA_FIXTURE_PATH, fixtureName, gradleVersion, testWork)
