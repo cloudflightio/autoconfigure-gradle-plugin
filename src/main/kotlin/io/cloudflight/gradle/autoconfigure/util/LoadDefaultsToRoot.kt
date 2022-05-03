@@ -15,12 +15,12 @@ internal fun loadDefaults(project: Project, defaultsUrl: URL) {
     }
 
     val extraProperties = project.extensions.extraProperties
-    LOG.warn("properties:\n{}", defaults)
+    LOG.debug("properties:\n{}", defaults)
 
     for (entry in defaults) {
         val key = entry.key as String
         val value = entry.value as String
-        LOG.warn("entry: {}, {}", entry, key in extraProperties)
+        LOG.debug("entry: {}, {}", entry, key in extraProperties)
 
         if (key !in extraProperties) {
             LOG.debug("setting global default for $key: $value")
