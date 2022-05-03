@@ -10,11 +10,12 @@ description "Cloudflight Gradle Test"
 group "io.cloudflight.gradle"
 version "1.0.0"
 
-javaConfigure {
-    applicationBuild = false
-    javaVersion = JavaVersion.VERSION_1_8
-    encoding = "UTF-8"
-    vendorName = "Cloudflight XYZ"
+autoConfigure {
+    java {
+        javaVersion = JavaVersion.VERSION_1_8
+        encoding = "UTF-8"
+        vendorName = "Cloudflight XYZ"
+    }
 }
 
 dependencies {
