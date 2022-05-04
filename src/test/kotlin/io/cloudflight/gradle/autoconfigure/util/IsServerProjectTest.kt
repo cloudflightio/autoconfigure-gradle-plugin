@@ -12,7 +12,7 @@ class IsServerProjectTest {
         val project = ProjectBuilder.builder().withName("test").build()
         val autoConfigure = project.rootProject.extensions.create("autoConfigure", AutoConfigureExtension::class.java)
         autoConfigure.java.serverProjectSuffix.convention("-suffix")
-        assertThat(isServerProject(project)).isFalse
+        assertThat(autoConfigure.java.isServerProject(project).get()).isFalse
     }
 
     @Test
@@ -20,7 +20,7 @@ class IsServerProjectTest {
         val project = ProjectBuilder.builder().withName("test-suffix").build()
         val autoConfigure = project.rootProject.extensions.create("autoConfigure", AutoConfigureExtension::class.java)
         autoConfigure.java.serverProjectSuffix.convention("-suffix")
-        assertThat(isServerProject(project)).isTrue
+        assertThat(autoConfigure.java.isServerProject(project).get()).isTrue
     }
 
 }

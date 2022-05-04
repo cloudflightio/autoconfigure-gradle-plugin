@@ -1,11 +1,12 @@
 package io.cloudflight.gradle.autoconfigure.util
 
-import io.cloudflight.gradle.autoconfigure.AutoConfigureExtension
+import io.cloudflight.gradle.autoconfigure.JavaAutoConfigurePluginExtension
 import org.gradle.api.Project
+import org.gradle.api.provider.Provider
 
 
-internal fun isServerProject(project: Project): Boolean {
-    val extension = project.rootProject.extensions.getByType(AutoConfigureExtension::class.java)
-
-    return project.name.endsWith(extension.java.serverProjectSuffix.get())
+internal fun JavaAutoConfigurePluginExtension.isServerProject(project: Project): Provider<Boolean> {
+    return project.provider {
+        project.name.endsWith(this.serverProjectSuffix.get())
+    }
 }

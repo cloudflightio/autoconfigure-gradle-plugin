@@ -92,17 +92,6 @@ class JavaConfigurePluginTest {
                     ),
                     arguments(
                             TestOptions(
-                                    fixtureName = "single-java-module-library-autoconfigure",
-                                    javaVersion = "1.8",
-                                    encoding = "UTF-8",
-                                    testPlatformMessage = "Enabled Junit5 as test platform",
-                                    createsSourceJar = true,
-                                    implementationVendor = "Cloudflight XYZ",
-                                    inferModulePath = true
-                            )
-                    ),
-                    arguments(
-                            TestOptions(
                                     fixtureName = "single-java-module-default",
                                     javaVersion = "11",
                                     encoding = "UTF-8",
@@ -120,18 +109,6 @@ class JavaConfigurePluginTest {
                                     testPlatformMessage = "Runs the module with Kotlin DSL",
                                     createsSourceJar = true,
                                     implementationVendor = "",
-                                    inferModulePath = true,
-                                    checkConfigurationInTestOutput = false
-                            )
-                    ),
-                    arguments(
-                            TestOptions(
-                                    fixtureName = "single-java-module-default-kts-autoconfigure",
-                                    javaVersion = "1.8",
-                                    encoding = "UTF-8",
-                                    testPlatformMessage = "Runs the module with Kotlin DSL",
-                                    createsSourceJar = true,
-                                    implementationVendor = "Cloudflight",
                                     inferModulePath = true,
                                     checkConfigurationInTestOutput = false
                             )

@@ -1,14 +1,11 @@
 package io.cloudflight.gradle.autoconfigure.java
 
-import io.cloudflight.gradle.autoconfigure.AutoConfigureExtension
-import io.cloudflight.gradle.autoconfigure.AutoconfigureGradlePlugin
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.java.archives.attributes
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.apply
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.tasks.named
 import io.cloudflight.gradle.autoconfigure.extentions.kotlin.collections.contains
-import io.cloudflight.gradle.autoconfigure.util.isServerProject
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -28,20 +25,17 @@ private const val TESTNG_ARTIFACT_GROUP = "org.testng"
 
 class JavaConfigurePlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        project.rootProject.plugins.apply(JavaAutoConfigurePlugin::class)
         project.plugins.apply(JavaLibraryPlugin::class)
 
         val gradle = project.gradle
         val extensions = project.extensions
         val tasks = project.tasks
 
-        val autoConfigure = project.rootProject.extensions.getByType(AutoConfigureExtension::class.java)
-
         extensions.create(EXTENSION_NAME, JavaConfigurePluginExtension::class).apply {
-            javaVersion.convention(autoConfigure.java.javaVersion)
-            encoding.convention(autoConfigure.java.encoding)
-            vendorName.convention(autoConfigure.java.vendorName)
-            applicationBuild.convention(project.provider { isServerProject(project) })
+            javaVersion.convention(JAVA_VERSION)
+            encoding.convention(JAVA_ENCODING)
+            vendorName.convention(VENDOR_NAME)
+            applicationBuild.convention(false)
         }
 
         project.afterEvaluate {
@@ -76,25 +70,25 @@ class JavaConfigurePlugin : Plugin<Project> {
                 val createdBy = "${System.getProperty("java.version")} (${System.getProperty("java.vendor")})"
 
                 it.attributes(
-                        "Class-Path" to classpath,
-                        "Created-By" to createdBy,
-                        "Implementation-Vendor" to javaConfigureExtension.vendorName.get(),
-                        "Implementation-Title" to project.name,
-                        "Implementation-Version" to project.version,
-                        GRADLE_VERSION to gradle.gradleVersion
+                    "Class-Path" to classpath,
+                    "Created-By" to createdBy,
+                    "Implementation-Vendor" to javaConfigureExtension.vendorName.get(),
+                    "Implementation-Title" to project.name,
+                    "Implementation-Version" to project.version,
+                    GRADLE_VERSION to gradle.gradleVersion
                 )
             }
 
             val testTask = tasks.named(JavaPlugin.TEST_TASK_NAME, Test::class)
             testTask.configure {
                 val testRuntimeDependencies =
-                        project.configurations.getByName(JavaPlugin.TEST_RUNTIME_CLASSPATH_CONFIGURATION_NAME)
+                    project.configurations.getByName(JavaPlugin.TEST_RUNTIME_CLASSPATH_CONFIGURATION_NAME)
                 val useJunit =
-                        testRuntimeDependencies.allDependencies.contains { dep -> dep.group == JUNIT_4_ARTIFACT_GROUP }
+                    testRuntimeDependencies.allDependencies.contains { dep -> dep.group == JUNIT_4_ARTIFACT_GROUP }
                 val useJunitPlatform =
-                        testRuntimeDependencies.allDependencies.contains { dep -> dep.group == JUNIT_PLATFORM_ARTIFACT_GROUP }
+                    testRuntimeDependencies.allDependencies.contains { dep -> dep.group == JUNIT_PLATFORM_ARTIFACT_GROUP }
                 val useTestNG =
-                        testRuntimeDependencies.allDependencies.contains { dep -> dep.group == TESTNG_ARTIFACT_GROUP }
+                    testRuntimeDependencies.allDependencies.contains { dep -> dep.group == TESTNG_ARTIFACT_GROUP }
 
                 if (arrayOf(useJunit, useJunitPlatform, useTestNG).filter { enabled -> enabled }.size > 1) {
                     LOG.warn("Multiple testing frameworks detected in runtime dependencies. No framework enabled automatically. junit4: $useJunit, junit5: $useJunitPlatform, testNg: $useTestNG")
@@ -118,17 +112,5 @@ class JavaConfigurePlugin : Plugin<Project> {
         private val LOG = LoggerFactory.getLogger(JavaConfigurePlugin::class.java)
 
         const val EXTENSION_NAME = "javaConfigure"
-    }
-
-    class JavaAutoConfigurePlugin : Plugin<Project> {
-        override fun apply(project: Project) {
-            val autoConfigure = AutoconfigureGradlePlugin.getOrCreateExtensionOnRootProject(project)
-            with(autoConfigure.java) {
-                javaVersion.convention(JavaVersion.VERSION_11)
-                encoding.convention("UTF-8")
-                serverProjectSuffix.convention("-server")
-                vendorName.convention("")
-            }
-        }
     }
 }
