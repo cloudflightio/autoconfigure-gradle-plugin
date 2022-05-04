@@ -4,8 +4,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import java.nio.file.Path
+import java.nio.file.Paths
 
-private val FIXTURES_BASE_DIR = Path.of("src", "test", "fixtures")
+private val FIXTURES_BASE_DIR = Paths.get("src", "test", "fixtures")
 
 internal class ProjectFixture(fixtureBaseDir: Path, val fixtureName: String, val gradleVersion: String? = null) {
 

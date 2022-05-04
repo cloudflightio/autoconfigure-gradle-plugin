@@ -6,7 +6,7 @@ import io.cloudflight.gradle.autoconfigure.test.util.normalizedOutput
 import io.cloudflight.gradle.autoconfigure.test.util.useFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import java.nio.file.Path
+import java.nio.file.Paths
 
 class AutoconfigureGradlePluginTest {
 
@@ -42,6 +42,6 @@ class AutoconfigureGradlePluginTest {
 
 }
 
-private val AUTOCONFIGURE_FIXTURE_PATH = Path.of("autoconfigure")
+private val AUTOCONFIGURE_FIXTURE_PATH = Paths.get("autoconfigure")
 private fun <T : Any> autoconfigureFixture(fixtureName: String, gradleVersion: String? = null, testWork: ProjectFixture.() -> T): T =
-    useFixture(AUTOCONFIGURE_FIXTURE_PATH, fixtureName, gradleVersion, testWork)
+        useFixture(AUTOCONFIGURE_FIXTURE_PATH, fixtureName, gradleVersion, testWork)
