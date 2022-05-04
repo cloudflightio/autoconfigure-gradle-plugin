@@ -38,10 +38,18 @@ tasks.test {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
     withSourcesJar()
     withJavadocJar()
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}
+
+tasks.withType<Test> {
+    // we wanna set the java Launcher to 17 here in order to be able set higher java compatibility
+    javaLauncher.set(javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    })
 }
 
 gradlePlugin {
@@ -64,7 +72,8 @@ gradlePlugin {
 
 tasks.withType<Jar>() {
     manifest {
-        val createdBy = "${System.getProperty("java.version")} (${System.getProperty("java.vendor")})"
+        val compiler  = javaToolchains.compilerFor(java.toolchain).get().metadata
+        val createdBy = compiler.javaRuntimeVersion + " (" + compiler.vendor + ")"
         val vendorName: String by project.extra
 
         attributes(
