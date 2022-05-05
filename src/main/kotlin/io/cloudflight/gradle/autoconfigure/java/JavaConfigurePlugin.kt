@@ -6,6 +6,7 @@ import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.tasks.named
 import io.cloudflight.gradle.autoconfigure.extentions.kotlin.collections.contains
+import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaLibraryPlugin
@@ -30,9 +31,17 @@ class JavaConfigurePlugin : Plugin<Project> {
         val extensions = project.extensions
         val tasks = project.tasks
 
-        val javaConfigureExtension = extensions.create(EXTENSION_NAME, JavaConfigurePluginExtension::class)
+        extensions.create(EXTENSION_NAME, JavaConfigurePluginExtension::class).apply {
+            javaVersion.convention(JAVA_VERSION)
+            encoding.convention(JAVA_ENCODING)
+            vendorName.convention(VENDOR_NAME)
+            applicationBuild.convention(false)
+        }
 
         project.afterEvaluate {
+
+            val javaConfigureExtension = extensions.getByType(JavaConfigurePluginExtension::class)
+
             val javaPluginExtension = extensions.getByType(JavaPluginExtension::class)
 
             javaPluginExtension.modularity.inferModulePath.set(true)
@@ -96,7 +105,6 @@ class JavaConfigurePlugin : Plugin<Project> {
                     LOG.warn("No testing framework detected in runtime dependencies. No framework enabled automatically")
                 }
             }
-
         }
     }
 
@@ -105,6 +113,4 @@ class JavaConfigurePlugin : Plugin<Project> {
 
         const val EXTENSION_NAME = "javaConfigure"
     }
-
-
 }

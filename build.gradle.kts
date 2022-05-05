@@ -60,18 +60,12 @@ gradlePlugin {
             displayName = "Autoconfigure-Gradle"
             description =
                 "A opinionated approach to configure a gradle project automatically by convention. It supports to automatically configure various plugins to reduce boilerplate code in gradle projects."
-            implementationClass = "io.cloudflight.gradle.autoconfigure.AutoconfigureGradlePlugin"
+            implementationClass = "io.cloudflight.gradle.autoconfigure.AutoConfigureGradlePlugin"
         }
         create("java-configure") {
             id = "io.cloudflight.autoconfigure.java-configure"
-            description = "Used by 'io.cloudflight.autoconfigure.java-autoconfigure' to configure a java project."
+            description = "Used to configure a java project."
             implementationClass = "io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin"
-        }
-        create("java-autoconfigure") {
-            id = "io.cloudflight.autoconfigure.java-autoconfigure"
-            description =
-                "Used by 'io.cloudflight.autoconfigure-gradle' to configure a java project by naming conventions and configurations from 'gradle.properties'"
-            implementationClass = "io.cloudflight.gradle.autoconfigure.java.JavaAutoconfigurePlugin"
         }
     }
 }

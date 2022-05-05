@@ -12,9 +12,9 @@ version "1.0.0"
 
 javaConfigure {
     applicationBuild = false
-    javaVersion = JavaVersion.VERSION_11
+    javaVersion = JavaVersion.VERSION_1_8
     encoding = "UTF-8"
-    vendorName = "Cloudflight Test Vendor"
+    vendorName = "Cloudflight XYZ"
 }
 
 dependencies {

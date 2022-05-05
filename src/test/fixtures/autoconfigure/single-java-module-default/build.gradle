@@ -1,0 +1,17 @@
+plugins {
+    id "io.cloudflight.autoconfigure-gradle"
+}
+
+description "The JavaConfigurePlugin is automatically applied and the default configuration of the AutoConfigurePlugin is used"
+group "io.cloudflight.gradle"
+version "1.0.0"
+
+plugins.forEach {
+    logger.quiet("Plugin {} applied", it.class.name)
+}
+
+def javaConfigurePluginExtension = project.extensions.getByType(io.cloudflight.gradle.autoconfigure.java.JavaConfigurePluginExtension)
+logger.quiet("javaConfigurePluginExtension.javaVersion: {}", javaConfigurePluginExtension.javaVersion.get())
+logger.quiet("javaConfigurePluginExtension.encoding: {}", javaConfigurePluginExtension.encoding.get())
+logger.quiet("javaConfigurePluginExtension.vendorName: {}", javaConfigurePluginExtension.vendorName.get())
+logger.quiet("javaConfigurePluginExtension.applicationBuild: {}", javaConfigurePluginExtension.applicationBuild.get())
