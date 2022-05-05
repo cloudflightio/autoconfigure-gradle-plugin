@@ -6,7 +6,7 @@ import org.gradle.api.provider.Provider
 
 
 internal fun JavaAutoConfigurePluginExtension.isServerProject(project: Project): Provider<Boolean> {
-    return project.provider {
-        project.name.endsWith(this.serverProjectSuffix.get())
+    return this.serverProjectSuffix.map {
+        project.name.endsWith(it)
     }
 }
