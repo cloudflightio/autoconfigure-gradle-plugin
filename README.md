@@ -30,8 +30,8 @@ This plugin requires at least Gradle 7.2 and Java 8.
 
 ## Main Concept
 
-This plugin is meant to be applied only at the root module of your project - never on sub-modules if you have one. It will
-automatically. All the plugin does by itself is scan the module and all sub-modules and apply
+This plugin is meant to be applied only at the root module of your project - never on sub-modules if you have one.
+All the plugin does by itself is scan the module and all sub-modules and apply
 any of the internal plugins mentioned below depending on the layout. Instead of requiring you
 to apply the same default over and over again, we do that automatically for you.
 
