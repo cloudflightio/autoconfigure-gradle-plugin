@@ -69,6 +69,7 @@ class KotlinConfigurePlugin : Plugin<Project> {
             tasks.withType(KotlinCompile::class.java).configureEach {
                 it.kotlinOptions.apiVersion = kotlinMajorMinor
                 it.kotlinOptions.languageVersion = kotlinMajorMinor
+                it.kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict") // https://kotlinlang.org/docs/java-interop.html#jsr-305-support
             }
         }
     }
