@@ -155,8 +155,8 @@ Per default, we are using the latest version of the Kotlin Plugin (1.6.10) to co
 you can specify an older version (i.e. 1.5.20), which results in the following behaviour:
 
 * The Kotlin StdLib of the version `1.5.20` is being added to the classpath
-* The `apiVersion` and `languageVersion` is set to `1.5`, see https://kotlinlang.org/docs/gradle.html#attributes-common-to-jvm-and-js for more details
-
+* The `apiVersion` and `languageVersion` is set to `1.5`, see [this link](https://kotlinlang.org/docs/gradle.html#attributes-common-to-jvm-and-js) for more details
+* The setting `-Xjsr305=strict` is being added to the Kotlin Compiler options, see [this link](https://kotlinlang.org/docs/java-interop.html#jsr-305-support) for more details
 
 
 ## Auto-Configuration
