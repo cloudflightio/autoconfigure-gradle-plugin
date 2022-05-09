@@ -38,7 +38,7 @@ class KotlinConfigurePluginTest {
 
     @ParameterizedTest
     @MethodSource("singleKotlinModuleArguments")
-    fun `the supplied options are used to configure the JavaPlugin`(
+    fun `the supplied options are used to configure the KotlinPlugin`(
         options: TestOptions
     ): Unit = javaFixture(options.fixtureName, options.gradleVersion) {
         val result = run("clean", "build", "dependencies", "--configuration", "runtimeClasspath")
@@ -70,6 +70,8 @@ class KotlinConfigurePluginTest {
 
         @JvmStatic
         fun singleKotlinModuleArguments(): Stream<Arguments> {
+            // keep in sync with the kotlin version in libs.versions.toml
+            val currentKotlinVersion = "1.6.21"
             return Stream.of(
                 arguments(
                     TestOptions(
@@ -80,7 +82,7 @@ class KotlinConfigurePluginTest {
                         createsSourceJar = true,
                         implementationVendor = "Cloudflight XYZ",
                         inferModulePath = true,
-                        kotlinVersion = KOTLIN_VERSION
+                        kotlinVersion = currentKotlinVersion
                     )
                 ),
                 arguments(

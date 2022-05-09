@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.6.10"
+kotlin = "1.6.21"
 kotlin-logging = "2.1.21"
 maven-artifact = "3.5.0"
 jupiter = "5.8.1"
