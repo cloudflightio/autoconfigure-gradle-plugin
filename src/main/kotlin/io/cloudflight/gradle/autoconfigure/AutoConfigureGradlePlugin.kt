@@ -4,6 +4,7 @@ import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.apply
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.java.*
+import io.cloudflight.gradle.autoconfigure.report.ReportConfigurePlugin
 import io.cloudflight.gradle.autoconfigure.util.isServerProject
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
@@ -25,6 +26,7 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
             applyPlugins(project, autoConfigure)
         }
 
+        target.plugins.apply(ReportConfigurePlugin::class.java)
     }
 
     companion object {

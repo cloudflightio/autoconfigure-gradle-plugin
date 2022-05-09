@@ -26,7 +26,7 @@ apply(plugin = "io.cloudflight.autoconfigure-gradle")
 
 ## Requirements
 
-This plugin requires at least Gradle 7.2 and Java 8.
+This plugin requires at least Gradle 7.4 and Java 8.
 
 ## Main Concept
 
@@ -95,6 +95,13 @@ the `test` section of that module:
 In other words, if you have `org.junit.jupiter:junit-jupiter-engine:5.8.2` on your `testImplemenation`
 classpath, we automatically apply `test { useJUnitPlatform() }` for you.
 
+#### Jacoco
+
+This plugin also automatically applies the [Jacoco-Plugin](https://docs.gradle.org/current/userguide/jacoco_plugin.html)
+in order to collect code-coverage information during our unit- and integration tests.
+
+Call `gradle testCodeCoverageReport` to get a multi-module coverage report over all your modules in the
+`build/reports/jacoco/testCodeCoverageReport/html` directory of your root module.
 
 #### MANIFEST.MF
 

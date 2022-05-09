@@ -67,6 +67,11 @@ gradlePlugin {
             description = "Used to configure a java project."
             implementationClass = "io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin"
         }
+        create("report-configure") {
+            id = "io.cloudflight.autoconfigure.report-configure"
+            description = "Preconfiguring reports for your build"
+            implementationClass = "io.cloudflight.gradle.autoconfigure.report.ReportConfigurePlugin"
+        }
     }
 }
 
