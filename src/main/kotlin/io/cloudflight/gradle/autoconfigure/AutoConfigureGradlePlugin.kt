@@ -4,10 +4,14 @@ import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.apply
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.java.*
+import io.cloudflight.gradle.autoconfigure.kotlin.KotlinConfigurePlugin
+import io.cloudflight.gradle.autoconfigure.kotlin.KotlinConfigurePluginExtension
+import io.cloudflight.gradle.autoconfigure.kotlin.isKotlinProject
 import io.cloudflight.gradle.autoconfigure.util.isServerProject
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.PluginContainer
 
 class AutoConfigureGradlePlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -35,15 +39,41 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
         val plugins = project.plugins
 
         if (isJavaProject(project)) {
-            plugins.apply(JavaConfigurePlugin::class)
-            val extension = project.extensions.getByType(JavaConfigurePluginExtension::class)
-            val javaConfigure = autoConfigure.java
-            extension.apply {
-                languageVersion.set(javaConfigure.languageVersion)
-                encoding.set(javaConfigure.encoding)
-                vendorName.set(javaConfigure.vendorName)
-                applicationBuild.set(javaConfigure.isServerProject(project))
-            }
+            applyJava(plugins, project, autoConfigure)
+        }
+
+        if (isKotlinProject(project)) {
+            applyJava(plugins, project, autoConfigure)
+            applyKotlin(plugins, project, autoConfigure)
+        }
+    }
+
+    private fun applyKotlin(
+        plugins: PluginContainer,
+        project: Project,
+        autoConfigure: AutoConfigureExtension
+    ) {
+        plugins.apply(KotlinConfigurePlugin::class)
+        val extension = project.extensions.getByType(KotlinConfigurePluginExtension::class)
+        val kotlinConfigure = autoConfigure.kotlin
+        extension.apply {
+            kotlinVersion.set(kotlinConfigure.kotlinVersion)
+        }
+    }
+
+    private fun applyJava(
+        plugins: PluginContainer,
+        project: Project,
+        autoConfigure: AutoConfigureExtension
+    ) {
+        plugins.apply(JavaConfigurePlugin::class)
+        val extension = project.extensions.getByType(JavaConfigurePluginExtension::class)
+        val javaConfigure = autoConfigure.java
+        extension.apply {
+            languageVersion.set(javaConfigure.languageVersion)
+            encoding.set(javaConfigure.encoding)
+            vendorName.set(javaConfigure.vendorName)
+            applicationBuild.set(javaConfigure.isServerProject(project))
         }
     }
 }

@@ -1,0 +1,30 @@
+plugins {
+    id "io.cloudflight.autoconfigure.kotlin-configure"
+}
+
+repositories {
+    mavenCentral()
+}
+
+description "Cloudflight Gradle Test"
+group "io.cloudflight.gradle"
+version "1.0.0"
+
+javaConfigure {
+    languageVersion = JavaLanguageVersion.of(8)
+    encoding = "UTF-8"
+    vendorName = "Cloudflight XYZ"
+}
+
+tasks.getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME).doLast {
+    def javaPluginExtension = project.extensions.getByType(JavaPluginExtension)
+    def inferModulePath = javaPluginExtension.hasProperty("modularity") ? javaPluginExtension.modularity.inferModulePath.get() : false
+    logger.quiet("javaPluginExtension.modularity.inferModulePath: {}", inferModulePath)
+    logger.quiet("javaPluginExtension.sourceCompatibility: {}", javaPluginExtension.sourceCompatibility)
+    logger.quiet("javaPluginExtension.targetCompatibility: {}", javaPluginExtension.targetCompatibility)
+    logger.quiet("compileJava.options.encoding: {}", options.encoding)
+}
+
+tasks.getByName(JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME).doLast {
+    logger.quiet("compileTestJava.options.encoding: {}", options.encoding)
+}

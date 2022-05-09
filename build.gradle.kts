@@ -21,6 +21,10 @@ dependencies {
     implementation(libs.maven.artifact)
     implementation(libs.kotlin.logging)
 
+    implementation(libs.kotlin.allopen)
+    implementation(libs.kotlin.gradleplugin)
+    implementation(libs.kotlin.noarg)
+
     testImplementation(libs.bundles.testImplementationDependencies)
 
     testRuntimeOnly(libs.junit.engine)
@@ -66,6 +70,11 @@ gradlePlugin {
             id = "io.cloudflight.autoconfigure.java-configure"
             description = "Used to configure a java project."
             implementationClass = "io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin"
+        }
+        create("kotlin-configure") {
+            id = "io.cloudflight.autoconfigure.kotlin-configure"
+            description = "Used to configure a kotlin project."
+            implementationClass = "io.cloudflight.gradle.autoconfigure.kotlin.KotlinConfigurePlugin"
         }
     }
 }
