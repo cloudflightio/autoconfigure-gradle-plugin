@@ -44,7 +44,7 @@ a source folder `src/main/java`).
 
 ### Java Plugin
 
-If the plugin detects either to folder `src/main/java` or `src/test/java` in a , it automatically
+If the plugin detects either to folder `src/main/java` or `src/test/java` in a module, it automatically
 applies the `java-library` plugin and applies the following configuration:
 
 #### Configuration
