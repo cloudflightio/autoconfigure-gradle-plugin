@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.allopen.gradle.SpringGradleSubplugin
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.internal.Kapt3GradleSubplugin
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
+import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.noarg.gradle.KotlinJpaSubplugin
 import org.slf4j.LoggerFactory
@@ -31,7 +32,7 @@ class KotlinConfigurePlugin : Plugin<Project> {
         val tasks = project.tasks
 
         extensions.create(EXTENSION_NAME, KotlinConfigurePluginExtension::class).apply {
-            kotlinVersion.convention(KOTLIN_VERSION) // TODO read from classpath
+            kotlinVersion.convention(project.getKotlinPluginVersion())
         }
 
         extensions.getByType(AllOpenExtension::class.java).apply {
@@ -69,7 +70,8 @@ class KotlinConfigurePlugin : Plugin<Project> {
             tasks.withType(KotlinCompile::class.java).configureEach {
                 it.kotlinOptions.apiVersion = kotlinMajorMinor
                 it.kotlinOptions.languageVersion = kotlinMajorMinor
-                it.kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict") // https://kotlinlang.org/docs/java-interop.html#jsr-305-support
+                it.kotlinOptions.freeCompilerArgs =
+                    listOf("-Xjsr305=strict") // https://kotlinlang.org/docs/java-interop.html#jsr-305-support
             }
         }
     }
