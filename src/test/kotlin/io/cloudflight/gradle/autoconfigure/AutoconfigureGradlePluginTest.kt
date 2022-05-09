@@ -5,8 +5,6 @@ import io.cloudflight.gradle.autoconfigure.test.util.ProjectFixture
 import io.cloudflight.gradle.autoconfigure.test.util.normalizedOutput
 import io.cloudflight.gradle.autoconfigure.test.util.useFixture
 import org.assertj.core.api.Assertions.assertThat
-import org.gradle.api.JavaVersion
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -17,7 +15,7 @@ import java.util.stream.Stream
 
 data class TestOptions(
     val fixtureName: String,
-    val javaVersion: String,
+    val languageVersion: Int,
     val encoding: String,
     val vendorName: String,
     val applicationBuild: Boolean
@@ -40,7 +38,7 @@ class AutoconfigureGradlePluginTest {
 
             assertThat(result.normalizedOutput).contains(JavaConfigurePlugin::class.simpleName).contains(
                 """
-                javaConfigurePluginExtension.javaVersion: ${options.javaVersion}
+                javaConfigurePluginExtension.languageVersion: ${options.languageVersion}
                 javaConfigurePluginExtension.encoding: ${options.encoding}
                 javaConfigurePluginExtension.vendorName: ${options.vendorName}
                 javaConfigurePluginExtension.applicationBuild: ${options.applicationBuild}
@@ -74,7 +72,7 @@ class AutoconfigureGradlePluginTest {
                 arguments(
                     TestOptions(
                         fixtureName = "single-java-module-default",
-                        javaVersion = "11",
+                        languageVersion = 11,
                         encoding = "UTF-8",
                         vendorName = "",
                         applicationBuild = false
@@ -83,7 +81,7 @@ class AutoconfigureGradlePluginTest {
                 arguments(
                     TestOptions(
                         fixtureName = "single-java-module-autoconfigure",
-                        javaVersion = "16",
+                        languageVersion = 16,
                         encoding = "UTF-16",
                         vendorName = "Cloudflight XYZ",
                         applicationBuild = true
@@ -92,7 +90,7 @@ class AutoconfigureGradlePluginTest {
                 arguments(
                     TestOptions(
                         fixtureName = "single-java-module-configure",
-                        javaVersion = "16",
+                        languageVersion = 16,
                         encoding = "UTF-16",
                         vendorName = "Cloudflight XYZ",
                         applicationBuild = true

@@ -4,13 +4,10 @@ import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.apply
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.java.*
-import io.cloudflight.gradle.autoconfigure.java.isJavaProject
 import io.cloudflight.gradle.autoconfigure.util.isServerProject
 import org.gradle.api.GradleException
-import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.provider.Provider
 
 class AutoConfigureGradlePlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -18,7 +15,7 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
 
         val autoConfigure = target.extensions.create(EXTENSION_NAME, AutoConfigureExtension::class)
         with(autoConfigure.java) {
-            javaVersion.convention(JAVA_VERSION)
+            languageVersion.convention(JAVA_LANGUAGE_VERSION)
             encoding.convention(JAVA_ENCODING)
             vendorName.convention(VENDOR_NAME)
             serverProjectSuffix.convention("-server")
@@ -42,7 +39,7 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
             val extension = project.extensions.getByType(JavaConfigurePluginExtension::class)
             val javaConfigure = autoConfigure.java
             extension.apply {
-                javaVersion.set(javaConfigure.javaVersion)
+                languageVersion.set(javaConfigure.languageVersion)
                 encoding.set(javaConfigure.encoding)
                 vendorName.set(javaConfigure.vendorName)
                 applicationBuild.set(javaConfigure.isServerProject(project))

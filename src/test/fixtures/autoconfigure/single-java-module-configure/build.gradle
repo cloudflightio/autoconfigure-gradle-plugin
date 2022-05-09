@@ -11,7 +11,7 @@ plugins.forEach {
 }
 
 javaConfigure {
-    javaVersion = JavaVersion.VERSION_16
+    languageVersion = JavaLanguageVersion.of(16)
     encoding = "UTF-16"
     vendorName = "Cloudflight XYZ"
     applicationBuild = true
@@ -19,7 +19,7 @@ javaConfigure {
 
 autoConfigure {
     java {
-        javaVersion = JavaVersion.VERSION_16
+        languageVersion = JavaLanguageVersion.of(16)
         encoding = "UTF-16"
         vendorName = "Cloudflight XYZ"
         serverProjectSuffix = "-autoconfigure"
@@ -27,7 +27,7 @@ autoConfigure {
 }
 
 def javaConfigurePluginExtension = project.extensions.getByType(io.cloudflight.gradle.autoconfigure.java.JavaConfigurePluginExtension)
-logger.quiet("javaConfigurePluginExtension.javaVersion: {}", javaConfigurePluginExtension.javaVersion.get())
+logger.quiet("javaConfigurePluginExtension.languageVersion: {}", javaConfigurePluginExtension.languageVersion.get())
 logger.quiet("javaConfigurePluginExtension.encoding: {}", javaConfigurePluginExtension.encoding.get())
 logger.quiet("javaConfigurePluginExtension.vendorName: {}", javaConfigurePluginExtension.vendorName.get())
 logger.quiet("javaConfigurePluginExtension.applicationBuild: {}", javaConfigurePluginExtension.applicationBuild.get())

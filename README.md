@@ -17,7 +17,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("io.cloudflight.gradle:autoconfigure:0.1.2")
+        classpath("io.cloudflight.gradle:autoconfigure:0.1.3")
     }
 }
 
@@ -36,7 +36,7 @@ your `build.gradle.kts`:
 
 ````kotlin
 configure<JavaConfigurePluginExtension> {
-    javaVersion.set(JavaVersion.VERSION_11)
+    languageVersion.set(JavaLanguageVersion.of(11))
     vendorName.set("Cloudflight")
     applicationBuild.set(false)
     encoding.set("UTF-8")

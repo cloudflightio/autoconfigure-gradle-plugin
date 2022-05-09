@@ -13,7 +13,7 @@ group = "io.cloudflight.gradle"
 version = "1.0.0"
 
 configure<JavaConfigurePluginExtension> {
-    javaVersion.set(JavaVersion.VERSION_1_8)
+    languageVersion.set(JavaLanguageVersion.of(8))
     vendorName.set("Cloudflight")
 }
 

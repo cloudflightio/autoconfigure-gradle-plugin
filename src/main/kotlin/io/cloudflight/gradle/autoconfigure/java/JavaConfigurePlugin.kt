@@ -6,7 +6,6 @@ import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.tasks.named
 import io.cloudflight.gradle.autoconfigure.extentions.kotlin.collections.contains
-import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaLibraryPlugin
@@ -15,6 +14,7 @@ import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.tasks.Jar
+import org.gradle.jvm.toolchain.JavaToolchainService
 import org.slf4j.LoggerFactory
 
 private const val GRADLE_VERSION = "Gradle-Version"
@@ -32,7 +32,7 @@ class JavaConfigurePlugin : Plugin<Project> {
         val tasks = project.tasks
 
         extensions.create(EXTENSION_NAME, JavaConfigurePluginExtension::class).apply {
-            javaVersion.convention(JAVA_VERSION)
+            languageVersion.convention(JAVA_LANGUAGE_VERSION)
             encoding.convention(JAVA_ENCODING)
             vendorName.convention(VENDOR_NAME)
             applicationBuild.convention(false)
@@ -46,8 +46,7 @@ class JavaConfigurePlugin : Plugin<Project> {
 
             javaPluginExtension.modularity.inferModulePath.set(true)
 
-            javaPluginExtension.sourceCompatibility = javaConfigureExtension.javaVersion.get()
-            javaPluginExtension.targetCompatibility = javaConfigureExtension.javaVersion.get()
+            javaPluginExtension.toolchain.languageVersion.set(javaConfigureExtension.languageVersion)
 
             if (!javaConfigureExtension.applicationBuild.get()) {
                 javaPluginExtension.withSourcesJar()
@@ -67,7 +66,9 @@ class JavaConfigurePlugin : Plugin<Project> {
             jar.manifest {
                 val configuration = project.configurations.getByName(JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME)
                 val classpath = configuration.files.joinToString(" ") { it.name }
-                val createdBy = "${System.getProperty("java.version")} (${System.getProperty("java.vendor")})"
+                val javaToolChains = project.extensions.getByType(JavaToolchainService::class.java)
+                val compiler  = javaToolChains.compilerFor(javaPluginExtension.toolchain).get().metadata
+                val createdBy = compiler.javaRuntimeVersion + " (" + compiler.vendor + ")"
 
                 it.attributes(
                     "Class-Path" to classpath,
