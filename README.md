@@ -44,7 +44,7 @@ a source folder `src/main/java`).
 
 ### Java Plugin
 
-If the plugin detects either to folder `src/main/java` or `src/test/java` in a module, it automatically
+If the plugin detects either the folder `src/main/java` or `src/test/java` in a module, it automatically
 applies the `java-library` plugin and applies the following configuration:
 
 #### Configuration
@@ -122,6 +122,42 @@ Gradle-Version: 7.3.3
 * `Implementation-Version` is being set to the current `project.version`
 * `Implementation-Title` is your `project.name`
 * The `Implementation-Vendor` can be set by configuring the `vendorName` in the `JavaConfigurePluginExtension` (see above)
+
+### Kotlin Plugin
+
+If the plugin detects either the folder `src/main/kotlin` or `src/test/kotlin` in a module, it automatically
+applies the [Kotlin Gradle Plugin](https://kotlinlang.org/docs/gradle.html) and applies the following configuration:
+
+#### Configuration
+
+You can provide some configuration to this plugin by adding the following block to
+your `build.gradle.kts`:
+
+````kotlin
+configure<KotlinConfigurePluginExtension> {
+    kotlinVersion.set("1.6.10")
+}
+````
+
+or if you prefer the Groovy Version in `build.gradle`:
+````groovy
+kotlinConfigure {
+    kotlinVersion.set("1.6.10")
+}
+````
+
+The Kotlin plugin also automatically applies the Java Plugin with all its configuration possibilities. Use the configuration
+there to adjust the JDK or the Manifest entries.
+
+#### Kotlin Version
+
+Per default, we are using the latest version of the Kotlin Plugin (1.6.10) to compile your Kotlin-Code. Still,
+you can specify an older version (i.e. 1.5.20), which results in the following behaviour:
+
+* The Kotlin StdLib of the version `1.5.20` is being added to the classpath
+* The `apiVersion` and `languageVersion` is set to `1.5`, see https://kotlinlang.org/docs/gradle.html#attributes-common-to-jvm-and-js for more details
+
+
 
 ## Auto-Configuration
 
