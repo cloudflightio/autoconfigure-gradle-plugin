@@ -24,6 +24,10 @@ buildscript {
 apply(plugin = "io.cloudflight.autoconfigure-gradle")
 ````
 
+## Requirements
+
+This plugin requires at least Gradle 7.2 and Java 8.
+
 ## Main Concept
 
 This plugin is meant to be applied only at the root module of your project - never on sub-modules if you have one. It will
