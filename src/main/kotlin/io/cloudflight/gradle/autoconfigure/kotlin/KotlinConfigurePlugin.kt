@@ -40,20 +40,18 @@ class KotlinConfigurePlugin : Plugin<Project> {
             annotation("javax.persistence.MappedSuperclass")
         }
 
+        val kotlinConfigureExtension = extensions.getByType(KotlinConfigurePluginExtension::class)
+
         val kotlin = extensions.getByType(KotlinProjectExtension::class.java)
         kotlin.sourceSets.maybeCreate("main").dependencies {
-            // we need to do that lazily here in order to evaluate the KotlinConfigurePluginExtension
-            // not too early to fetch the configured kotlin version
-            this.implementation(project.provider {
-                // see https://kotlinlang.org/docs/gradle.html#dependency-on-the-standard-library
-                // as we allow clients to override the Kotlin Version, (i.e. to 1.5.20), we also want to ensure
-                // that in this case the kotlin-stdtlib-jdk8 from exactly that Kotlin version is being added
-                // to the dependencies. Without those lines, we would always add the stdlib in the version
-                // of the underlying Kotlin Gradle Plugin (1.6.20 at the time of that writing)
-                val kotlinConfigureExtension = extensions.getByType(KotlinConfigurePluginExtension::class)
-                val kotlinVersion = kotlinConfigureExtension.kotlinVersion.get()
-                "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
-            })
+            // see https://kotlinlang.org/docs/gradle.html#dependency-on-the-standard-library
+            // as we allow clients to override the Kotlin Version, (i.e. to 1.5.20), we also want to ensure
+            // that in this case the kotlin-stdtlib-jdk8 from exactly that Kotlin version is being added
+            // to the dependencies. Without those lines, we would always add the stdlib in the version
+            // of the underlying Kotlin Gradle Plugin (1.6.20 at the time of that writing)
+            this.implementation(kotlinConfigureExtension.kotlinVersion
+                .map { "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$it" }
+            )
         }
 
         // https://kotlinlang.org/docs/gradle.html#gradle-java-toolchains-support
@@ -63,7 +61,6 @@ class KotlinConfigurePlugin : Plugin<Project> {
         }
 
         project.afterEvaluate {
-            val kotlinConfigureExtension = extensions.getByType(KotlinConfigurePluginExtension::class)
             val kotlinVersion = kotlinConfigureExtension.kotlinVersion.get()
             val kotlinMajorMinor = kotlinVersion.toMajorMinor()
 
