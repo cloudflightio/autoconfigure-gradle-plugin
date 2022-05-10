@@ -21,7 +21,6 @@ assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-nexus-publishing = { id = "io.github.gradle-nexus.publish-plugin", version = "1.1.0" }
 
 [bundles]
 testImplementationDependencies = ["junit-api", "junit-params", "assertj-core"]
