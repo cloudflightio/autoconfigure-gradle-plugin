@@ -7,12 +7,17 @@ import org.gradle.jvm.toolchain.JavaLanguageVersion
 import javax.inject.Inject
 
 open class AutoConfigureExtension @Inject constructor(
-        objects: ObjectFactory
+    objects: ObjectFactory
 ) {
 
     val java: JavaAutoConfigurePluginExtension = objects.newInstance(JavaAutoConfigurePluginExtension::class.java)
     fun java(action: Action<JavaAutoConfigurePluginExtension>) {
         action.execute(java)
+    }
+
+    val kotlin: KotlinAutoConfigurePluginExtension = objects.newInstance(KotlinAutoConfigurePluginExtension::class.java)
+    fun kotlin(action: Action<KotlinAutoConfigurePluginExtension>) {
+        action.execute(kotlin)
     }
 }
 
@@ -24,4 +29,8 @@ abstract class JavaAutoConfigurePluginExtension {
     abstract val serverProjectSuffix: Property<String>
     abstract val vendorName: Property<String>
 
+}
+
+abstract class KotlinAutoConfigurePluginExtension {
+    abstract val kotlinVersion: Property<String>
 }

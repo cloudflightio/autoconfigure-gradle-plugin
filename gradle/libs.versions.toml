@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.6.10"
+kotlin = "1.6.21"
 kotlin-logging = "2.1.21"
 maven-artifact = "3.5.0"
 jupiter = "5.8.1"
@@ -7,6 +7,9 @@ assertj = "3.22.0"
 
 [libraries]
 kotlin-logging = { module = "io.github.microutils:kotlin-logging-jvm", version.ref = "kotlin-logging" }
+kotlin-allopen = { module = "org.jetbrains.kotlin:kotlin-allopen", version.ref = "kotlin" }
+kotlin-gradleplugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-noarg = { module = "org.jetbrains.kotlin:kotlin-noarg", version.ref = "kotlin" }
 
 maven-artifact = { module = "org.apache.maven:maven-artifact", version.ref = "maven-artifact" }
 
