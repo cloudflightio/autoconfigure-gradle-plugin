@@ -1,5 +1,3 @@
-import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePluginExtension
-
 plugins {
     id("io.cloudflight.autoconfigure.java-configure")
 }
@@ -12,7 +10,7 @@ description = "Cloudflight Gradle Test"
 group = "io.cloudflight.gradle"
 version = "1.0.0"
 
-configure<JavaConfigurePluginExtension> {
+javaConfigure {
     languageVersion.set(JavaLanguageVersion.of(8))
     vendorName.set("Cloudflight")
 }
