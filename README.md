@@ -128,13 +128,6 @@ kotlinConfigure {
 }
 ````
 
-or if you prefer the Groovy Version in `build.gradle`:
-````groovy
-kotlinConfigure {
-    kotlinVersion.set("1.6.10")
-}
-````
-
 The Kotlin plugin also automatically applies the Java Plugin with all its configuration possibilities. Use the configuration
 there to adjust the JDK or the Manifest entries.
 
