@@ -2,8 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     id("java-gradle-plugin")
     id("maven-publish")
-    alias(libs.plugins.nexus.publishing)
-    id("signing")
+    id("com.gradle.plugin-publish") version "0.18.0"
 }
 
 description = "A opinionated approach to configure a gradle project automatically by convention. It supports to automatically configure various plugins to reduce boilerplate code in gradle projects."
@@ -56,8 +55,13 @@ tasks.withType<Test> {
     })
 }
 
+pluginBundle {
+    website = "https://github.com/cloudflightio/autoconfigure-gradle-plugin"
+    vcsUrl = "https://github.com/cloudflightio/autoconfigure-gradle-plugin.git"
+    tags = listOf("autoconfigure", "java", "kotlin")
+}
+
 gradlePlugin {
-    isAutomatedPublishing = false // disable normal plugin publish configuration as long as we publish on MavenCentral
     plugins {
         create("autoconfigure-gradle") {
             id = "io.cloudflight.autoconfigure-gradle"
@@ -68,16 +72,19 @@ gradlePlugin {
         }
         create("java-configure") {
             id = "io.cloudflight.autoconfigure.java-configure"
+            displayName = "Configure Java-Plugin"
             description = "Used to configure a java project."
             implementationClass = "io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin"
         }
         create("kotlin-configure") {
             id = "io.cloudflight.autoconfigure.kotlin-configure"
+            displayName = "Configure Kotlin-Plugin"
             description = "Used to configure a kotlin project."
             implementationClass = "io.cloudflight.gradle.autoconfigure.kotlin.KotlinConfigurePlugin"
         }
         create("report-configure") {
             id = "io.cloudflight.autoconfigure.report-configure"
+            displayName = "Configure global reports"
             description = "Preconfiguring reports for your build"
             implementationClass = "io.cloudflight.gradle.autoconfigure.report.ReportConfigurePlugin"
         }
@@ -100,59 +107,4 @@ tasks.withType<Jar>() {
 
     from(layout.projectDirectory.file("LICENSE"))
     from(layout.projectDirectory.file("NOTICE"))
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-            pom {
-                name.set(project.name)
-                description.set(project.description)
-                url.set("https://github.com/cloudflightio/autoconfigure-gradle-plugin")
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-                inceptionYear.set("2022")
-                organization {
-                    name.set("Cloudflight GmbH")
-                    url.set("https://cloudflight.io")
-                }
-                developers {
-                    developer {
-                        id.set("cgrabmann")
-                        name.set("Clemens Grabmann")
-                        email.set("clemens.grabmann@cloudflight.io")
-                    }
-                }
-                scm {
-                    connection.set("scm:ggit@github.com:cloudflightio/autoconfigure-gradle-plugin.git")
-                    developerConnection.set("scm:git@github.com:cloudflightio/autoconfigure-gradle-plugin.git")
-                    url.set("https://github.com/cloudflightio/autoconfigure-gradle-plugin")
-                }
-            }
-        }
-    }
-}
-
-nexusPublishing {
-    repositories {
-        sonatype {  //only for users registered in Sonatype after 24 Feb 2021
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-            username.set(System.getenv("MAVEN_USERNAME"))
-            password.set(System.getenv("MAVEN_PASSWORD"))
-        }
-    }
-}
-
-signing {
-    setRequired {
-        System.getenv("PGP_SECRET") != null
-    }
-    useInMemoryPgpKeys(System.getenv("PGP_SECRET"), System.getenv("PGP_PASSPHRASE"))
-    sign(publishing.publications.getByName("maven"))
 }
