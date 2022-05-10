@@ -4,9 +4,9 @@ import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.apply
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin
-import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePluginExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.jvm.toolchain.JavaToolchainSpec
 import org.jetbrains.kotlin.allopen.gradle.AllOpenExtension
 import org.jetbrains.kotlin.allopen.gradle.SpringGradleSubplugin
@@ -55,9 +55,9 @@ class KotlinConfigurePlugin : Plugin<Project> {
         }
 
         // https://kotlinlang.org/docs/gradle.html#gradle-java-toolchains-support
-        val javaConfigureExtension = extensions.getByType(JavaConfigurePluginExtension::class)
+        val javaPluginExtension = extensions.getByType(JavaPluginExtension::class)
         kotlin.jvmToolchain {
-            (it as JavaToolchainSpec).languageVersion.set(javaConfigureExtension.languageVersion)
+            (it as JavaToolchainSpec).languageVersion.set(javaPluginExtension.toolchain.languageVersion)
         }
 
         project.afterEvaluate {
