@@ -15,6 +15,7 @@ import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.tasks.Jar
 import org.gradle.jvm.toolchain.JavaToolchainService
+import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.slf4j.LoggerFactory
 
 private const val GRADLE_VERSION = "Gradle-Version"
@@ -26,6 +27,7 @@ private const val TESTNG_ARTIFACT_GROUP = "org.testng"
 class JavaConfigurePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.apply(JavaLibraryPlugin::class)
+        project.plugins.apply(JacocoPlugin::class)
 
         val gradle = project.gradle
         val extensions = project.extensions
