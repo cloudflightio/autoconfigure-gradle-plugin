@@ -53,16 +53,6 @@ You can provide some configuration to this plugin by adding the following block 
 your `build.gradle.kts`:
 
 ````kotlin
-configure<JavaConfigurePluginExtension> {
-    languageVersion.set(JavaLanguageVersion.of(11))
-    vendorName.set("Cloudflight")
-    applicationBuild.set(false)
-    encoding.set("UTF-8")
-}
-````
-
-or if you prefer the Groovy Version in `build.gradle`:
-````groovy
 javaConfigure {
     languageVersion.set(JavaLanguageVersion.of(11))
     vendorName.set("Cloudflight")
@@ -70,7 +60,6 @@ javaConfigure {
     encoding.set("UTF-8")
 }
 ````
-
 
 The usage of those properties will be explained in the sections below:
 
@@ -134,13 +123,6 @@ You can provide some configuration to this plugin by adding the following block 
 your `build.gradle.kts`:
 
 ````kotlin
-configure<KotlinConfigurePluginExtension> {
-    kotlinVersion.set("1.6.10")
-}
-````
-
-or if you prefer the Groovy Version in `build.gradle`:
-````groovy
 kotlinConfigure {
     kotlinVersion.set("1.6.10")
 }
@@ -165,14 +147,14 @@ In multi-module projects, each of the above mentioned plugins can be configured 
 but you can also use the `autoConfigure` extension of this plugin to set defaults for all submodules without
 iterating through all modules by yourself.
 
-To achieve that, add the following block to your root module `build.gradle` in a multi-module project:
+To achieve that, add the following block to your root module `build.gradle.kts` in a multi-module project:
 
-````groovy
+````kotlin
 autoConfigure {
     java {
-        languageVersion = JavaLanguageVersion.of(17)
-        encoding = "UTF-16"
-        vendorName = "My cool company"
+        languageVersion.set(JavaLanguageVersion.of(17))
+        encoding.set("UTF-16")
+        vendorName.set("My cool company")
     }
 }
 ````
