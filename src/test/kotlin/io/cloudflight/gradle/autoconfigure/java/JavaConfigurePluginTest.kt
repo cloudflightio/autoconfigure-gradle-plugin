@@ -23,7 +23,8 @@ data class TestOptions(
     val implementationVendor: String,
     val inferModulePath: Boolean,
     val gradleVersion: String? = null,
-    val checkConfigurationInTestOutput: Boolean = true
+    val checkConfigurationInTestOutput: Boolean = true,
+    val classpath: String = ""
 )
 
 class JavaConfigurePluginTest {
@@ -71,7 +72,7 @@ class JavaConfigurePluginTest {
         val manifestPath = fixtureDir.resolve("build/tmp/jar/MANIFEST.MF")
         val manifest = Manifest(manifestPath.inputStream()).mainAttributes
         assertThat(manifest)
-            .containsEntry(Name.CLASS_PATH, "")
+            .containsEntry(Name.CLASS_PATH, options.classpath)
             .containsEntry(Name.IMPLEMENTATION_VENDOR, options.implementationVendor)
             .containsEntry(Name.IMPLEMENTATION_TITLE, fixtureName)
             .containsEntry(Name.IMPLEMENTATION_VERSION, "1.0.0")
@@ -91,6 +92,19 @@ class JavaConfigurePluginTest {
                         createsSourceJar = true,
                         implementationVendor = "Cloudflight XYZ",
                         inferModulePath = true
+                    )
+                ),
+                arguments(
+                    TestOptions(
+                        fixtureName = "single-java-module-constraints",
+                        languageVersion = 11,
+                        encoding = "UTF-8",
+                        testPlatformMessage = "Enabled Junit5 as test platform",
+                        createsSourceJar = true,
+                        implementationVendor = "",
+                        inferModulePath = true,
+                        checkConfigurationInTestOutput = false,
+                        classpath = "commons-io-2.8.0.jar"
                     )
                 ),
                 arguments(

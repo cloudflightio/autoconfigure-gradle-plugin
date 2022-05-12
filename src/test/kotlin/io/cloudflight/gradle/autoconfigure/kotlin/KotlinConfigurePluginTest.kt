@@ -28,13 +28,6 @@ data class TestOptions(
 
 class KotlinConfigurePluginTest {
 
-    private fun Int.toJavaVersion(): String {
-        return if (this == 8) {
-            "1.8"
-        } else {
-            this.toString()
-        }
-    }
 
     @ParameterizedTest
     @MethodSource("singleKotlinModuleArguments")
@@ -76,6 +69,30 @@ class KotlinConfigurePluginTest {
                 arguments(
                     TestOptions(
                         fixtureName = "single-kotlin-module",
+                        languageVersion = 8,
+                        encoding = "UTF-8",
+                        testPlatformMessage = "Enabled Junit5 as test platform",
+                        createsSourceJar = true,
+                        implementationVendor = "Cloudflight XYZ",
+                        inferModulePath = true,
+                        kotlinVersion = currentKotlinVersion
+                    )
+                ),
+                arguments(
+                    TestOptions(
+                        fixtureName = "single-kotlin-module-constraints",
+                        languageVersion = 8,
+                        encoding = "UTF-8",
+                        testPlatformMessage = "Enabled Junit5 as test platform",
+                        createsSourceJar = true,
+                        implementationVendor = "Cloudflight XYZ",
+                        inferModulePath = true,
+                        kotlinVersion = currentKotlinVersion
+                    )
+                ),
+                arguments(
+                    TestOptions(
+                        fixtureName = "single-kotlin-module-server",
                         languageVersion = 8,
                         encoding = "UTF-8",
                         testPlatformMessage = "Enabled Junit5 as test platform",
