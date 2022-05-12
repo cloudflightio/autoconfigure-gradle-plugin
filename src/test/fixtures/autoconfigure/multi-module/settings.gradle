@@ -2,3 +2,4 @@ rootProject.name = 'multi-module'
 
 include('no-plugin-applied')
 include('java-module')
+include('kotlin-module')

@@ -13,6 +13,7 @@ import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.PluginContainer
+import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 
 class AutoConfigureGradlePlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -24,6 +25,9 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
             encoding.convention(JAVA_ENCODING)
             vendorName.convention(VENDOR_NAME)
             serverProjectSuffix.convention("-server")
+        }
+        with (autoConfigure.kotlin) {
+            kotlinVersion.convention(target.getKotlinPluginVersion())
         }
 
         for (project in target.allprojects) {
