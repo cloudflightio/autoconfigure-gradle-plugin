@@ -1,7 +1,7 @@
 # Gradle AutoConfigure Plugin
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Gradle%20Plugin&metadataUrl=https%3A%2F%2Fplugins.gradle.org%2Fm2%2Fio%2Fcloudflight%2Fgradle%2Fautoconfigure%2Fmaven-metadata.xml)](https://plugins.gradle.org/plugin/io.cloudflight.autoconfigure-gradle)
+![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/io.cloudflight.autoconfigure-gradle?label=Gradle%20Plugin%20Portal)
 
 This plugin is an opinionated approach to configure a Gradle project automatically by convention. 
 It supports to automatically configure various plugins to reduce boilerplate code in Gradle projects.
