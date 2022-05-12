@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    id("io.cloudflight.autoconfigure-gradle") version "0.2.0"
     id("java-gradle-plugin")
     id("maven-publish")
     id("com.gradle.plugin-publish") version "0.18.0"
@@ -11,12 +11,23 @@ if (System.getenv("RELEASE") != "true") {
     version = "$version-SNAPSHOT"
 }
 
+autoConfigure {
+    java {
+        languageVersion.set(JavaLanguageVersion.of(8))
+        vendorName.set("Cloudflight")
+    }
+    kotlin {
+        // we let the plugin itself by dependent on Kotlin 1.5.31 as this is the version currently being used
+        // by the gradle runtime of version 7.4.1
+        kotlinVersion.set("1.5.31")
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation(libs.maven.artifact)
     implementation(libs.kotlin.logging)
 
@@ -36,16 +47,11 @@ tasks.compileTestKotlin.configure {
 }
 
 tasks.test {
-    useJUnitPlatform()
     inputs.dir(layout.projectDirectory.dir("./src/test/fixtures"))
 }
 
 java {
-    withSourcesJar()
     withJavadocJar()
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
-    }
 }
 
 tasks.withType<Test> {
@@ -92,19 +98,6 @@ gradlePlugin {
 }
 
 tasks.withType<Jar>() {
-    manifest {
-        val compiler  = javaToolchains.compilerFor(java.toolchain).get().metadata
-        val createdBy = compiler.javaRuntimeVersion + " (" + compiler.vendor + ")"
-        val vendorName: String by project.extra
-
-        attributes(
-            "Created-By" to createdBy,
-            "Implementation-Vendor" to vendorName,
-            "Implementation-Title" to project.name,
-            "Implementation-Version" to project.version,
-        )
-    }
-
     from(layout.projectDirectory.file("LICENSE"))
     from(layout.projectDirectory.file("NOTICE"))
 }
