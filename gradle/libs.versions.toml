@@ -19,8 +19,5 @@ junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref 
 
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 
-[plugins]
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-
 [bundles]
 testImplementationDependencies = ["junit-api", "junit-params", "assertj-core"]
