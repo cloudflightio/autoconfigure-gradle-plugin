@@ -54,12 +54,6 @@ class KotlinConfigurePlugin : Plugin<Project> {
             )
         }
 
-        // https://kotlinlang.org/docs/gradle.html#gradle-java-toolchains-support
-        val javaPluginExtension = extensions.getByType(JavaPluginExtension::class)
-        kotlin.jvmToolchain {
-            (it as JavaToolchainSpec).languageVersion.set(javaPluginExtension.toolchain.languageVersion)
-        }
-
         project.afterEvaluate {
             val kotlinVersion = kotlinConfigureExtension.kotlinVersion.get()
             val kotlinMajorMinor = kotlinVersion.toMajorMinor()
