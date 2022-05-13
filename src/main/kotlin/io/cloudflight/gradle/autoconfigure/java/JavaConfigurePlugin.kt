@@ -6,8 +6,10 @@ import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.tasks.named
 import io.cloudflight.gradle.autoconfigure.extentions.kotlin.collections.contains
+import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.plugins.JavaLibraryPlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
@@ -29,7 +31,6 @@ class JavaConfigurePlugin : Plugin<Project> {
         project.plugins.apply(JavaLibraryPlugin::class)
         project.plugins.apply(JacocoPlugin::class)
 
-        val gradle = project.gradle
         val extensions = project.extensions
         val tasks = project.tasks
 
@@ -47,7 +48,6 @@ class JavaConfigurePlugin : Plugin<Project> {
             val javaPluginExtension = extensions.getByType(JavaPluginExtension::class)
 
             javaPluginExtension.modularity.inferModulePath.set(true)
-
             javaPluginExtension.toolchain.languageVersion.set(javaConfigureExtension.languageVersion)
 
             if (!javaConfigureExtension.applicationBuild.get()) {
@@ -65,22 +65,7 @@ class JavaConfigurePlugin : Plugin<Project> {
             }
 
             val jar = tasks.named(JavaPlugin.JAR_TASK_NAME, Jar::class).get()
-            jar.manifest {
-                val configuration = project.configurations.getByName(JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME)
-                val classpath = configuration.files.joinToString(" ") { it.name }
-                val javaToolChains = project.extensions.getByType(JavaToolchainService::class.java)
-                val compiler  = javaToolChains.compilerFor(javaPluginExtension.toolchain).get().metadata
-                val createdBy = compiler.javaRuntimeVersion + " (" + compiler.vendor + ")"
-
-                it.attributes(
-                    "Class-Path" to classpath,
-                    "Created-By" to createdBy,
-                    "Implementation-Vendor" to javaConfigureExtension.vendorName.get(),
-                    "Implementation-Title" to project.name,
-                    "Implementation-Version" to project.version,
-                    GRADLE_VERSION to gradle.gradleVersion
-                )
-            }
+            jar.doFirst(PopulateManifestAction)
 
             val testTask = tasks.named(JavaPlugin.TEST_TASK_NAME, Test::class)
             testTask.configure {
@@ -108,6 +93,30 @@ class JavaConfigurePlugin : Plugin<Project> {
                     LOG.warn("No testing framework detected in runtime dependencies. No framework enabled automatically")
                 }
             }
+        }
+    }
+
+    private object PopulateManifestAction : Action<Task> {
+        override fun execute(t: Task) {
+            val jar = t as Jar
+            val project = t.project
+            val javaConfigureExtension = project.extensions.getByType(JavaConfigurePluginExtension::class)
+            val javaPluginExtension = project.extensions.getByType(JavaPluginExtension::class)
+            val configuration =
+                project.configurations.getByName(JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME)
+            val classpath = configuration.files.joinToString(" ") { it.name }
+            val javaToolChains = project.extensions.getByType(JavaToolchainService::class.java)
+            val compiler = javaToolChains.compilerFor(javaPluginExtension.toolchain).get().metadata
+            val createdBy = compiler.javaRuntimeVersion + " (" + compiler.vendor + ")"
+
+            jar.manifest.attributes(
+                "Class-Path" to classpath,
+                "Created-By" to createdBy,
+                "Implementation-Vendor" to javaConfigureExtension.vendorName.get(),
+                "Implementation-Title" to project.name,
+                "Implementation-Version" to project.version,
+                GRADLE_VERSION to project.gradle.gradleVersion
+            )
         }
     }
 
