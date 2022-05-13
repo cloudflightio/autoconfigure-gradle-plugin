@@ -4,6 +4,8 @@ import io.cloudflight.gradle.autoconfigure.test.util.ProjectFixture
 import io.cloudflight.gradle.autoconfigure.test.util.normalizedOutput
 import io.cloudflight.gradle.autoconfigure.test.util.useFixture
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.ThrowingConsumer
+import org.gradle.testkit.runner.BuildResult
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
@@ -55,6 +57,12 @@ class KotlinConfigurePluginTest {
             .containsEntry(Name.IMPLEMENTATION_VERSION, "1.0.0")
 
         assertThat(result.normalizedOutput).contains("--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:${options.kotlinVersion}")
+
+        // validate that Kotlin uses the jdk configured by the java toolchain
+        val jdkHome = result.extractJavaToolchainJdkHome()
+        val kotlinJdkLines = result.normalizedOutput.lines().filter { it.startsWith("[KOTLIN]") }
+        val validateJdkHome = ThrowingConsumer<String> { input -> assertThat(input).contains(jdkHome) }
+        assertThat(kotlinJdkLines).isNotEmpty.allSatisfy(validateJdkHome)
 
         println(result.output)
     }
@@ -117,6 +125,11 @@ class KotlinConfigurePluginTest {
             )
         }
     }
+}
+
+private fun BuildResult.extractJavaToolchainJdkHome(): String {
+    val prefix = "javaToolchain.jdkHome: "
+    return this.normalizedOutput.lines().first { it.startsWith(prefix) }.removePrefix(prefix)
 }
 
 private val KOTLIN_FIXTURE_PATH = Paths.get("kotlin")

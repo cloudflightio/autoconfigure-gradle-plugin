@@ -18,6 +18,7 @@ import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.tasks.Jar
 import org.gradle.jvm.toolchain.JavaToolchainService
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
+import org.jetbrains.kotlin.gradle.plugin.statistics.ReportStatisticsToElasticSearch.user
 import org.slf4j.LoggerFactory
 
 private const val GRADLE_VERSION = "Gradle-Version"
@@ -34,21 +35,26 @@ class JavaConfigurePlugin : Plugin<Project> {
         val extensions = project.extensions
         val tasks = project.tasks
 
-        extensions.create(EXTENSION_NAME, JavaConfigurePluginExtension::class).apply {
+        val javaConfigureExtension = extensions.create(EXTENSION_NAME, JavaConfigurePluginExtension::class).apply {
             languageVersion.convention(JAVA_LANGUAGE_VERSION)
             encoding.convention(JAVA_ENCODING)
             vendorName.convention(VENDOR_NAME)
             applicationBuild.convention(false)
         }
 
+        val javaPluginExtension = extensions.getByType(JavaPluginExtension::class)
+        javaPluginExtension.modularity.inferModulePath.set(true)
+        javaPluginExtension.toolchain.languageVersion.set(javaConfigureExtension.languageVersion)
+
+        tasks.named(JavaPlugin.JAR_TASK_NAME, Jar::class).configure {
+            it.doFirst(PopulateManifestAction)
+        }
+
+        tasks.named(JavaPlugin.TEST_TASK_NAME, Test::class).configure {
+            it.doFirst(ConfigureUnitTestFrameworkAction)
+        }
+
         project.afterEvaluate {
-
-            val javaConfigureExtension = extensions.getByType(JavaConfigurePluginExtension::class)
-
-            val javaPluginExtension = extensions.getByType(JavaPluginExtension::class)
-
-            javaPluginExtension.modularity.inferModulePath.set(true)
-            javaPluginExtension.toolchain.languageVersion.set(javaConfigureExtension.languageVersion)
 
             if (!javaConfigureExtension.applicationBuild.get()) {
                 javaPluginExtension.withSourcesJar()
@@ -63,35 +69,34 @@ class JavaConfigurePlugin : Plugin<Project> {
             compileTest.configure {
                 it.options.encoding = javaConfigureExtension.encoding.get()
             }
+        }
+    }
 
-            val jar = tasks.named(JavaPlugin.JAR_TASK_NAME, Jar::class).get()
-            jar.doFirst(PopulateManifestAction)
+    private object ConfigureUnitTestFrameworkAction : Action<Task> {
+        override fun execute(t: Task) {
+            val test = t as Test
+            val testRuntimeDependencies =
+                t.project.configurations.getByName(JavaPlugin.TEST_RUNTIME_CLASSPATH_CONFIGURATION_NAME)
+            val useJunit =
+                testRuntimeDependencies.allDependencies.contains { dep -> dep.group == JUNIT_4_ARTIFACT_GROUP }
+            val useJunitPlatform =
+                testRuntimeDependencies.allDependencies.contains { dep -> dep.group == JUNIT_PLATFORM_ARTIFACT_GROUP }
+            val useTestNG =
+                testRuntimeDependencies.allDependencies.contains { dep -> dep.group == TESTNG_ARTIFACT_GROUP }
 
-            val testTask = tasks.named(JavaPlugin.TEST_TASK_NAME, Test::class)
-            testTask.configure {
-                val testRuntimeDependencies =
-                    project.configurations.getByName(JavaPlugin.TEST_RUNTIME_CLASSPATH_CONFIGURATION_NAME)
-                val useJunit =
-                    testRuntimeDependencies.allDependencies.contains { dep -> dep.group == JUNIT_4_ARTIFACT_GROUP }
-                val useJunitPlatform =
-                    testRuntimeDependencies.allDependencies.contains { dep -> dep.group == JUNIT_PLATFORM_ARTIFACT_GROUP }
-                val useTestNG =
-                    testRuntimeDependencies.allDependencies.contains { dep -> dep.group == TESTNG_ARTIFACT_GROUP }
-
-                if (arrayOf(useJunit, useJunitPlatform, useTestNG).filter { enabled -> enabled }.size > 1) {
-                    LOG.warn("Multiple testing frameworks detected in runtime dependencies. No framework enabled automatically. junit4: $useJunit, junit5: $useJunitPlatform, testNg: $useTestNG")
-                } else if (useJunit) {
-                    it.useJUnit()
-                    LOG.info("Enabled Junit4 as test platform")
-                } else if (useJunitPlatform) {
-                    it.useJUnitPlatform()
-                    LOG.info("Enabled Junit5 as test platform")
-                } else if (useTestNG) {
-                    it.useTestNG()
-                    LOG.info("Enabled TestNG as test platform")
-                } else {
-                    LOG.warn("No testing framework detected in runtime dependencies. No framework enabled automatically")
-                }
+            if (arrayOf(useJunit, useJunitPlatform, useTestNG).filter { enabled -> enabled }.size > 1) {
+                LOG.warn("Multiple testing frameworks detected in runtime dependencies. No framework enabled automatically. junit4: $useJunit, junit5: $useJunitPlatform, testNg: $useTestNG")
+            } else if (useJunit) {
+                test.useJUnit()
+                LOG.info("Enabled Junit4 as test platform")
+            } else if (useJunitPlatform) {
+                test.useJUnitPlatform()
+                LOG.info("Enabled Junit5 as test platform")
+            } else if (useTestNG) {
+                test.useTestNG()
+                LOG.info("Enabled TestNG as test platform")
+            } else {
+                LOG.warn("No testing framework detected in runtime dependencies. No framework enabled automatically")
             }
         }
     }
