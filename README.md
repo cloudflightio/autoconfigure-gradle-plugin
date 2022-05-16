@@ -13,7 +13,7 @@ by adding the following block to your `build.gradle.kts`:
 
 ````kotlin
 plugins {
-    id("io.cloudflight.autoconfigure-gradle") version "0.2.0"
+    id("io.cloudflight.autoconfigure-gradle") version "0.3.0"
 }
 ````
 
