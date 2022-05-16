@@ -100,6 +100,18 @@ class KotlinConfigurePluginTest {
                 ),
                 arguments(
                     TestOptions(
+                        fixtureName = "single-kotlin-module-kapt",
+                        languageVersion = 11,
+                        encoding = "UTF-8",
+                        testPlatformMessage = "Enabled Junit5 as test platform",
+                        createsSourceJar = true,
+                        implementationVendor = "Cloudflight",
+                        inferModulePath = true,
+                        kotlinVersion = currentKotlinVersion
+                    )
+                ),
+                arguments(
+                    TestOptions(
                         fixtureName = "single-kotlin-module-server",
                         languageVersion = 8,
                         encoding = "UTF-8",

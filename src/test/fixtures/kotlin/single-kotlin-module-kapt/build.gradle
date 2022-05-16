@@ -1,0 +1,35 @@
+plugins {
+    id "io.cloudflight.autoconfigure.kotlin-configure"
+}
+
+repositories {
+    mavenCentral()
+}
+
+description "Cloudflight Gradle Test"
+group "io.cloudflight.gradle"
+version "1.0.0"
+
+javaConfigure {
+    languageVersion = JavaLanguageVersion.of(11)
+    vendorName = "Cloudflight"
+}
+
+dependencies {
+    implementation 'javax.persistence:javax.persistence-api:2.2'
+    implementation 'com.querydsl:querydsl-jpa:5.0.0'
+
+    kapt 'com.querydsl:querydsl-apt:5.0.0:jpa'
+
+    kapt 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.7'
+
+    kapt 'org.springframework.boot:spring-boot-configuration-processor:2.6.7'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.6.7'
+}
+
+tasks.compileKotlin.doLast {
+    def compiler = javaToolchains.compilerFor {
+        languageVersion.set(project.javaConfigure.languageVersion)
+    }
+    logger.quiet("javaToolchain.jdkHome: {}", compiler.get().metadata.installationPath.asFile.absolutePath)
+}
