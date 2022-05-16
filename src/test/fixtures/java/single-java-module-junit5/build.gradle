@@ -1,24 +1,27 @@
 plugins {
     id "io.cloudflight.autoconfigure.java-configure"
+    id 'com.adarshr.test-logger' version '3.2.0'
 }
 
 repositories {
     mavenCentral()
 }
 
-description "Cloudflight Gradle Test"
+description "JUnit5 Platform is configured by default"
 group "io.cloudflight.gradle"
 version "1.0.0"
 
-dependencies {
-    testImplementation("junit:junit:4.13")
-    testImplementation("org.testng:testng:7.4.0")
+testlogger {
+    theme 'plain'
+    showSummary true
+    showPassed false
+    showSkipped false
+    showFailed false
 }
 
 tasks.getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME).doLast {
     def javaPluginExtension = project.extensions.getByType(JavaPluginExtension)
-    def inferModulePath = javaPluginExtension.hasProperty("modularity") ? javaPluginExtension.modularity.inferModulePath.get() : false
-    logger.quiet("javaPluginExtension.modularity.inferModulePath: {}", inferModulePath)
+    logger.quiet("javaPluginExtension.modularity.inferModulePath: {}", javaPluginExtension.modularity.inferModulePath.get())
     logger.quiet("javaPluginExtension.sourceCompatibility: {}", javaPluginExtension.sourceCompatibility)
     logger.quiet("javaPluginExtension.targetCompatibility: {}", javaPluginExtension.targetCompatibility)
     logger.quiet("compileJava.options.encoding: {}", options.encoding)
