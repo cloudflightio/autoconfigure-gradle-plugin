@@ -18,10 +18,10 @@ data class TestOptions(
     val fixtureName: String,
     val languageVersion: Int,
     val encoding: String,
-    val testPlatformMessage: String,
     val createsSourceJar: Boolean,
     val implementationVendor: String,
     val inferModulePath: Boolean,
+    val successfulTestCount: Int? = null,
     val gradleVersion: String? = null,
     val checkConfigurationInTestOutput: Boolean = true,
     val classpath: String = ""
@@ -55,7 +55,11 @@ class JavaConfigurePluginTest {
                 """
                 compileTestJava.options.encoding: ${options.encoding}
             """.trimIndent()
-            ).contains(options.testPlatformMessage)
+            )
+        }
+
+        if (options.successfulTestCount != null) {
+            assertThat(result.normalizedOutput).contains("SUCCESS: Executed ${options.successfulTestCount} tests")
         }
 
         val outJarDirPath = fixtureDir.resolve("build/libs")
@@ -88,7 +92,6 @@ class JavaConfigurePluginTest {
                         fixtureName = "single-java-module-library",
                         languageVersion = 8,
                         encoding = "UTF-8",
-                        testPlatformMessage = "Enabled Junit5 as test platform",
                         createsSourceJar = true,
                         implementationVendor = "Cloudflight XYZ",
                         inferModulePath = true
@@ -99,7 +102,6 @@ class JavaConfigurePluginTest {
                         fixtureName = "single-java-module-constraints",
                         languageVersion = 11,
                         encoding = "UTF-8",
-                        testPlatformMessage = "Enabled Junit5 as test platform",
                         createsSourceJar = true,
                         implementationVendor = "",
                         inferModulePath = true,
@@ -112,7 +114,6 @@ class JavaConfigurePluginTest {
                         fixtureName = "single-java-module-default",
                         languageVersion = 11,
                         encoding = "UTF-8",
-                        testPlatformMessage = "Enabled Junit5 as test platform",
                         createsSourceJar = true,
                         implementationVendor = "",
                         inferModulePath = true
@@ -123,7 +124,6 @@ class JavaConfigurePluginTest {
                         fixtureName = "single-java-module-default-kts",
                         languageVersion = 11,
                         encoding = "UTF-8",
-                        testPlatformMessage = "Runs the module with Kotlin DSL",
                         createsSourceJar = true,
                         implementationVendor = "",
                         inferModulePath = true,
@@ -135,7 +135,6 @@ class JavaConfigurePluginTest {
                         fixtureName = "single-java-module-default-kts-configure",
                         languageVersion = 8,
                         encoding = "UTF-8",
-                        testPlatformMessage = "Runs the module with Kotlin DSL",
                         createsSourceJar = true,
                         implementationVendor = "Cloudflight",
                         inferModulePath = true,
@@ -147,7 +146,6 @@ class JavaConfigurePluginTest {
                         fixtureName = "single-java-module-application",
                         languageVersion = 11,
                         encoding = "UTF-8",
-                        testPlatformMessage = "Enabled Junit5 as test platform",
                         createsSourceJar = false,
                         implementationVendor = "Cloudflight Test Vendor",
                         inferModulePath = true
@@ -158,8 +156,19 @@ class JavaConfigurePluginTest {
                         fixtureName = "single-java-module-junit4",
                         languageVersion = 11,
                         encoding = "UTF-8",
-                        testPlatformMessage = "Enabled Junit4 as test platform",
                         createsSourceJar = true,
+                        successfulTestCount = 1,
+                        implementationVendor = "",
+                        inferModulePath = true
+                    )
+                ),
+                arguments(
+                    TestOptions(
+                        fixtureName = "single-java-module-junit5",
+                        languageVersion = 11,
+                        encoding = "UTF-8",
+                        createsSourceJar = true,
+                        successfulTestCount = 1,
                         implementationVendor = "",
                         inferModulePath = true
                     )
@@ -169,34 +178,12 @@ class JavaConfigurePluginTest {
                         fixtureName = "single-java-module-testNG",
                         languageVersion = 11,
                         encoding = "UTF-8",
-                        testPlatformMessage = "Enabled TestNG as test platform",
                         createsSourceJar = true,
+                        successfulTestCount = 1,
                         implementationVendor = "",
                         inferModulePath = true
                     )
                 ),
-                arguments(
-                    TestOptions(
-                        fixtureName = "single-java-module-junit4&testNG",
-                        languageVersion = 11,
-                        encoding = "UTF-8",
-                        testPlatformMessage = "Multiple testing frameworks detected in runtime dependencies.",
-                        createsSourceJar = true,
-                        implementationVendor = "",
-                        inferModulePath = true
-                    )
-                ),
-                arguments(
-                    TestOptions(
-                        fixtureName = "single-java-module-no-test-framework",
-                        languageVersion = 11,
-                        encoding = "UTF-8",
-                        testPlatformMessage = "No testing framework detected in runtime dependencies.",
-                        createsSourceJar = true,
-                        implementationVendor = "",
-                        inferModulePath = true
-                    )
-                )
             )
         }
     }

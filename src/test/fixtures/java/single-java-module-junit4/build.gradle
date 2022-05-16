@@ -1,17 +1,30 @@
 plugins {
     id "io.cloudflight.autoconfigure.java-configure"
+    id 'com.adarshr.test-logger' version '3.2.0'
 }
 
 repositories {
     mavenCentral()
 }
 
-description "Cloudflight Gradle Test"
+description "Unit test platform can get overridden to use JUnit4"
 group "io.cloudflight.gradle"
 version "1.0.0"
 
-dependencies {
-    testImplementation("junit:junit:4.13")
+testlogger {
+    theme 'plain'
+    showSummary true
+    showPassed false
+    showSkipped false
+    showFailed false
+}
+
+testing {
+    suites {
+        test {
+            useJUnit()
+        }
+    }
 }
 
 tasks.getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME).doLast {

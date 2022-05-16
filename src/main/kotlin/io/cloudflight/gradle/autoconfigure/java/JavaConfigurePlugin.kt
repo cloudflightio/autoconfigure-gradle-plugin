@@ -5,7 +5,7 @@ import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.apply
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.tasks.named
-import io.cloudflight.gradle.autoconfigure.extentions.kotlin.collections.contains
+import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.withType
 import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -13,23 +13,21 @@ import org.gradle.api.Task
 import org.gradle.api.plugins.JavaLibraryPlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.plugins.JvmTestSuitePlugin
+import org.gradle.api.plugins.jvm.JvmTestSuite
 import org.gradle.api.tasks.compile.JavaCompile
-import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.tasks.Jar
 import org.gradle.jvm.toolchain.JavaToolchainService
+import org.gradle.testing.base.TestingExtension
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
-import org.jetbrains.kotlin.gradle.plugin.statistics.ReportStatisticsToElasticSearch.user
 import org.slf4j.LoggerFactory
 
 private const val GRADLE_VERSION = "Gradle-Version"
 
-private const val JUNIT_4_ARTIFACT_GROUP = "junit"
-private const val JUNIT_PLATFORM_ARTIFACT_GROUP = "org.junit.jupiter"
-private const val TESTNG_ARTIFACT_GROUP = "org.testng"
-
 class JavaConfigurePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.apply(JavaLibraryPlugin::class)
+        project.plugins.apply(JvmTestSuitePlugin::class)
         project.plugins.apply(JacocoPlugin::class)
 
         val extensions = project.extensions
@@ -50,8 +48,9 @@ class JavaConfigurePlugin : Plugin<Project> {
             it.doFirst(PopulateManifestAction)
         }
 
-        tasks.named(JavaPlugin.TEST_TASK_NAME, Test::class).configure {
-            it.doFirst(ConfigureUnitTestFrameworkAction)
+        val testingExtension = extensions.getByType(TestingExtension::class)
+        testingExtension.suites.withType(JvmTestSuite::class).configureEach {
+            it.useJUnitJupiter()
         }
 
         project.afterEvaluate {
@@ -68,35 +67,6 @@ class JavaConfigurePlugin : Plugin<Project> {
             val compileTest = tasks.named(JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME, JavaCompile::class)
             compileTest.configure {
                 it.options.encoding = javaConfigureExtension.encoding.get()
-            }
-        }
-    }
-
-    private object ConfigureUnitTestFrameworkAction : Action<Task> {
-        override fun execute(t: Task) {
-            val test = t as Test
-            val testRuntimeDependencies =
-                t.project.configurations.getByName(JavaPlugin.TEST_RUNTIME_CLASSPATH_CONFIGURATION_NAME)
-            val useJunit =
-                testRuntimeDependencies.allDependencies.contains { dep -> dep.group == JUNIT_4_ARTIFACT_GROUP }
-            val useJunitPlatform =
-                testRuntimeDependencies.allDependencies.contains { dep -> dep.group == JUNIT_PLATFORM_ARTIFACT_GROUP }
-            val useTestNG =
-                testRuntimeDependencies.allDependencies.contains { dep -> dep.group == TESTNG_ARTIFACT_GROUP }
-
-            if (arrayOf(useJunit, useJunitPlatform, useTestNG).filter { enabled -> enabled }.size > 1) {
-                LOG.warn("Multiple testing frameworks detected in runtime dependencies. No framework enabled automatically. junit4: $useJunit, junit5: $useJunitPlatform, testNg: $useTestNG")
-            } else if (useJunit) {
-                test.useJUnit()
-                LOG.info("Enabled Junit4 as test platform")
-            } else if (useJunitPlatform) {
-                test.useJUnitPlatform()
-                LOG.info("Enabled Junit5 as test platform")
-            } else if (useTestNG) {
-                test.useTestNG()
-                LOG.info("Enabled TestNG as test platform")
-            } else {
-                LOG.warn("No testing framework detected in runtime dependencies. No framework enabled automatically")
             }
         }
     }

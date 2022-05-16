@@ -65,17 +65,23 @@ The encoding will be set automatically to all source sets, the default being UTF
 
 #### Unit-Test Configuration
 
-Based on your `testImplementation` dependencies, we automatically configure
-the `test` section of that module:
+The new [JVM Test Suite Plugin](https://docs.gradle.org/current/userguide/jvm_test_suite_plugin.html) is automatically applied
+and configured with `useJUnitPlatform()`.
 
-| dependency            | automatically applied configuration |
-|-----------------------|-------------------------------------|
-| `junit.*`             | `test { useJUnit() }`               |
-| `org.junit.jupiter.*` | `test { useJUnitPlatform() }`       |
-| `org.testng.*`        | `test { useTestNG() }`              |
+As stated in the official documentation this automatically includes the necessary dependencies with a default version declared by the JVM Test Suite Plugin.
 
-In other words, if you have `org.junit.jupiter:junit-jupiter-engine:5.8.2` on your `testImplemenation`
-classpath, we automatically apply `test { useJUnitPlatform() }` for you.
+To override the used testing framework or use a different version of the JUnit-Jupiter-Platform use:
+```kotlin
+testing {
+    suite {
+        val test by getting(JvmTestSuite::class) {
+            useTestNG()
+            // to declare a version
+            useJUnitPlatform("<version>")
+        }
+    }
+}
+```
 
 #### Jacoco
 
