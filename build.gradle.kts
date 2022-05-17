@@ -25,9 +25,12 @@ autoConfigure {
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
 }
 
 dependencies {
+    implementation(libs.license.plugin)
+
     implementation(libs.maven.artifact)
     implementation(libs.kotlin.logging)
 

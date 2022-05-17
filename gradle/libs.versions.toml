@@ -11,6 +11,8 @@ kotlin-allopen = { module = "org.jetbrains.kotlin:kotlin-allopen", version.ref =
 kotlin-gradleplugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-noarg = { module = "org.jetbrains.kotlin:kotlin-noarg", version.ref = "kotlin" }
 
+license-plugin = { module = "io.cloudflight.license.gradle:license-gradle-plugin", version = "1.0.3" }
+
 maven-artifact = { module = "org.apache.maven:maven-artifact", version.ref = "maven-artifact" }
 
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jupiter" }
