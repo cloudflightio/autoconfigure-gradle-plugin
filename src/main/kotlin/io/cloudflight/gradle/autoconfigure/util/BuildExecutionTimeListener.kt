@@ -11,6 +11,9 @@ import org.gradle.api.tasks.TaskState
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+/**
+ * TODO find alternative solution that does not use deprecated code as soon as https://github.com/gradle/gradle/issues/20151 is solved
+ */
 class BuildExecutionTimeListener : TaskExecutionListener, BuildListener {
 
     companion object {

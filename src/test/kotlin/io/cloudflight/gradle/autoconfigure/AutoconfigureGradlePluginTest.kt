@@ -63,6 +63,7 @@ class AutoconfigureGradlePluginTest {
 
             assertThat(noPluginAppliedOutput).doesNotContain(JavaConfigurePlugin::class.simpleName)
             assertThat(javaModuleOutput).contains(JavaConfigurePlugin::class.simpleName)
+            assertThat(result.normalizedOutput).contains("BUILD EXECUTION TIMES")
         }
 
     companion object {
