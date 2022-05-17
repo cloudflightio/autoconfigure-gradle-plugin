@@ -48,7 +48,7 @@ internal fun <T> useFixture(
     fixtureBaseDir: Path,
     fixtureName: String,
     gradleVersion: String?,
-    environment: Map<String, String>?= emptyMap(),
+    environment: Map<String, String>? = emptyMap(),
     testWork: ProjectFixture.() -> T
 ): T {
     val fixture = ProjectFixture(fixtureBaseDir, fixtureName, gradleVersion, environment)
