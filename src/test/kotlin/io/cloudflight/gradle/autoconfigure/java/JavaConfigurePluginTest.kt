@@ -26,7 +26,7 @@ data class TestOptions(
     val inferModulePath: Boolean,
     val successfulTestCount: Int? = null,
     val gradleVersion: String? = null,
-    val environment:Map<String, String> = emptyMap(),
+    val environment: Map<String, String> = emptyMap(),
     val checkConfigurationInTestOutput: Boolean = true,
     val classpath: String = "",
     val additionalChecks: ((fixtureDir: Path) -> (Unit))? = null
@@ -79,7 +79,8 @@ class JavaConfigurePluginTest {
             assertThat(outJarSourcesPath).doesNotExist()
         }
 
-        val manifestPath = if (options.hasVersionSuffixOnJar) fixtureDir.resolve("build/tmp/jar/MANIFEST.MF") else fixtureDir.resolve("build/tmp/bootJar/MANIFEST.MF")
+        val manifestPath =
+            if (options.hasVersionSuffixOnJar) fixtureDir.resolve("build/tmp/jar/MANIFEST.MF") else fixtureDir.resolve("build/tmp/bootJar/MANIFEST.MF")
         val manifest = Manifest(manifestPath.inputStream()).mainAttributes
         assertThat(manifest)
             .containsEntry(Name.CLASS_PATH, options.classpath)
@@ -220,5 +221,10 @@ class JavaConfigurePluginTest {
 }
 
 private val JAVA_FIXTURE_PATH = Paths.get("java")
-private fun <T : Any> javaFixture(fixtureName: String, gradleVersion: String?, environment:Map<String, String>,testWork: ProjectFixture.() -> T): T =
+private fun <T : Any> javaFixture(
+    fixtureName: String,
+    gradleVersion: String?,
+    environment: Map<String, String>,
+    testWork: ProjectFixture.() -> T
+): T =
     useFixture(JAVA_FIXTURE_PATH, fixtureName, gradleVersion, environment, testWork)
