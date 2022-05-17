@@ -154,7 +154,7 @@ ${allTasks}
         if (map.isEmpty()) {
             return 0
         } else {
-            return map.keys.toSortedSet(StringLengthDescendingComparator).first().length
+            return map.keys.toSortedSet(compareBy { it.length }).first().length
         }
     }
 
