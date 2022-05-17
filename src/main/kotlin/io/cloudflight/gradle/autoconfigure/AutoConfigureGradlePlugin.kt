@@ -9,6 +9,7 @@ import io.cloudflight.gradle.autoconfigure.kotlin.KotlinConfigurePlugin
 import io.cloudflight.gradle.autoconfigure.kotlin.KotlinConfigurePluginExtension
 import io.cloudflight.gradle.autoconfigure.kotlin.isKotlinProject
 import io.cloudflight.gradle.autoconfigure.util.isServerProject
+import io.cloudflight.license.gradle.LicensePlugin
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -51,6 +52,10 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
         if (isKotlinProject(project)) {
             applyJava(plugins, project, autoConfigure)
             applyKotlin(plugins, project, autoConfigure)
+        }
+
+        if (isJavaProject(project) || isKotlinProject(project)) {
+            project.plugins.apply(LicensePlugin::class.java)
         }
     }
 
