@@ -19,6 +19,9 @@ shadow-plugin = { module = "gradle.plugin.com.github.johnrengelman:shadow", vers
 
 maven-artifact = { module = "org.apache.maven:maven-artifact", version.ref = "maven-artifact" }
 
+# IMPORTANT: do not update, see https://github.com/gigaSproule/swagger-gradle-plugin/issues/186
+swagger-gradle-plugin = { module = "com.benjaminsproule:swagger-gradle-plugin", version = "1.0.8" }
+
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jupiter" }
 junit-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "jupiter" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "jupiter" }

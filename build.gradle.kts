@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.spring.boot.plugin)
     implementation(libs.shadow.plugin)
 
+    implementation(libs.swagger.gradle.plugin)
 
     testImplementation(libs.bundles.testImplementationDependencies)
 
@@ -101,6 +102,12 @@ gradlePlugin {
             displayName = "Configure global reports"
             description = "Preconfiguring reports for your build"
             implementationClass = "io.cloudflight.gradle.autoconfigure.report.ReportConfigurePlugin"
+        }
+        create("swagger-api-configure") {
+            id = "io.cloudflight.autoconfigure.swagger-api-configure"
+            displayName = "Configure Swagger Generation"
+            description = "Configure Swagger Generation"
+            implementationClass = "io.cloudflight.gradle.autoconfigure.swagger.SwaggerApiConfigurePlugin"
         }
     }
 }
