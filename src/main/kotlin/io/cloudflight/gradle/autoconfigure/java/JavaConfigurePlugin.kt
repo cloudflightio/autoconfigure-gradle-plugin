@@ -25,7 +25,6 @@ import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.tasks.Jar
 import org.gradle.jvm.toolchain.JavaToolchainService
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
-import org.slf4j.LoggerFactory
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 private const val GRADLE_VERSION = "Gradle-Version"
@@ -102,7 +101,7 @@ class JavaConfigurePlugin : Plugin<Project> {
         }
     }
 
-    private object PopulateManifestAction : Action<Task> {
+    internal object PopulateManifestAction : Action<Task> {
         override fun execute(t: Task) {
             val jar = t as Jar
             val project = t.project
@@ -127,8 +126,6 @@ class JavaConfigurePlugin : Plugin<Project> {
     }
 
     companion object {
-        private val LOG = LoggerFactory.getLogger(JavaConfigurePlugin::class.java)
-
         const val EXTENSION_NAME = "javaConfigure"
     }
 }

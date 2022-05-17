@@ -79,7 +79,7 @@ class JavaConfigurePluginTest {
             assertThat(outJarSourcesPath).doesNotExist()
         }
 
-        val manifestPath = fixtureDir.resolve("build/tmp/jar/MANIFEST.MF")
+        val manifestPath = if (options.hasVersionSuffixOnJar) fixtureDir.resolve("build/tmp/jar/MANIFEST.MF") else fixtureDir.resolve("build/tmp/bootJar/MANIFEST.MF")
         val manifest = Manifest(manifestPath.inputStream()).mainAttributes
         assertThat(manifest)
             .containsEntry(Name.CLASS_PATH, options.classpath)

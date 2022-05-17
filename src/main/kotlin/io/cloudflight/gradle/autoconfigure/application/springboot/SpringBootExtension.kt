@@ -1,5 +1,6 @@
 package io.cloudflight.gradle.autoconfigure.application.springboot
 
+import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 import org.springframework.boot.gradle.dsl.SpringBootExtension
@@ -15,6 +16,7 @@ object SpringBootExtension {
         val boot = project.tasks.getByName(SpringBootPlugin.BOOT_JAR_TASK_NAME) as BootJar
         boot.archiveBaseName.set(project.name)
         boot.archiveFileName.set("${project.name}.jar")
+        boot.doFirst(JavaConfigurePlugin.PopulateManifestAction)
 
         val springBoot = project.extensions.getByType(SpringBootExtension::class.java)
         springBoot.buildInfo()
