@@ -92,8 +92,7 @@ class BuildExecutionTimeListener : TaskExecutionListener, BuildListener {
         modules.append("Grouped by module").append(System.lineSeparator())
         val maxModulePathLength = getMaxKeyLength(timesPerModule)
         addHeader(modules, maxModulePathLength)
-        val timeDescending = compareBy { it.value }.reversed()
-        timesPerModule.entries.sortedWith(timeDescending).forEach {
+        timesPerModule.entries.sortedBy { it.value }.reversed().forEach {
             val modulePath = it.key
             val time = it.value
             addEntry(modules, if (modulePath.isBlank()) "<<root>>" else modulePath, maxModulePathLength, time, sum)
@@ -104,7 +103,7 @@ class BuildExecutionTimeListener : TaskExecutionListener, BuildListener {
         tasks.append("Grouped by task").append(System.lineSeparator())
         val maxTaskNameLength = getMaxKeyLength(timesPerTask)
         addHeader(tasks, maxTaskNameLength)
-        timesPerTask.entries.sortedWith(TimeDescendingComparator).forEach {
+        timesPerTask.entries.sortedBy { it.value }.reversed().forEach {
             val taskName = it.key
             val time = it.value
             addEntry(tasks, taskName, maxTaskNameLength, time, sum)
@@ -156,18 +155,6 @@ ${allTasks}
             return 0
         } else {
             return map.keys.toSortedSet(compareBy { it.length }).first().length
-        }
-    }
-
-    private object StringLengthDescendingComparator : Comparator<String> {
-        override fun compare(o1: String, o2: String): Int {
-            return o2.length - o1.length
-        }
-    }
-
-    private object TimeDescendingComparator : Comparator<Map.Entry<String, Long>> {
-        override fun compare(o1: Map.Entry<String, Long>, o2: Map.Entry<String, Long>): Int {
-            return (o2.value - o1.value).toInt()
         }
     }
 
