@@ -38,6 +38,11 @@ dependencies {
     implementation(libs.kotlin.gradleplugin)
     implementation(libs.kotlin.noarg)
 
+    implementation(libs.git.properties.plugin)
+    implementation(libs.spring.boot.plugin)
+    implementation(libs.shadow.plugin)
+
+
     testImplementation(libs.bundles.testImplementationDependencies)
 
     testRuntimeOnly(libs.junit.engine)

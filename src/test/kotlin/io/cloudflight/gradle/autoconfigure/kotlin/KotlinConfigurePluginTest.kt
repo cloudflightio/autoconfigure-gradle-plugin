@@ -22,6 +22,7 @@ data class TestOptions(
     val encoding: String,
     val testPlatformMessage: String,
     val createsSourceJar: Boolean,
+    val hasVersionSuffixOnJar: Boolean = true,
     val implementationVendor: String,
     val inferModulePath: Boolean,
     val gradleVersion: String? = null,
@@ -39,12 +40,15 @@ class KotlinConfigurePluginTest {
         val result = run("clean", "build", "dependencies", "--configuration", "runtimeClasspath")
 
         val outJarDirPath = fixtureDir.resolve("build/libs")
-        val outJarLibPath = outJarDirPath.resolve("$fixtureName-1.0.0.jar")
-        assertThat(outJarLibPath).exists().isRegularFile()
+        val versionSuffix = if (options.hasVersionSuffixOnJar) "-1.0.0" else ""
+        val outJarLibPath = outJarDirPath.resolve("$fixtureName$versionSuffix.jar")
+        assertThat(outJarLibPath).exists().isRegularFile
 
-        val outJarSourcesPath = outJarDirPath.resolve("$fixtureName-1.0.0-sources.jar")
+        assertThat(outJarLibPath).exists().isRegularFile
+
+        val outJarSourcesPath = outJarDirPath.resolve("$fixtureName$versionSuffix-sources.jar")
         if (options.createsSourceJar) {
-            assertThat(outJarSourcesPath).exists().isRegularFile()
+            assertThat(outJarSourcesPath).exists().isRegularFile
         } else {
             assertThat(outJarSourcesPath).doesNotExist()
         }
@@ -116,7 +120,7 @@ class KotlinConfigurePluginTest {
                         languageVersion = 8,
                         encoding = "UTF-8",
                         testPlatformMessage = "Enabled Junit5 as test platform",
-                        createsSourceJar = true,
+                        createsSourceJar = false,
                         implementationVendor = "Cloudflight XYZ",
                         inferModulePath = true,
                         kotlinVersion = currentKotlinVersion
@@ -146,4 +150,4 @@ private fun BuildResult.extractJavaToolchainJdkHome(): String {
 
 private val KOTLIN_FIXTURE_PATH = Paths.get("kotlin")
 private fun <T : Any> javaFixture(fixtureName: String, gradleVersion: String?, testWork: ProjectFixture.() -> T): T =
-    useFixture(KOTLIN_FIXTURE_PATH, fixtureName, gradleVersion, testWork)
+    useFixture(KOTLIN_FIXTURE_PATH, fixtureName, gradleVersion, emptyMap(), testWork)
