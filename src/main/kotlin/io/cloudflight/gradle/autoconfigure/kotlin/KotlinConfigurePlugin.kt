@@ -4,6 +4,7 @@ import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.apply
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin
+import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePluginExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
@@ -52,6 +53,17 @@ class KotlinConfigurePlugin : Plugin<Project> {
             this.implementation(kotlinConfigureExtension.kotlinVersion
                 .map { "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$it" }
             )
+        }
+
+        val javaConfigurePluginExtension = extensions.getByType(JavaConfigurePluginExtension::class)
+        kotlin.jvmToolchain {
+            // see https://youtrack.jetbrains.com/issue/KT-51104/Docs-Build-Tools-Gradle-Setting-toolchain-via-Java-extension-doe
+            // `kotlinOptions.jvmTarget` does not correctly get configured when only the `java { toolchain { languageVersion = ... } }` is applied
+            // we need to explicitly configure it in the `kotlin.jvmToolchain` as well.
+            // But we cannot use the `java.toolchain` for it as it should be the same toolchain object instance for java and kotlin
+            // and therefor would lead to a stackoverflow during property resolution.
+            // see: https://youtrack.jetbrains.com/issue/KT-43095/Add-support-for-Java-Toolchain-to-the-Gradle-plugin#focus=Comments-27-5173612.0-0
+            (it as JavaToolchainSpec).languageVersion.set(javaConfigurePluginExtension.languageVersion)
         }
 
         project.afterEvaluate {
