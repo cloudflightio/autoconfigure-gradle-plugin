@@ -55,4 +55,4 @@ class ReportConfigurePluginTest {
 
 private val REPORT_FIXTURE_PATH = Paths.get("report")
 private fun <T : Any> javaFixture(fixtureName: String, gradleVersion: String?, testWork: ProjectFixture.() -> T): T =
-    useFixture(REPORT_FIXTURE_PATH, fixtureName, gradleVersion, testWork)
+    useFixture(REPORT_FIXTURE_PATH, fixtureName, gradleVersion, emptyMap(), testWork)

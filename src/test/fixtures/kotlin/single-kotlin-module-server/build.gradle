@@ -1,6 +1,5 @@
 plugins {
     id "io.cloudflight.autoconfigure.kotlin-configure"
-    id 'org.springframework.boot' version '2.6.7'
 }
 
 repositories {
@@ -15,6 +14,7 @@ javaConfigure {
     languageVersion = JavaLanguageVersion.of(8)
     encoding = "UTF-8"
     vendorName = "Cloudflight XYZ"
+    applicationBuild = true
 }
 
 dependencies {

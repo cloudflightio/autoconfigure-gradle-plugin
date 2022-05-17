@@ -107,6 +107,7 @@ private val AUTOCONFIGURE_FIXTURE_PATH = Paths.get("autoconfigure")
 private fun <T : Any> autoconfigureFixture(
     fixtureName: String,
     gradleVersion: String? = null,
-    testWork: ProjectFixture.() -> T
+    environment: Map<String, String> = emptyMap(),
+    testWork: ProjectFixture .() -> T
 ): T =
-    useFixture(AUTOCONFIGURE_FIXTURE_PATH, fixtureName, gradleVersion, testWork)
+    useFixture(AUTOCONFIGURE_FIXTURE_PATH, fixtureName, gradleVersion, environment, testWork)

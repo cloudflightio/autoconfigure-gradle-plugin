@@ -47,6 +47,7 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
 
     companion object {
         const val EXTENSION_NAME = "autoConfigure"
+        const val TASK_GROUP = "cloudflight"
     }
 
     private fun applyPlugins(project: Project, autoConfigure: AutoConfigureExtension) {

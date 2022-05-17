@@ -8,7 +8,7 @@ import java.nio.file.Paths
 
 private val FIXTURES_BASE_DIR = Paths.get("src", "test", "fixtures")
 
-internal class ProjectFixture(fixtureBaseDir: Path, val fixtureName: String, val gradleVersion: String? = null) {
+internal class ProjectFixture(fixtureBaseDir: Path, val fixtureName: String, val gradleVersion: String? = null, val environment:Map<String, String>? = null) {
 
     val fixtureDir: Path = FIXTURES_BASE_DIR.resolve(fixtureBaseDir).resolve(fixtureName)
 
@@ -27,9 +27,13 @@ internal class ProjectFixture(fixtureBaseDir: Path, val fixtureName: String, val
     }
 
     fun createRunner(first: String, vararg tasks: String): GradleRunner {
+        val sysEnv = mutableMapOf<String, String>()
+        sysEnv.putAll(System.getenv())
+        environment?.let { sysEnv.putAll(it) }
         var runner = GradleRunner.create()
             .withProjectDir(fixtureDir.toFile())
             .withPluginClasspath()
+            .withEnvironment(sysEnv)
             .withArguments(first, *tasks)
 
         if (gradleVersion != null) {
@@ -44,8 +48,9 @@ internal fun <T> useFixture(
     fixtureBaseDir: Path,
     fixtureName: String,
     gradleVersion: String?,
+    environment: Map<String, String>? = emptyMap(),
     testWork: ProjectFixture.() -> T
 ): T {
-    val fixture = ProjectFixture(fixtureBaseDir, fixtureName, gradleVersion)
+    val fixture = ProjectFixture(fixtureBaseDir, fixtureName, gradleVersion, environment)
     return fixture.testWork()
 }
