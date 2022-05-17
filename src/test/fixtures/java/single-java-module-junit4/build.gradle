@@ -19,12 +19,12 @@ testlogger {
     showFailed false
 }
 
-testing {
-    suites {
-        test {
-            useJUnit()
-        }
-    }
+dependencies {
+    testImplementation("junit:junit:4.13")
+}
+
+tasks.test {
+    useJUnit()
 }
 
 tasks.getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME).doLast {

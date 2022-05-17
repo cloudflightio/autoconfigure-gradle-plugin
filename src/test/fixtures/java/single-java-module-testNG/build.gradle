@@ -19,12 +19,12 @@ testlogger {
     showFailed false
 }
 
-testing {
-    suites {
-        test {
-            useTestNG()
-        }
-    }
+dependencies {
+    testImplementation("org.testng:testng:7.4.0")
+}
+
+tasks.test {
+    useTestNG()
 }
 
 tasks.getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME).doLast {
