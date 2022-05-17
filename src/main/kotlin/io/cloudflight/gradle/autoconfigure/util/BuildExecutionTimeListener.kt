@@ -57,7 +57,7 @@ class BuildExecutionTimeListener : TaskExecutionListener, BuildListener {
 
         val sum = executionTimes.values.sum()
 
-        if (sum == 0.toLong()) {
+        if (sum == 0L) {
             return
         }
 
