@@ -8,7 +8,7 @@ import java.nio.file.Paths
 
 private val FIXTURES_BASE_DIR = Paths.get("src", "test", "fixtures")
 
-internal class ProjectFixture(fixtureBaseDir: Path, val fixtureName: String, val gradleVersion: String? = null, val environment:Map<String, String>?=null) {
+internal class ProjectFixture(fixtureBaseDir: Path, val fixtureName: String, val gradleVersion: String? = null, val environment:Map<String, String>? = null) {
 
     val fixtureDir: Path = FIXTURES_BASE_DIR.resolve(fixtureBaseDir).resolve(fixtureName)
 
