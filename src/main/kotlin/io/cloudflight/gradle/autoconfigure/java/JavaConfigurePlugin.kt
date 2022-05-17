@@ -11,7 +11,6 @@ import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.project.withPlugin
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.tasks.named
-import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.withType
 import io.cloudflight.gradle.autoconfigure.git.GitExtension
 import io.cloudflight.gradle.autoconfigure.util.BuildUtils
 import org.gradle.api.Action
