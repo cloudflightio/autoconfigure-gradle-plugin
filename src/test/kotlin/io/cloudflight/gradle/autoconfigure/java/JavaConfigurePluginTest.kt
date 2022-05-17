@@ -69,7 +69,7 @@ class JavaConfigurePluginTest {
 
         val outJarDirPath = fixtureDir.resolve("build/libs")
         val versionSuffix = if (options.hasVersionSuffixOnJar) "-1.0.0" else ""
-        val outJarLibPath =outJarDirPath.resolve("$fixtureName$versionSuffix.jar")
+        val outJarLibPath = outJarDirPath.resolve("$fixtureName$versionSuffix.jar")
         assertThat(outJarLibPath).exists().isRegularFile
 
         val outJarSourcesPath = outJarDirPath.resolve("$fixtureName$versionSuffix-sources.jar")
