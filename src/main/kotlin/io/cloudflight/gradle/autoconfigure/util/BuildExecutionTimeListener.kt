@@ -92,7 +92,8 @@ class BuildExecutionTimeListener : TaskExecutionListener, BuildListener {
         modules.append("Grouped by module").append(System.lineSeparator())
         val maxModulePathLength = getMaxKeyLength(timesPerModule)
         addHeader(modules, maxModulePathLength)
-        timesPerModule.entries.sortedWith(TimeDescendingComparator).forEach {
+        val timeDescending = compareBy { it.value }.reversed()
+        timesPerModule.entries.sortedWith(timeDescending).forEach {
             val modulePath = it.key
             val time = it.value
             addEntry(modules, if (modulePath.isBlank()) "<<root>>" else modulePath, maxModulePathLength, time, sum)
