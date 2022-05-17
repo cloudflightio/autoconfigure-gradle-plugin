@@ -13,7 +13,7 @@ by adding the following block to your `build.gradle.kts`:
 
 ````kotlin
 plugins {
-    id("io.cloudflight.autoconfigure-gradle") version "0.3.0"
+    id("io.cloudflight.autoconfigure-gradle") version "0.4.0"
 }
 ````
 
@@ -65,21 +65,12 @@ The encoding will be set automatically to all source sets, the default being UTF
 
 #### Unit-Test Configuration
 
-The new [JVM Test Suite Plugin](https://docs.gradle.org/current/userguide/jvm_test_suite_plugin.html) is automatically applied
-and configured with `useJUnitPlatform()`.
+The test task is automatically configured with `useJUnitPlatform()` to use the JUnit5 Platform per default. You do need to add the necessary dependencies yourself as described [here](https://docs.gradle.org/current/userguide/java_testing.html#compiling_and_executing_junit_jupiter_tests).
 
-As stated in the official documentation this automatically includes the necessary dependencies with a default version declared by the JVM Test Suite Plugin.
-
-To override the used testing framework or use a different version of the JUnit-Jupiter-Platform use:
+To override the used testing platform use:
 ```kotlin
-testing {
-    suite {
-        val test by getting(JvmTestSuite::class) {
-            useTestNG()
-            // to declare a version
-            useJUnitPlatform("<version>")
-        }
-    }
+tasks.test {
+    useJUnit()
 }
 ```
 

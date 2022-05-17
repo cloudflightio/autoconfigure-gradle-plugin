@@ -19,6 +19,11 @@ testlogger {
     showFailed false
 }
 
+dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+}
+
 tasks.getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME).doLast {
     def javaPluginExtension = project.extensions.getByType(JavaPluginExtension)
     logger.quiet("javaPluginExtension.modularity.inferModulePath: {}", javaPluginExtension.modularity.inferModulePath.get())

@@ -5,7 +5,6 @@ import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.apply
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.tasks.named
-import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.withType
 import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -13,12 +12,10 @@ import org.gradle.api.Task
 import org.gradle.api.plugins.JavaLibraryPlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
-import org.gradle.api.plugins.JvmTestSuitePlugin
-import org.gradle.api.plugins.jvm.JvmTestSuite
 import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.tasks.Jar
 import org.gradle.jvm.toolchain.JavaToolchainService
-import org.gradle.testing.base.TestingExtension
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.slf4j.LoggerFactory
 
@@ -27,7 +24,6 @@ private const val GRADLE_VERSION = "Gradle-Version"
 class JavaConfigurePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.apply(JavaLibraryPlugin::class)
-        project.plugins.apply(JvmTestSuitePlugin::class)
         project.plugins.apply(JacocoPlugin::class)
 
         val extensions = project.extensions
@@ -48,9 +44,8 @@ class JavaConfigurePlugin : Plugin<Project> {
             it.doFirst(PopulateManifestAction)
         }
 
-        val testingExtension = extensions.getByType(TestingExtension::class)
-        testingExtension.suites.withType(JvmTestSuite::class).configureEach {
-            it.useJUnitJupiter()
+        tasks.named(JavaPlugin.TEST_TASK_NAME, Test::class).configure {
+            it.useJUnitPlatform()
         }
 
         project.afterEvaluate {
