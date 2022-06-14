@@ -121,7 +121,7 @@ class JavaConfigurePluginTest {
                 arguments(
                     TestOptions(
                         fixtureName = "single-java-module-default",
-                        languageVersion = 11,
+                        languageVersion = JAVA_LANGUAGE_VERSION.asInt(),
                         encoding = "UTF-8",
                         createsSourceJar = true,
                         implementationVendor = "",
@@ -131,7 +131,7 @@ class JavaConfigurePluginTest {
                 arguments(
                     TestOptions(
                         fixtureName = "single-java-module-default-kts",
-                        languageVersion = 11,
+                        languageVersion = JAVA_LANGUAGE_VERSION.asInt(),
                         encoding = "UTF-8",
                         createsSourceJar = true,
                         implementationVendor = "",
@@ -185,7 +185,7 @@ class JavaConfigurePluginTest {
                 arguments(
                     TestOptions(
                         fixtureName = "single-java-module-junit4",
-                        languageVersion = 11,
+                        languageVersion = JAVA_LANGUAGE_VERSION.asInt(),
                         encoding = "UTF-8",
                         createsSourceJar = true,
                         successfulTestCount = 1,
@@ -196,7 +196,7 @@ class JavaConfigurePluginTest {
                 arguments(
                     TestOptions(
                         fixtureName = "single-java-module-junit5",
-                        languageVersion = 11,
+                        languageVersion = JAVA_LANGUAGE_VERSION.asInt(),
                         encoding = "UTF-8",
                         createsSourceJar = true,
                         successfulTestCount = 1,
@@ -207,7 +207,7 @@ class JavaConfigurePluginTest {
                 arguments(
                     TestOptions(
                         fixtureName = "single-java-module-testNG",
-                        languageVersion = 11,
+                        languageVersion = JAVA_LANGUAGE_VERSION.asInt(),
                         encoding = "UTF-8",
                         createsSourceJar = true,
                         successfulTestCount = 1,

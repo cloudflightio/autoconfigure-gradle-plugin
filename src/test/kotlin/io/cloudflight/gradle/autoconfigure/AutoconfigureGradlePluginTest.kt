@@ -1,5 +1,6 @@
 package io.cloudflight.gradle.autoconfigure
 
+import io.cloudflight.gradle.autoconfigure.java.JAVA_LANGUAGE_VERSION
 import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin
 import io.cloudflight.gradle.autoconfigure.test.util.ProjectFixture
 import io.cloudflight.gradle.autoconfigure.test.util.normalizedOutput
@@ -73,7 +74,7 @@ class AutoconfigureGradlePluginTest {
                 arguments(
                     TestOptions(
                         fixtureName = "single-java-module-default",
-                        languageVersion = 11,
+                        languageVersion = JAVA_LANGUAGE_VERSION.asInt(),
                         encoding = "UTF-8",
                         vendorName = "",
                         applicationBuild = false
