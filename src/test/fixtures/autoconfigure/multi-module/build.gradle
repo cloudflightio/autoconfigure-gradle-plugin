@@ -7,6 +7,9 @@ group "io.cloudflight.gradle"
 version "1.0.0"
 
 project.allprojects { current ->
+    repositories {
+        mavenCentral()
+    }
     logger.quiet("Project {} start", current.name)
     current.plugins.forEach {
         logger.quiet("Plugin {} applied", it.class.name)

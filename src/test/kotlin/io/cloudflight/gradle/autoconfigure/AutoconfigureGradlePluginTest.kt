@@ -30,11 +30,24 @@ class AutoconfigureGradlePluginTest {
         assertThat(result.normalizedOutput).doesNotContain(JavaConfigurePlugin::class.simpleName)
     }
 
+    @Test
+    fun `build execution times are reported correctly`(): Unit =
+        autoconfigureFixture("multi-module") {
+            val result = runCleanBuild()
+            // it's hard to automatically test formatting of the build execution times, because
+            // the build times change from run to run (and therefore the content of the log), but we
+            // print the output here on purpose to be able to have a look at that manually
+            println(result.normalizedOutput)
+            assertThat(result.normalizedOutput).contains("BUILD EXECUTION TIMES")
+        }
+
     @ParameterizedTest
     @MethodSource("singleJavaModuleArguments")
     fun `JavaConfigurePlugin is applied to a single-module java project and configured options are respected`(options: TestOptions): Unit =
         autoconfigureFixture(options.fixtureName) {
             val result = runTasks()
+
+            println(result.normalizedOutput)
 
             assertThat(result.normalizedOutput).contains(JavaConfigurePlugin::class.simpleName).contains(
                 """
@@ -63,6 +76,7 @@ class AutoconfigureGradlePluginTest {
 
             assertThat(noPluginAppliedOutput).doesNotContain(JavaConfigurePlugin::class.simpleName)
             assertThat(javaModuleOutput).contains(JavaConfigurePlugin::class.simpleName)
+            println(result.normalizedOutput)
             assertThat(result.normalizedOutput).contains("BUILD EXECUTION TIMES")
         }
 

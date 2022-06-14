@@ -10,6 +10,8 @@ import org.gradle.api.logging.Logging
 import org.gradle.api.tasks.TaskState
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.max
+import kotlin.math.roundToInt
 
 /**
  * TODO find alternative solution that does not use deprecated code as soon as https://github.com/gradle/gradle/issues/20151 is solved
@@ -65,23 +67,23 @@ class BuildExecutionTimeListener : TaskExecutionListener, BuildListener {
         allTasks.append("All tasks that take longer than $MIN_TIME_FOR_LOG ms").append(System.lineSeparator())
         val maxTaskPathLength = getMaxKeyLength(executionTimes)
         addHeader(allTasks, maxTaskPathLength)
-        executionTimes.toSortedMap().forEach {
+        executionTimes.entries.sortedByDescending { it.value }.forEach {
             val taskPath = it.key
             val time = it.value
 
             val lastColon = taskPath.lastIndexOf(':')
             val taskName = taskPath.substring(lastColon + 1)
             if (!timesPerTask.containsKey(taskName)) {
-                timesPerTask.put(taskName, time)
+                timesPerTask[taskName] = time
             } else {
-                timesPerTask.put(taskName, time + timesPerTask.getValue(taskName))
+                timesPerTask[taskName] = time + timesPerTask.getValue(taskName)
             }
 
             val module = taskPath.substring(0, lastColon)
             if (!timesPerModule.containsKey(module)) {
-                timesPerModule.put(module, time)
+                timesPerModule[module] = time
             } else {
-                timesPerModule.put(module, time + timesPerModule.getValue(module))
+                timesPerModule[module] = time + timesPerModule.getValue(module)
             }
             if (time >= MIN_TIME_FOR_LOG) {
                 addEntry(allTasks, taskPath, maxTaskPathLength, time, sum)
@@ -95,8 +97,7 @@ class BuildExecutionTimeListener : TaskExecutionListener, BuildListener {
         timesPerModule.entries.sortedBy { it.value }.reversed().forEach {
             val modulePath = it.key
             val time = it.value
-            addEntry(modules, if (modulePath.isBlank()) "<<root>>" else modulePath, maxModulePathLength, time, sum)
-
+            addEntry(modules, modulePath.ifBlank { "<<root>>" }, maxModulePathLength, time, sum)
         }
 
         val tasks = StringBuilder()
@@ -115,9 +116,9 @@ BUILD EXECUTION TIMES
 =====================
 Total: ${format(sum)}
 
-${modules}
-${tasks}
-${allTasks}
+$modules
+$tasks
+$allTasks
 """
         )
     }
@@ -131,13 +132,13 @@ ${allTasks}
     private fun addEntry(builder: StringBuilder, entry: String, maxEntryLength: Int, time: Long, sum: Long) {
         val timeString = createTimeString(time, sum)
         builder.append(entry)
-            .append(" ".repeat(Math.max(1, maxEntryLength + MIN_GAP_BETWEEN_TEXT_AND_TIME - entry.length)))
-            .append(" ".repeat(Math.max(1, MAX_LENGTH_FOR_TIME_STRING - timeString.length)))
+            .append(" ".repeat(max(1, maxEntryLength + MIN_GAP_BETWEEN_TEXT_AND_TIME - entry.length)))
+            .append(" ".repeat(max(1, MAX_LENGTH_FOR_TIME_STRING - timeString.length)))
             .append(timeString).append(System.lineSeparator())
     }
 
     private fun createTimeString(time: Long, sum: Long): String {
-        return time.toString() + " ms" + "  (" + (Math.round(time / sum.toDouble() * 100)).toString()
+        return "$time ms  (" + ((time / sum.toDouble() * 100).roundToInt()).toString()
             .padStart(3, ' ') + "%)"
     }
 
@@ -151,10 +152,10 @@ ${allTasks}
     }
 
     private fun getMaxKeyLength(map: Map<String, Long>): Int {
-        if (map.isEmpty()) {
-            return 0
+        return if (map.isEmpty()) {
+            0
         } else {
-            return map.keys.toSortedSet(compareBy { it.length }).first().length
+            map.keys.toSortedSet(compareByDescending { it.length }).first().length
         }
     }
 
