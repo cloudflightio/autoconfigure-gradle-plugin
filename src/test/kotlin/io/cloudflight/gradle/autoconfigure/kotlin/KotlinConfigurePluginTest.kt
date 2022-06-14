@@ -76,7 +76,7 @@ class KotlinConfigurePluginTest {
         @JvmStatic
         fun singleKotlinModuleArguments(): Stream<Arguments> {
             // keep in sync with the kotlin version in libs.versions.toml
-            val currentKotlinVersion = "1.6.21"
+            val currentKotlinVersion = "1.7.0"
             return Stream.of(
                 arguments(
                     TestOptions(

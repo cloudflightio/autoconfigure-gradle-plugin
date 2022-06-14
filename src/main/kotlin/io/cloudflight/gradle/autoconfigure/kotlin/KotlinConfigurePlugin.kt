@@ -7,7 +7,6 @@ import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin
 import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePluginExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.jvm.toolchain.JavaToolchainSpec
 import org.jetbrains.kotlin.allopen.gradle.AllOpenExtension
 import org.jetbrains.kotlin.allopen.gradle.SpringGradleSubplugin
@@ -17,7 +16,6 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.noarg.gradle.KotlinJpaSubplugin
-import org.slf4j.LoggerFactory
 
 class KotlinConfigurePlugin : Plugin<Project> {
     override fun apply(project: Project) {
@@ -80,8 +78,6 @@ class KotlinConfigurePlugin : Plugin<Project> {
     }
 
     companion object {
-        private val LOG = LoggerFactory.getLogger(KotlinConfigurePlugin::class.java)
-
         const val EXTENSION_NAME = "kotlinConfigure"
     }
 
