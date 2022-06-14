@@ -47,7 +47,7 @@ your `build.gradle.kts`:
 
 ````kotlin
 javaConfigure {
-    languageVersion.set(JavaLanguageVersion.of(11))
+    languageVersion.set(JavaLanguageVersion.of(17))
     vendorName.set("Cloudflight")
     applicationBuild.set(false)
     encoding.set("UTF-8")
@@ -59,7 +59,7 @@ The usage of those properties will be explained in the sections below:
 #### Java Compatibility
 
 Based on the `langageVersion` in your `JavaConfigurePluginExtension` we will set the [Java Toolchain](https://docs.gradle.org/current/userguide/toolchains.html)
-for you and also use it in the Manifest, the default being Java 11. 
+for you and also use it in the Manifest, the default being Java 17. 
 
 The encoding will be set automatically to all source sets, the default being UTF-8.
 
