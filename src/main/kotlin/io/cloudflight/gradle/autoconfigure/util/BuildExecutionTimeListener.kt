@@ -155,7 +155,7 @@ $allTasks
         return if (map.isEmpty()) {
             0
         } else {
-            map.keys.toSortedSet(compareByDescending { it.length }).first().length
+            map.keys.sortedByDescending { it.length }.first().length
         }
     }
 
