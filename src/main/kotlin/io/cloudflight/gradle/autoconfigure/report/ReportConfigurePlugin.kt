@@ -16,15 +16,17 @@ open class ReportConfigurePlugin : Plugin<Project> {
 
         if (project.subprojects.isNotEmpty()) {
             val reporting = project.extensions.getByType(ReportingExtension::class.java)
-            reporting.reports.create(REPORT_TASK_NAME, JacocoCoverageReport::class.java) {
-                it.testType.set(TestSuiteType.UNIT_TEST)
-            }
+            if (!reporting.reports.any { it.name == REPORT_TASK_NAME }) {
+                reporting.reports.create(REPORT_TASK_NAME, JacocoCoverageReport::class.java) {
+                    it.testType.set(TestSuiteType.UNIT_TEST)
+                }
 
-            for (subproject in project.subprojects) {
-                project.dependencies.add(
-                    JacocoReportAggregationPlugin.JACOCO_AGGREGATION_CONFIGURATION_NAME,
-                    subproject
-                )
+                for (subproject in project.subprojects) {
+                    project.dependencies.add(
+                        JacocoReportAggregationPlugin.JACOCO_AGGREGATION_CONFIGURATION_NAME,
+                        subproject
+                    )
+                }
             }
         }
     }

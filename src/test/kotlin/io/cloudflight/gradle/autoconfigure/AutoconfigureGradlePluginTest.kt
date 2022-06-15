@@ -66,6 +66,13 @@ class AutoconfigureGradlePluginTest {
             assertThat(result.normalizedOutput).contains("BUILD EXECUTION TIMES")
         }
 
+    @Test
+    fun `in a multi module project also the root project can be a java project`(): Unit =
+        autoconfigureFixture("multi-module-with-root") {
+            val result = runTasks()
+            assertThat(result.normalizedOutput).contains("BUILD EXECUTION TIMES")
+        }
+
     companion object {
         @JvmStatic
         fun singleJavaModuleArguments(): Stream<Arguments> {
