@@ -1,5 +1,5 @@
 plugins {
-    id("io.cloudflight.autoconfigure-gradle") version "0.2.0"
+    id("io.cloudflight.autoconfigure-gradle") version "0.4.0"
     id("java-gradle-plugin")
     id("maven-publish")
     id("com.gradle.plugin-publish") version "0.18.0"
