@@ -1,0 +1,3 @@
+rootProject.name = 'multi-module-with-root-and-plugin-applied'
+
+include('java-module')
