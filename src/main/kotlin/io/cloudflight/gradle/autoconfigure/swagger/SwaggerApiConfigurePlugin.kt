@@ -20,7 +20,6 @@ import org.gradle.api.tasks.SourceSet
 import org.gradle.internal.classloader.MultiParentClassLoader
 import java.io.File
 import java.net.URLClassLoader
-import java.util.stream.StreamSupport
 
 class SwaggerApiConfigurePlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -114,8 +113,7 @@ class SwaggerApiConfigurePlugin : Plugin<Project> {
                     getFilesFromConfiguration(project, JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME),
                     getFilesFromSourceSet(project)
                 )
-                    .stream()
-                    .flatMap { files -> StreamSupport.stream(files.spliterator(), false) }
+                    .flatten()
                     .forEach {
                         val method = classLoader.javaClass.methods.first { it.name == "addURL" }
                         method.invoke(classLoader, it.toURI().toURL())
