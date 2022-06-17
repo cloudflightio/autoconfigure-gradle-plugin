@@ -118,6 +118,8 @@ class SwaggerApiConfigurePlugin : Plugin<Project> {
                         val method = classLoader.javaClass.methods.first { it.name == "addURL" }
                         method.invoke(classLoader, it.toURI().toURL())
                     }
+            } else {
+                throw GradleException("no classLoader could be found for the buildscript of $project")
             }
         }
 
