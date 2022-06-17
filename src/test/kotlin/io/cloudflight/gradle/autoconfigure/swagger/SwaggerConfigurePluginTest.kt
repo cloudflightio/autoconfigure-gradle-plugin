@@ -16,7 +16,7 @@ data class TestOptions(
     val gradleVersion: String? = null,
 )
 
-class KotlinConfigurePluginTest {
+class SwaggerConfigurePluginTest {
 
 
     @ParameterizedTest
