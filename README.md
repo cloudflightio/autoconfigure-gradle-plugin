@@ -130,6 +130,42 @@ you can specify an older version (i.e. 1.5.20), which results in the following b
 * The `apiVersion` and `languageVersion` is set to `1.5`, see [this link](https://kotlinlang.org/docs/gradle.html#attributes-common-to-jvm-and-js) for more details
 * The setting `-Xjsr305=strict` is being added to the Kotlin Compiler options, see [this link](https://kotlinlang.org/docs/java-interop.html#jsr-305-support) for more details
 
+## Node-Plugin
+
+Apply the plugin `io.cloudflight.autoconfigure.node-configure` in order to configure the [Gradle Node Plugin](https://github.com/node-gradle/gradle-node-plugin)
+
+````kotlin
+plugins {
+    id("io.cloudflight.autoconfigure.node-configure")
+}
+````
+
+You can configure this plugin with the `NodeConfigurePluginExtension` as follows:
+
+````kotlin
+nodeConfigure {
+    nodeVersion = "16.15.1"
+    downloadNode = true
+    npm {
+        npmVersion = "6.14.10"
+    }
+}
+````
+
+Tthese values shown here are also the default values, so you can omit them, i.e. if you're fine with this values simply don't configure anything.
+
+You then automatically get the following tasks:
+
+| Task         | Description                                                                                                                                   |
+|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| `clfNpmBuild` | Runs `npm run build`. Automatically being called during compilation.                                                                          |
+| `clfNpmBuildDev` | Runs `npm run build:dev`. Use this target to have live reloading supported.                                                                   |
+| `clfNpmLint` | Runs `npm run lint`. Automatically being called in the check-phase (right after compilation).                                                 |
+| `clfNpmTest` | Runs `npm run test`. This task is automatically being attached to the `test` target, if your `package.json` contains a `test` script.         |
+| `clfNpmUpdateVersion` | Updates the version in your `package.json` to the current value in `build.gradle`. This task is only being called in CI-Servers automatically |
+
+The Node-Configure-Plugin takes care about dependencies between this tasks, as well as inputs and outputs and up-to-date-handling.
+
 
 ## Auto-Configuration
 
