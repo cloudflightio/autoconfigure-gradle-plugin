@@ -34,6 +34,9 @@ class SwaggerApiConfigurePlugin : Plugin<Project> {
             if (swagger.apiSourceExtensions.isEmpty()) {
                 swagger.apiSourceExtensions.add(ApiSourceExtension(target))
             }
+            if (swagger.apiSourceExtensions.size > 1) {
+                throw GradleException("only one apiSource is supported")
+            }
             with(swagger.apiSourceExtensions.first()) {
                 info = InfoExtension(target)
                 info.title = target.name
@@ -52,9 +55,6 @@ class SwaggerApiConfigurePlugin : Plugin<Project> {
             val documentationTask =
                 target.tasks.create("clfGenerateSwaggerDocumentation", GenerateSwaggerDocsTask::class.java)
 
-            if (swagger.apiSourceExtensions.size > 1) {
-                throw GradleException("only one apiSource is supported")
-            }
 
             val extension = swagger.apiSourceExtensions.first()
             val outputs = extension.outputFormats.map {
