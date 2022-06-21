@@ -8,7 +8,12 @@ import java.nio.file.Paths
 
 private val FIXTURES_BASE_DIR = Paths.get("src", "test", "fixtures")
 
-internal class ProjectFixture(fixtureBaseDir: Path, val fixtureName: String, val gradleVersion: String? = null, val environment:Map<String, String>? = null) {
+internal class ProjectFixture(
+    fixtureBaseDir: Path,
+    val fixtureName: String,
+    val gradleVersion: String? = null,
+    val environment: Map<String, String>? = null
+) {
 
     val fixtureDir: Path = FIXTURES_BASE_DIR.resolve(fixtureBaseDir).resolve(fixtureName)
 
@@ -18,15 +23,24 @@ internal class ProjectFixture(fixtureBaseDir: Path, val fixtureName: String, val
 
     fun runTasks() = run("tasks")
 
-    fun run(first: String, vararg tasks: String): BuildResult {
-        val runner = createRunner(first, *tasks, "--stacktrace", "--info", "--rerun-tasks")
+    fun run(first: String, vararg tasks: String, printStackTrace: Boolean = true, forceRerunTasks: Boolean = true): BuildResult {
+        val arguments = mutableListOf(first)
+        arguments.addAll(tasks)
+        if (printStackTrace) {
+            arguments.add("--stacktrace")
+        }
+        arguments.add("--info")
+        if (forceRerunTasks) {
+            arguments.add("--rerun-tasks")
+        }
+        val runner = createRunner(arguments)
         return runner.build().also {
             // do some checks that should be true for each biuld
             assertThat(it.normalizedOutput).doesNotContain("Execution optimizations have been disabled for task")
         }
     }
 
-    fun createRunner(first: String, vararg tasks: String): GradleRunner {
+    fun createRunner(arguments: List<String>): GradleRunner {
         val sysEnv = mutableMapOf<String, String>()
         sysEnv.putAll(System.getenv())
         environment?.let { sysEnv.putAll(it) }
@@ -34,7 +48,7 @@ internal class ProjectFixture(fixtureBaseDir: Path, val fixtureName: String, val
             .withProjectDir(fixtureDir.toFile())
             .withPluginClasspath()
             .withEnvironment(sysEnv)
-            .withArguments(first, *tasks)
+            .withArguments(arguments)
 
         if (gradleVersion != null) {
             runner = runner.withGradleVersion(gradleVersion)

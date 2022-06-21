@@ -42,6 +42,9 @@ dependencies {
     implementation(libs.spring.boot.plugin)
     implementation(libs.shadow.plugin)
 
+    implementation(libs.node.plugin)
+    implementation(libs.json.wrapper)
+
     implementation(libs.swagger.gradle.plugin)
 
     testImplementation(libs.bundles.testImplementationDependencies)
@@ -96,6 +99,12 @@ gradlePlugin {
             displayName = "Configure Kotlin-Plugin"
             description = "Used to configure a kotlin project."
             implementationClass = "io.cloudflight.gradle.autoconfigure.kotlin.KotlinConfigurePlugin"
+        }
+        create("node-configure") {
+            id = "io.cloudflight.autoconfigure.node-configure"
+            displayName = "Configure the Node-Plugin"
+            description = "Used to configure a node project."
+            implementationClass = "io.cloudflight.gradle.autoconfigure.node.NodeConfigurePlugin"
         }
         create("report-configure") {
             id = "io.cloudflight.autoconfigure.report-configure"

@@ -36,6 +36,11 @@ jobs:
         with:
           arguments: check
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v2
+        if: always()
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
       - name: Publish Artifact
         uses: actions/upload-artifact@v3
         with:

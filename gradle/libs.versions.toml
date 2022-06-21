@@ -16,6 +16,9 @@ license-plugin = { module = "io.cloudflight.license.gradle:license-gradle-plugin
 git-properties-plugin = { module = "com.gorylenko.gradle-git-properties:gradle-git-properties", version = "2.4.1" }
 spring-boot-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "2.6.7" }
 shadow-plugin = { module = "gradle.plugin.com.github.johnrengelman:shadow", version = "7.1.2" }
+node-plugin = { module = "com.github.node-gradle:gradle-node-plugin", version = "3.2.1" }
+
+json-wrapper = {module="io.cloudflight.json:json-wrapper", version="0.3.2"}
 
 maven-artifact = { module = "org.apache.maven:maven-artifact", version.ref = "maven-artifact" }
 

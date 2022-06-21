@@ -174,3 +174,7 @@ gradle-app.setting
 
 .idea/vcs.xml
 .idea/.name
+
+node_modules
+dist
+lint.js
