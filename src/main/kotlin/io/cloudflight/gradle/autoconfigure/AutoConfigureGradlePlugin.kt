@@ -8,6 +8,8 @@ import io.cloudflight.gradle.autoconfigure.report.ReportConfigurePlugin
 import io.cloudflight.gradle.autoconfigure.kotlin.KotlinConfigurePlugin
 import io.cloudflight.gradle.autoconfigure.kotlin.KotlinConfigurePluginExtension
 import io.cloudflight.gradle.autoconfigure.kotlin.isKotlinProject
+import io.cloudflight.gradle.autoconfigure.node.NodeConfigurePlugin
+import io.cloudflight.gradle.autoconfigure.node.isNodeProject
 import io.cloudflight.gradle.autoconfigure.util.BuildExecutionTimeListener
 import io.cloudflight.gradle.autoconfigure.util.isServerProject
 import io.cloudflight.license.gradle.LicensePlugin
@@ -22,7 +24,7 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
         if (target != target.rootProject) throw GradleException("'autoconfigure-gradle' plugin can only be applied to the root project.")
 
         if (!target.gradle.startParameter.isParallelProjectExecutionEnabled) {
-            target.gradle.addListener( BuildExecutionTimeListener())
+            target.gradle.addListener(BuildExecutionTimeListener())
         } else {
             target.logger.info("Parallel builds are enabled. Build Execution Times are not calculated as this is not yet supported")
         }
@@ -34,7 +36,7 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
             vendorName.convention(VENDOR_NAME)
             serverProjectSuffix.convention("-server")
         }
-        with (autoConfigure.kotlin) {
+        with(autoConfigure.kotlin) {
             kotlinVersion.convention(target.getKotlinPluginVersion())
         }
 
@@ -62,7 +64,11 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
             applyKotlin(plugins, project, autoConfigure)
         }
 
-        if (isJavaProject(project) || isKotlinProject(project)) {
+        if (isNodeProject(project)) {
+            applyNode(project)
+        }
+
+        if (isJavaProject(project) || isKotlinProject(project) || isNodeProject(project)) {
             project.plugins.apply(LicensePlugin::class.java)
         }
     }
@@ -94,5 +100,9 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
             vendorName.set(javaConfigure.vendorName)
             applicationBuild.set(javaConfigure.isServerProject(project))
         }
+    }
+
+    private fun applyNode(project: Project) {
+        project.plugins.apply(NodeConfigurePlugin::class)
     }
 }
