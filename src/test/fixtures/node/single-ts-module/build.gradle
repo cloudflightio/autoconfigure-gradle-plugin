@@ -2,6 +2,8 @@ plugins {
     id "io.cloudflight.autoconfigure.node-configure"
 }
 
+version = "1.0.0"
+
 nodeConfigure {
     npm {
         inputFiles = [
