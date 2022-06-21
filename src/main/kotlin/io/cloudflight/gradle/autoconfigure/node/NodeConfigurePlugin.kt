@@ -76,9 +76,14 @@ class NodeConfigurePlugin : Plugin<Project> {
         val updateVersion = project.tasks.create("clfNpmUpdateVersion", NpmTask::class.java) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.npmCommand.set(listOf("version"))
-            t.args.set(listOf(project.version.toString(), "--allow-same-version", "--no-git-tag-version"))
+            t.args.set(project.provider {
+                listOf(
+                    project.version.toString(),
+                    "--allow-same-version",
+                    "--no-git-tag-version"
+                )
+            })
             t.inputs.files(nodeExtension.npm.inputFiles)
-            t.dependsOn(install)
         }
 
         val build = project.tasks.create("clfNpmBuild", NpmTask::class.java) { t ->
