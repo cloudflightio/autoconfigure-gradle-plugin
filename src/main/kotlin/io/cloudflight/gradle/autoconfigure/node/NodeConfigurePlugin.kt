@@ -17,6 +17,9 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.language.base.plugins.LifecycleBasePlugin
 import java.io.File
 
+internal const val NPM_BUILD_TASK_NAME = "clfNpmBuild"
+internal const val NPM_LINT_TASK_NAME = "clfNpmLint"
+
 class NodeConfigurePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.apply(NodePlugin::class)
@@ -59,7 +62,7 @@ class NodeConfigurePlugin : Plugin<Project> {
 
         val install = project.tasks.getByName(NpmInstallTask.NAME) as NpmInstallTask
 
-        val lint = project.tasks.create("clfNpmLint", NpmTask::class.java) { t ->
+        val lint = project.tasks.create(NPM_LINT_TASK_NAME, NpmTask::class.java) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.args.set(listOf("run", "lint"))
             t.dependsOn(install)
@@ -86,7 +89,7 @@ class NodeConfigurePlugin : Plugin<Project> {
             t.inputs.files(nodeExtension.npm.inputFiles)
         }
 
-        val build = project.tasks.create("clfNpmBuild", NpmTask::class.java) { t ->
+        val build = project.tasks.create(NPM_BUILD_TASK_NAME, NpmTask::class.java) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.args.set(listOf("run", "build"))
             t.dependsOn(install)

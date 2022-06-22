@@ -1,0 +1,12 @@
+/**
+ * Overrides of the imported PrimeNG Theme.
+ */
+
+:root {
+  --primary-color: var(--clf-blue);
+  --primary-color-text: var(--clf-white);
+}
+
+.p-button {
+  background-color: var(--primary-color);
+}

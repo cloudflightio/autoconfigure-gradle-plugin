@@ -41,7 +41,7 @@ class SwaggerApiConfigurePlugin : Plugin<Project> {
                 info = InfoExtension(target)
                 info.title = target.name
                 springmvc = true
-                outputFormats = listOf("json", "yaml")
+                outputFormats = listOf("json", YAML)
                 if (swaggerDirectory == null) {
                     swaggerDirectory = target.layout.buildDirectory
                         .dir("generated/resources/openapi").get().asFile.absolutePath
@@ -160,7 +160,7 @@ class SwaggerApiConfigurePlugin : Plugin<Project> {
             task.project.file("$targetDir/${filename}.${format}")
         ) {
             it.name = filename
-            it.classifier = CLASSIFIER
+            it.classifier = SWAGGER_CLASSIFIER
             it.type = format
             it.builtBy(task)
         }
@@ -168,7 +168,7 @@ class SwaggerApiConfigurePlugin : Plugin<Project> {
 
 
     companion object {
-        const val CLASSIFIER = "swagger"
+
 
         private fun getFilesFromSourceSet(project: Project): FileCollection {
             val javaPluginExtension = project.extensions.getByType(JavaPluginExtension::class.java)

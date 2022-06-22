@@ -4,12 +4,15 @@ kotlin-logging = "2.1.21"
 maven-artifact = "3.5.0"
 jupiter = "5.8.1"
 assertj = "3.22.0"
+jackson = "2.13.2.1"
 
 [libraries]
 kotlin-logging = { module = "io.github.microutils:kotlin-logging-jvm", version.ref = "kotlin-logging" }
 kotlin-allopen = { module = "org.jetbrains.kotlin:kotlin-allopen", version.ref = "kotlin" }
 kotlin-gradleplugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-noarg = { module = "org.jetbrains.kotlin:kotlin-noarg", version.ref = "kotlin" }
+
+jackson = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
 
 license-plugin = { module = "io.cloudflight.license.gradle:license-gradle-plugin", version = "1.0.3" }
 
@@ -18,12 +21,21 @@ spring-boot-plugin = { module = "org.springframework.boot:spring-boot-gradle-plu
 shadow-plugin = { module = "gradle.plugin.com.github.johnrengelman:shadow", version = "7.1.2" }
 node-plugin = { module = "com.github.node-gradle:gradle-node-plugin", version = "3.2.1" }
 
-json-wrapper = {module="io.cloudflight.json:json-wrapper", version="0.3.2"}
+json-wrapper = { module = "io.cloudflight.json:json-wrapper", version = "0.3.2" }
 
 maven-artifact = { module = "org.apache.maven:maven-artifact", version.ref = "maven-artifact" }
 
 # IMPORTANT: do not update, see https://github.com/gigaSproule/swagger-gradle-plugin/issues/186
 swagger-gradle-plugin = { module = "com.benjaminsproule:swagger-gradle-plugin", version = "1.0.8" }
+swagger-codegen-plugin = { module = "gradle.plugin.org.hidetake:gradle-swagger-generator-plugin", version = "2.19.1" }
+
+# this could be removed as soon as https://github.com/gigaSproule/swagger-gradle-plugin/issues/186 is fixed
+# because the latest version from the swagger-gradle-plugin already has the 1.6 version of the swagger library on the classpath.
+# we need to manually upgrade here in order to have the library compatible with jackson
+swagger-jersey2-jaxrs = { module = "io.swagger:swagger-jersey2-jaxrs", version = { strictly = "1.6.2" } }
+
+# we need to manually inject this version because of https://github.com/ronmamo/reflections/issues/273 (we would transitively pull 0.9.2 otherwise)
+reflections = { module = "org.reflections:reflections", version = { strictly = "0.9.11" } }
 
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jupiter" }
 junit-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "jupiter" }

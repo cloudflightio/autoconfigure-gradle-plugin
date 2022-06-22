@@ -1,0 +1,12 @@
+[versions]
+clf-platform-spring = "0.9.3"
+
+[libraries]
+
+cloudflight-platform-spring-bom = { module = "io.cloudflight.platform.spring:platform-spring-bom", version.ref = "clf-platform-spring" }
+cloudflight-platform-spring-test-bom = { module = "io.cloudflight.platform.spring:platform-spring-test-bom", version.ref = "clf-platform-spring" }
+
+[bundles]
+
+[plugins]
+

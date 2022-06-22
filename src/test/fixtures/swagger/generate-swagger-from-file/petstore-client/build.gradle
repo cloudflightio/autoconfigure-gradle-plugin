@@ -1,0 +1,39 @@
+plugins {
+    id "io.cloudflight.autoconfigure.swagger-codegen-configure"
+    id 'java'
+}
+
+dependencies {
+    swaggerApi project(':petstore-api')
+
+    implementation('org.springframework:spring-web:5.2.0.RELEASE')
+    implementation('javax.servlet:javax.servlet-api:4.0.1')
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.13.2.1')
+    implementation('javax.validation:validation-api:2.0.1.Final')
+
+    implementation('io.springfox:springfox-swagger2:2.9.2')
+
+    swaggerCodegen('io.swagger:swagger-codegen-cli:2.3.1')
+}
+
+swaggerSources {
+    'petstore-api' {
+        code {
+            language = "java"
+            library = "resttemplate"
+            components = [
+                    apis           : true,
+                    supportingFiles: true,
+                    models         : true,
+                    apiTests       : false
+            ]
+            additionalProperties = [
+                    'invokerPackage': 'io.cloudflight.petstore.client',
+                    'apiPackage'    : "io.cloudflight.petstore.client",
+                    'modelPackage'  : "io.cloudflight.petstore.model",
+            ]
+        }
+    }
+}
+
+

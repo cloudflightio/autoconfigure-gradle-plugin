@@ -1,0 +1,7 @@
+<div class="navbar-container flex justify-content-between align-items-center p-3 bg-primary">
+    <span class="font-bold">Kotlin-Springboot-Angular Skeleton</span>
+    <div class="flex align-items-center">
+        <span class="mr-3">{{currentUser?.name}}</span>
+        <button pRipple pButton (click)="logout()" class="p-button-danger">{{'logout' | translate}}</button>
+    </div>
+</div>

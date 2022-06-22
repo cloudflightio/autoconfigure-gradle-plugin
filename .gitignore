@@ -178,3 +178,6 @@ gradle-app.setting
 node_modules
 dist
 lint.js
+
+.angular
+coverage

@@ -46,10 +46,17 @@ dependencies {
     implementation(libs.json.wrapper)
 
     implementation(libs.swagger.gradle.plugin)
+    implementation(libs.swagger.codegen.plugin)
 
     testImplementation(libs.bundles.testImplementationDependencies)
 
     testRuntimeOnly(libs.junit.engine)
+
+    constraints {
+        api(libs.jackson)
+        api(libs.swagger.jersey2.jaxrs)
+        api(libs.reflections)
+    }
 }
 
 tasks.compileTestKotlin.configure {
@@ -114,9 +121,15 @@ gradlePlugin {
         }
         create("swagger-api-configure") {
             id = "io.cloudflight.autoconfigure.swagger-api-configure"
-            displayName = "Configure Swagger Generation"
-            description = "Configure Swagger Generation"
+            displayName = "Configure Swagger API Generation"
+            description = "Configure Swagger API Generation"
             implementationClass = "io.cloudflight.gradle.autoconfigure.swagger.SwaggerApiConfigurePlugin"
+        }
+        create("swagger-codegen-configure") {
+            id = "io.cloudflight.autoconfigure.swagger-codegen-configure"
+            displayName = "Configure Swagger Code Generation"
+            description = "Configure Swagger Code Generation"
+            implementationClass = "io.cloudflight.gradle.autoconfigure.swagger.SwaggerCodegenConfigurePlugin"
         }
     }
 }
