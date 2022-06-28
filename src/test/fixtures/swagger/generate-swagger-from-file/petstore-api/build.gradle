@@ -1,0 +1,7 @@
+apply plugin: 'java'
+
+artifacts.add(JavaPlugin.API_ELEMENTS_CONFIGURATION_NAME, file('petstore-minimal.yaml')) {
+    name project.name
+    classifier 'swagger'
+    type 'yaml'
+}

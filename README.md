@@ -166,6 +166,215 @@ You then automatically get the following tasks:
 
 The Node-Configure-Plugin takes care about dependencies between this tasks, as well as inputs and outputs and up-to-date-handling.
 
+## Swagger Plugin
+
+When it comes to the definition of APIs over HTTP, Swagger/OpenAPI is the defacto-standard nowadays. Code generation is an important part there, and there exist a couple of libraries out there, to generate code from or to OpenAPI specifications.
+
+This plugin preconfigures both the  for API generation [Swagger Gradle Plugin](https://github.com/gigaSproule/swagger-gradle-plugin)
+and the [Swagger Generator Plugin](https://github.com/int128/gradle-swagger-generator-plugin) for code generation. 
+
+While both of them are really powerful and flexible, they all have some downsides:
+
+* They resolve dependencies too early and do not play well with the Java Platform Plugin for central dependency constraints.
+* It’s not easy to configure the plugins in a way to have the task order applied in the correct way (i.e. which task is being dependent on what when it comes to code generation)
+* Their dynamic configuration makes it hard to provide sensible defaults.
+* They are coming with a lot of transitive dependencies, some of them incompatible with important other plugins like the Spring Boot plugin.
+
+With some extra-code within this plugin we managed to find a solution that fullfils all these 
+requirements while keeping the flexibility of the underlying plugins.
+
+In order to support all possibible use cases, there is one important thing to understand: 
+Swagger/OpenAPI specifictions (yaml or json) always need to be in another module than the code that is being generated out of it.
+
+So we always see the whole setup as two steps:
+
+1. Manage your API specifications (either by generating API spcifications from code, or by importing external specifications)
+2. Generate code from Swagger/OpenAPI
+
+
+### Manage your API specifications
+
+#### Generate from code
+
+Our recommended way to work with OpenAPI clients is to write APIs interfaces and DTOs in 
+Java or Kotlin code, annotate them with Spring and OpenAPI annotations and then generate the 
+OpenAPI specification from there, and use that in turn to generate other clients like for Typescript.
+
+The module `skeleton-api` only contains Java/Kotlin interfaces along with their DTOs and all 
+Spring MVC annotations to define the API contract to that server. 
+The according `build.gradle` file looks like that:
+
+````groovy
+plugins {
+    id "io.cloudflight.autoconfigure.swagger-api-configure"
+}
+
+dependencies {
+    implementation 'io.swagger:swagger-annotations'
+    implementation 'org.springframework:spring-web'
+}
+````
+
+By doing this, the build will generate API definitions in JSON and YAML format to the directory `skeleton-api/build/generated-resources/openapi`.
+The task which is doing this, is called `clfGenerateSwaggerDocumentation` and it is triggered 
+automatically before calling the `jar` task.
+
+This task wraps the `GenerateSwaggerDocsTask` of the plugin mentioned above and configures it automatically with those values:
+
+````groovy
+swagger {
+    apiSource {
+        locations = [
+            project.group + '.api',
+            project.group + '.api.dto'
+        ]
+    }
+}
+````
+
+That means, if the groupId of your project (to be set in the root `build.gradle`) 
+is `io.cloudflight.skeleton`, then your API interfaces need to be in the package `io.cloudflight.skeleton.api` (or a subpackage of it) 
+and your DTOs in the package `io.cloudflight.skeleton.api.dto`.
+
+Additionally, the Autoconfigure Gradle Plugin will create an additional maven publication, 
+that means the YAML and JSON files are also being published to your artifact repository like Nexus 
+and you can fetch it from there like JAR files.
+
+
+#### API from file
+
+In case you have to embed an external OpenAPI specification, or for any reason you want to 
+maintain your own OpenAPI specification instead of writing code, you can do that as well.
+
+In order to take part in the advanced dependency resolution that have been implemented 
+within this plugin on top of the official Swagger plugin, you have to put those OpenAPI 
+files into a separate gradle/maven module:
+
+Your module structure might look like that:
+
+````
+externalsystem-api
+  build.gradle
+  myopenapifile.yml
+myproject-server
+  build.gradle
+myproject-ui
+  package.json
+  build.gradle
+````
+
+We are focussing on the module `externalsystem-api` now, the `build.gradle` looks as follows:
+
+````groovy
+apply plugin: 'java'  
+
+artifacts.add(JavaPlugin.API_ELEMENTS_CONFIGURATION_NAME, file('myopenapifile.yml')) {   
+    name project.name
+    classifier 'swagger'
+    type 'yaml' 
+}
+````
+
+* We need to apply the Java plugin manually here, as we don’t have a folder `src/main/java` here. 
+* Refer to your OpenAPI or Swagger configuration file and create a publication. 
+* If you OpenAPI or Swagger configuration file is provided in JSON format, you can alternatively specify json as type here.
+
+That’s it. Your OpenAPI specification (Whereever it comes from) is now registered and can be used later as reference for code generation.
+
+### Generate code from Swagger/OpenAPI
+
+Now that we have defined our API modules, we can use them to generate code from it. To achieve that, simply apply the 
+plugin `io.cloudflight.autoconfigure.swagger-codegen-configure` and create a dependency within the configuration 
+`swaggerApi` to your API module.
+
+This plugin applies the necessary swaggerSources configuration for the [Swagger Generator Plugin](https://github.com/int128/gradle-swagger-generator-plugin) 
+so that you don't have to do anything extra. The minimal configuration is nothing more than that:
+
+````groovy
+plugins {
+    id 'io.cloudflight.autoconfigure.swagger-codegen-configure'
+}
+
+dependencies {
+    swaggerApi project(':api')
+}
+````
+
+Dependending of the layout of the module which applies `io.cloudflight.autoconfigure.swagger-codegen-configure`, code is
+being generated with the following defaults (the rules are evaluated top down, first match is being applied):
+
+
+| Rule                            | `swaggerGenerator`   | `swaggerLibrary` |
+|---------------------------------|----------------------|------------------|
+| The Node plugin is applied      | `typescript-angular` | `null`           |
+| Module name ends with `-client` | `spring`             | `spring-cloud`   |
+| Default                         | `spring`             | `spring-boot`    |
+
+Target packages are derived from the project `group`.
+
+In rare occasions the applied defaults do not work, in that case you can simply add or overwrite the 
+missing configuration as you would if you were using the [Swagger Generator Plugin](https://github.com/int128/gradle-swagger-generator-plugin) without the 
+AutoConfigure Plugin:
+
+````groovy
+swaggerSources {
+    'externalsystem-api' { 
+        code {
+            additionalProperties = [
+                'delegatePattern' : 'true'
+            ]
+        }
+    }
+}
+````
+
+Please note that the configuration name (`externalsystem-api` in that case) has to match the name of the referenced module or dependency.
+
+A more complex configuration would be:
+
+````groovy
+swaggerSources {
+    'hub-api-definition' {
+        code {
+            language = "java"
+            library = "resttemplate"
+            components = [apis: true, apiTests: false, supportingFiles: true]
+            additionalProperties = [
+                'invokerPackage': "io.cloudflight.commons.hub",
+                'apiPackage'  : "io.cloudflight.commons.hub.client",
+                'modelPackage'  : "io.cloudflight.commons.hub.dto"
+            ]
+        }
+    }
+}
+````
+
+#### Exchanging the generator CLI
+
+Per default, we are using the module `io.swagger.codegen.v3:swagger-codegen-cli:3.0.34` as code generator library.
+
+There are two ways to override that:
+
+1. override the property `swaggerCodegenCliVersion` in your `build.gradle` to use another version of `io.swagger.codegen.v3:swagger-codegen-cli`. 
+````groovy
+swaggerCodgenConfigure {
+    swaggerCodegenCliVersion = 3.0.30
+}
+````
+2. define your own generator within the `swaggerCodegen` as described in the [official plugin documentation](https://github.com/int128/gradle-swagger-generator-plugin#code-generation).
+
+#### Adding custom templates
+
+You can also define your own artifacts containg mustache templates for code generation, simply add a dependency within the `swaggerTemplate` configuration
+and refer to a JAR that contains the updates mustache files:
+
+````groovy
+dependencies {
+    swaggerApi project(':api')
+
+    swaggerTemplate "<your-jar-with-mustache-templates>"
+}
+````
 
 ## Auto-Configuration
 
@@ -181,6 +390,9 @@ autoConfigure {
         languageVersion.set(JavaLanguageVersion.of(17))
         encoding.set("UTF-16")
         vendorName.set("My cool company")
+    }
+    kotlin {
+        kotlinVersion.set("1.5.31")
     }
 }
 ````
