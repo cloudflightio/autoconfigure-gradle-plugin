@@ -236,7 +236,7 @@ That means, if the groupId of your project (to be set in the root `build.gradle`
 is `io.cloudflight.skeleton`, then your API interfaces need to be in the package `io.cloudflight.skeleton.api` (or a subpackage of it) 
 and your DTOs in the package `io.cloudflight.skeleton.api.dto`.
 
-Additionally, the Cloudflight Gradle Plugin will create an additional maven publication, 
+Additionally, the Autoconfigure Gradle Plugin will create an additional maven publication, 
 that means the YAML and JSON files are also being published to your artifact repository like Nexus 
 and you can fetch it from there like JAR files.
 
