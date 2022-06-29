@@ -65,6 +65,7 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
         }
 
         if (isNodeProject(project)) {
+            applyJava(plugins, project, autoConfigure)
             applyNode(project)
         }
 
