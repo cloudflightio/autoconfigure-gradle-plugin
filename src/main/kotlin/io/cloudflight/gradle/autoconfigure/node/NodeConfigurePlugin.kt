@@ -17,9 +17,6 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.language.base.plugins.LifecycleBasePlugin
 import java.io.File
 
-internal const val NPM_BUILD_TASK_NAME = "clfNpmBuild"
-internal const val NPM_LINT_TASK_NAME = "clfNpmLint"
-
 class NodeConfigurePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.apply(NodePlugin::class)
@@ -129,6 +126,9 @@ class NodeConfigurePlugin : Plugin<Project> {
     }
 
     companion object {
-        const val EXTENSION_NAME = "nodeConfigure"
+        const val NPM_BUILD_TASK_NAME = "clfNpmBuild"
+        const val NPM_LINT_TASK_NAME = "clfNpmLint"
+
+        private const val EXTENSION_NAME = "nodeConfigure"
     }
 }

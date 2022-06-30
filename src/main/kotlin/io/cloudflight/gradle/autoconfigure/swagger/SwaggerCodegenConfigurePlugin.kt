@@ -2,8 +2,8 @@ package io.cloudflight.gradle.autoconfigure.swagger
 
 import com.github.gradle.node.npm.task.NpmTask
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
-import io.cloudflight.gradle.autoconfigure.node.NPM_BUILD_TASK_NAME
-import io.cloudflight.gradle.autoconfigure.node.NPM_LINT_TASK_NAME
+import io.cloudflight.gradle.autoconfigure.node.NodeConfigurePlugin.Companion.NPM_BUILD_TASK_NAME
+import io.cloudflight.gradle.autoconfigure.node.NodeConfigurePlugin.Companion.NPM_LINT_TASK_NAME
 import io.cloudflight.gradle.autoconfigure.node.isNodeProject
 import org.gradle.api.*
 import org.gradle.api.artifacts.Configuration
