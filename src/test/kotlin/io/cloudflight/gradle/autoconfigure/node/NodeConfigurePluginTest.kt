@@ -5,6 +5,7 @@ import io.cloudflight.gradle.autoconfigure.test.util.useFixture
 import io.cloudflight.gradle.autoconfigure.util.EnvironmentUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.language.base.plugins.LifecycleBasePlugin
+import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
@@ -16,7 +17,8 @@ data class TestOptions(
     val fixtureName: String,
     val environment: Map<String, String> = emptyMap(),
     val nodeVersion: String = NODE_VERSION,
-    val tasksThatShouldHaveRun: Set<String> = emptySet()
+    val tasksThatShouldHaveRun: Set<String> = emptySet(),
+    val assertUpToDateRerun: Boolean = true
 )
 
 class NodeConfigurePluginTest {
@@ -35,11 +37,13 @@ class NodeConfigurePluginTest {
             assertThat(map).containsAnyElementsOf(options.tasksThatShouldHaveRun)
         }
 
-        /* TODO check why this does not work on github CI
-        val result2 = run(LifecycleBasePlugin.BUILD_TASK_NAME, forceRerunTasks = false)
-        result2.tasks.forEach {
-            assertThat(it.outcome).`as`("${it.path} is up-to-date").isIn(TaskOutcome.UP_TO_DATE, TaskOutcome.NO_SOURCE)
-        }*/
+        if (options.assertUpToDateRerun) {
+            val result2 = run(LifecycleBasePlugin.BUILD_TASK_NAME, forceRerunTasks = false)
+            result2.tasks.forEach {
+                assertThat(it.outcome).`as`("${it.path} is up-to-date")
+                    .isIn(TaskOutcome.UP_TO_DATE, TaskOutcome.NO_SOURCE)
+            }
+        }
     }
 
     companion object {
@@ -50,14 +54,16 @@ class NodeConfigurePluginTest {
             return Stream.of(
                 arguments(
                     TestOptions(
-                        fixtureName = "single-ts-module"
+                        fixtureName = "single-ts-module",
+                        assertUpToDateRerun = false // TODO check why this does not work on Github CI
                     )
                 ),
                 arguments(
                     TestOptions(
                         fixtureName = "single-ts-module",
                         environment = mapOf(EnvironmentUtils.ENV_DEFAULT_BUILD to true.toString()),
-                        tasksThatShouldHaveRun = setOf("clfNpmUpdateVersion")
+                        tasksThatShouldHaveRun = setOf("clfNpmUpdateVersion"),
+                        assertUpToDateRerun = false
                     )
                 )
             )
