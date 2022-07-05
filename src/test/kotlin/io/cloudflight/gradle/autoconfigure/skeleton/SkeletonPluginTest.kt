@@ -2,12 +2,15 @@ package io.cloudflight.gradle.autoconfigure.skeleton
 
 import io.cloudflight.gradle.autoconfigure.test.util.ProjectFixture
 import io.cloudflight.gradle.autoconfigure.test.util.useFixture
+import org.assertj.core.api.Assertions.assertThat
+import org.gradle.language.base.plugins.LifecycleBasePlugin
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.nio.file.Paths
 import java.util.stream.Stream
+import java.util.zip.ZipFile
 
 data class TestOptions(
     val fixtureName: String,
@@ -16,14 +19,19 @@ data class TestOptions(
 
 class SwaggerConfigurePluginTest {
 
-
     @ParameterizedTest
     @MethodSource("skeletonArguments")
-    fun `the supplied options are used to configure the Swaggerplugin`(
+    fun `the skeleton application is build correctly`(
         options: TestOptions
     ): Unit = swaggerFixture(options.fixtureName) {
-        val result = run("clean", "build")
+        run(LifecycleBasePlugin.CLEAN_TASK_NAME, LifecycleBasePlugin.BUILD_TASK_NAME)
 
+        val uiJar = this.fixtureDir.resolve("skeleton-ui/build/libs/skeleton-ui-1.0.0.jar")
+        assertThat(uiJar).exists()
+
+        val zipFile = ZipFile(uiJar.toFile())
+        assertThat(zipFile.getEntry("META-INF/MANIFEST.MF")).isNotNull
+        assertThat(zipFile.getEntry("static/index.html")).isNotNull
     }
 
     companion object {

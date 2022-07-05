@@ -15,6 +15,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.language.base.plugins.LifecycleBasePlugin
+import org.gradle.language.jvm.tasks.ProcessResources
 import java.io.File
 
 class NodeConfigurePlugin : Plugin<Project> {
@@ -111,6 +112,10 @@ class NodeConfigurePlugin : Plugin<Project> {
         //this prevents running npmBuild each time when a project is started via intellij
         project.tasks.getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME).mustRunAfter(build)
         project.tasks.getByName(JavaPlugin.JAR_TASK_NAME).dependsOn(build)
+
+        // add the output directory to the JAR
+        project.tasks.named(JavaPlugin.PROCESS_RESOURCES_TASK_NAME, ProcessResources::class.java).get()
+            .from(build.outputs)
 
         if (NpmHelper.hasScript("test", project.file(NpmHelper.PACKAGE_JSON))) {
             val npmTest = project.tasks.create("clfNpmTest", NpmTask::class.java) { t ->
