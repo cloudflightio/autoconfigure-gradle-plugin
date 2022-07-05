@@ -17,7 +17,7 @@ data class TestOptions(
     val swaggerFileName: String = fixtureName
 )
 
-class SwaggerConfigurePluginTest {
+class SkeletonPluginTest {
 
     @ParameterizedTest
     @MethodSource("skeletonArguments")
@@ -29,9 +29,10 @@ class SwaggerConfigurePluginTest {
         val uiJar = this.fixtureDir.resolve("skeleton-ui/build/libs/skeleton-ui-1.0.0.jar")
         assertThat(uiJar).exists()
 
-        val zipFile = ZipFile(uiJar.toFile())
-        assertThat(zipFile.getEntry("META-INF/MANIFEST.MF")).isNotNull
-        assertThat(zipFile.getEntry("static/index.html")).isNotNull
+        ZipFile(uiJar.toFile()).use { zipFile ->
+            assertThat(zipFile.getEntry("META-INF/MANIFEST.MF")).isNotNull
+            assertThat(zipFile.getEntry("static/index.html")).isNotNull
+        }
     }
 
     companion object {
