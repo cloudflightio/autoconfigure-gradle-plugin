@@ -45,11 +45,12 @@ class KotlinConfigurePlugin : Plugin<Project> {
         kotlin.sourceSets.maybeCreate("main").dependencies {
             // see https://kotlinlang.org/docs/gradle.html#dependency-on-the-standard-library
             // as we allow clients to override the Kotlin Version, (i.e. to 1.5.20), we also want to ensure
-            // that in this case the kotlin-stdtlib-jdk8 from exactly that Kotlin version is being added
-            // to the dependencies. Without those lines, we would always add the stdlib in the version
-            // of the underlying Kotlin Gradle Plugin (1.6.20 at the time of that writing)
-            this.implementation(kotlinConfigureExtension.kotlinVersion
-                .map { "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$it" }
+            // that all kotlin standard libraries from exactly that Kotlin version is being added
+            // to the dependencies. That's why we add the kotlin-bom in exactly our version here.
+            // Without those lines, we would always add the stdlib in the version
+            // of the underlying Kotlin Gradle Plugin (1.7.10 at the time of that writing)
+            this.api(kotlinConfigureExtension.kotlinVersion
+                .map { project.dependencies.platform("org.jetbrains.kotlin:kotlin-bom:$it") }
             )
         }
 
