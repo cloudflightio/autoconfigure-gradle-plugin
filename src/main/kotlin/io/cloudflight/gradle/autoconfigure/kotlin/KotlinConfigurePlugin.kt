@@ -41,7 +41,7 @@ class KotlinConfigurePlugin : Plugin<Project> {
 
         val kotlinConfigureExtension = extensions.getByType(KotlinConfigurePluginExtension::class)
 
-        val kotlin = extensions.getByType(KotlinProjectExtension::class.java)
+        val kotlin = extensions.getByType(KotlinProjectExtension::class)
         kotlin.sourceSets.maybeCreate("main").dependencies {
             // see https://kotlinlang.org/docs/gradle.html#dependency-on-the-standard-library
             // as we allow clients to override the Kotlin Version, (i.e. to 1.5.20), we also want to ensure

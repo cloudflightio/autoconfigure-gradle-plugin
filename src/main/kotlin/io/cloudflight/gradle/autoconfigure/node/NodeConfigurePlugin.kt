@@ -8,7 +8,9 @@ import com.github.gradle.node.npm.task.NpmTask
 import io.cloudflight.gradle.autoconfigure.AutoConfigureGradlePlugin
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.apply
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
+import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin
+import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePluginExtension
 import io.cloudflight.gradle.autoconfigure.util.BuildUtils.isIntegrationBuild
 import io.cloudflight.gradle.autoconfigure.util.EnvironmentUtils.isVerifyBuild
 import org.gradle.api.Plugin
@@ -44,6 +46,10 @@ class NodeConfigurePlugin : Plugin<Project> {
                             project.file("eslintrc.json")
                         )
             )
+        }
+
+        project.extensions.getByType(JavaConfigurePluginExtension::class).apply {
+            createSourceArtifacts.set(false)
         }
 
 
