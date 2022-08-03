@@ -49,8 +49,11 @@ class KotlinConfigurePlugin : Plugin<Project> {
             // to the dependencies. That's why we add the kotlin-bom in exactly our version here.
             // Without those lines, we would always add the stdlib in the version
             // of the underlying Kotlin Gradle Plugin (1.7.10 at the time of that writing)
-            this.api(kotlinConfigureExtension.kotlinVersion
+            this.implementation(kotlinConfigureExtension.kotlinVersion
                 .map { project.dependencies.platform("org.jetbrains.kotlin:kotlin-bom:$it") }
+            )
+            this.implementation(kotlinConfigureExtension.kotlinVersion
+                .map { "org.jetbrains.kotlin:kotlin-stdlib-jdk8" }
             )
         }
 
