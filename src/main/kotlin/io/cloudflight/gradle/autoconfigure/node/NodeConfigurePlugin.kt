@@ -16,8 +16,9 @@ import io.cloudflight.gradle.autoconfigure.util.EnvironmentUtils.isVerifyBuild
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.tasks.SourceSet
 import org.gradle.language.base.plugins.LifecycleBasePlugin
-import org.gradle.language.jvm.tasks.ProcessResources
 import java.io.File
 
 class NodeConfigurePlugin : Plugin<Project> {
@@ -119,9 +120,11 @@ class NodeConfigurePlugin : Plugin<Project> {
         project.tasks.getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME).mustRunAfter(build)
         project.tasks.getByName(JavaPlugin.JAR_TASK_NAME).dependsOn(build)
 
-        // add the output directory to the JAR
-        project.tasks.named(JavaPlugin.PROCESS_RESOURCES_TASK_NAME, ProcessResources::class.java).get()
-            .from(build.outputs)
+        val javaPluginExtension = project.extensions.getByType(JavaPluginExtension::class.java)
+        val sourceSetMain = javaPluginExtension.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
+
+        sourceSetMain.java.srcDirs(NpmHelper.determineSourceDirs(project))
+        sourceSetMain.output.dir(mapOf("builtBy" to build), nodeExtension.npm.destinationDir)
 
         if (NpmHelper.hasScript("test", project.file(NpmHelper.PACKAGE_JSON))) {
             val npmTest = project.tasks.create("clfNpmTest", NpmTask::class.java) { t ->
