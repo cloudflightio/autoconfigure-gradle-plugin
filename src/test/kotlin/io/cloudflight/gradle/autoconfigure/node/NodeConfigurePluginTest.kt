@@ -37,6 +37,10 @@ class NodeConfigurePluginTest {
             assertThat(map).containsAnyElementsOf(options.tasksThatShouldHaveRun)
         }
 
+        val outJarDirPath = fixtureDir.resolve("build/libs")
+        val outJarSourcesPath = outJarDirPath.resolve("$fixtureName-1.0.0-sources.jar")
+        assertThat(outJarSourcesPath).doesNotExist()
+
         if (options.assertUpToDateRerun) {
             val result2 = run(LifecycleBasePlugin.BUILD_TASK_NAME, forceRerunTasks = false)
             result2.tasks.forEach {

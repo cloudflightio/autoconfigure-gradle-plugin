@@ -51,6 +51,7 @@ javaConfigure {
     vendorName.set("Cloudflight")
     applicationBuild.set(false)
     encoding.set("UTF-8")
+    createSourceArtifacts.set(false)
 }
 ````
 
@@ -101,6 +102,11 @@ Gradle-Version: 7.3.3
 * `Implementation-Version` is being set to the current `project.version`
 * `Implementation-Title` is your `project.name`
 * The `Implementation-Vendor` can be set by configuring the `vendorName` in the `JavaConfigurePluginExtension` (see above)
+
+#### Artifacts
+
+Per default the source and javadoc jars will be generated for all builds that have the property `applicationBuild` set to `false`.   
+If you want to change that behavior you can manually set the `createSourceArtifacts` depending on the desired outcome.
 
 ### Kotlin Plugin
 

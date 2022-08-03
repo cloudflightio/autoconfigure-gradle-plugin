@@ -38,6 +38,7 @@ class JavaConfigurePlugin : Plugin<Project> {
             encoding.convention(JAVA_ENCODING)
             vendorName.convention(VENDOR_NAME)
             applicationBuild.convention(false)
+            createSourceArtifacts.convention(applicationBuild.map { !it })
             applicationFramework.convention(ApplicationFramework.SpringBoot)
         }
 
@@ -55,9 +56,12 @@ class JavaConfigurePlugin : Plugin<Project> {
 
         project.afterEvaluate {
 
-            if (!javaConfigureExtension.applicationBuild.get()) {
+            if (javaConfigureExtension.createSourceArtifacts.get()) {
                 javaPluginExtension.withSourcesJar()
-            } else {
+                javaPluginExtension.withJavadocJar()
+            }
+
+            if (javaConfigureExtension.applicationBuild.get()){
                 when (javaConfigureExtension.applicationFramework.get()) {
                     ApplicationFramework.SpringBoot -> {
                         if (BuildUtils.isIntegrationBuild()) {

@@ -73,8 +73,10 @@ class JavaConfigurePluginTest {
         assertThat(outJarLibPath).exists().isRegularFile
 
         val outJarSourcesPath = outJarDirPath.resolve("$fixtureName$versionSuffix-sources.jar")
+        val outJarJavadocPath = outJarDirPath.resolve("$fixtureName$versionSuffix-javadoc.jar")
         if (options.createsSourceJar) {
             assertThat(outJarSourcesPath).exists().isRegularFile
+            assertThat(outJarJavadocPath).exists().isRegularFile
         } else {
             assertThat(outJarSourcesPath).doesNotExist()
         }
@@ -102,6 +104,16 @@ class JavaConfigurePluginTest {
                         languageVersion = 8,
                         encoding = "UTF-8",
                         createsSourceJar = true,
+                        implementationVendor = "Cloudflight XYZ",
+                        inferModulePath = true
+                    )
+                ),
+                arguments(
+                    TestOptions(
+                        fixtureName = "single-java-module-library-no-sources",
+                        languageVersion = 8,
+                        encoding = "UTF-8",
+                        createsSourceJar = false,
                         implementationVendor = "Cloudflight XYZ",
                         inferModulePath = true
                     )
