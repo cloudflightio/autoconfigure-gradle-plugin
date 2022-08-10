@@ -411,3 +411,7 @@ autoConfigure {
 Each property here comes with an equivalent to the above mentioned sub-plugins. If you set a default value
 on the root module here, and override it with a more specific value in the sub-module, then the latter will
 always win.
+
+## Contributing
+
+-   [Contributing to the project](CONTRIBUTING.md)
