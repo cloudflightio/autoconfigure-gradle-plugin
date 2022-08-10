@@ -108,6 +108,11 @@ Gradle-Version: 7.3.3
 Per default the source and javadoc jars will be generated for all builds that have the property `applicationBuild` set to `false`.   
 If you want to change that behavior you can manually set the `createSourceArtifacts` depending on the desired outcome.
 
+### Test Fixtures
+
+If the folder `src/testFixtures` exists, we automatically apply the plugin [`java-test-fixtures`](https://docs.gradle.org/current/userguide/java_testing.html#sec:java_test_fixtures),
+you don't need to apply it on your own.
+
 ### Kotlin Plugin
 
 If the plugin detects either the folder `src/main/kotlin` or `src/test/kotlin` in a module, it automatically

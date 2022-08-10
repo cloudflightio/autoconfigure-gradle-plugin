@@ -227,6 +227,17 @@ class JavaConfigurePluginTest {
                         inferModulePath = true
                     )
                 ),
+                arguments(
+                    TestOptions(
+                        fixtureName = "single-java-module-testfixtures",
+                        languageVersion = JAVA_LANGUAGE_VERSION.asInt(),
+                        encoding = "UTF-8",
+                        createsSourceJar = true,
+                        successfulTestCount = 1,
+                        implementationVendor = "",
+                        inferModulePath = true
+                    )
+                ),
             )
         }
     }
