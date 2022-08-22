@@ -10,7 +10,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.nio.file.Paths
 import java.util.jar.Attributes.Name
 import java.util.jar.Manifest
 import java.util.stream.Stream
@@ -148,6 +147,5 @@ private fun BuildResult.extractJavaToolchainJdkHome(): String {
     return this.normalizedOutput.lines().first { it.startsWith(prefix) }.removePrefix(prefix)
 }
 
-private val KOTLIN_FIXTURE_PATH = Paths.get("kotlin")
 private fun <T : Any> javaFixture(fixtureName: String, gradleVersion: String?, testWork: ProjectFixture.() -> T): T =
-    useFixture(KOTLIN_FIXTURE_PATH, fixtureName, gradleVersion, emptyMap(), testWork)
+    useFixture("kotlin", fixtureName, gradleVersion, emptyMap(), testWork)
