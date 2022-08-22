@@ -59,6 +59,5 @@ class SwaggerConfigurePluginTest {
     }
 }
 
-private val SWAGGER_FIXTURE_PATH = Paths.get("swagger")
 private fun <T : Any> swaggerFixture(fixtureName: String, testWork: ProjectFixture.() -> T): T =
-    useFixture(SWAGGER_FIXTURE_PATH, fixtureName, null, emptyMap(), testWork)
+    useFixture("swagger", fixtureName, null, emptyMap(), testWork)

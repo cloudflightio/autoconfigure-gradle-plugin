@@ -7,7 +7,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.nio.file.Paths
 import java.util.stream.Stream
 
 data class TestOptions(
@@ -53,6 +52,5 @@ class ReportConfigurePluginTest {
     }
 }
 
-private val REPORT_FIXTURE_PATH = Paths.get("report")
 private fun <T : Any> javaFixture(fixtureName: String, gradleVersion: String?, testWork: ProjectFixture.() -> T): T =
-    useFixture(REPORT_FIXTURE_PATH, fixtureName, gradleVersion, emptyMap(), testWork)
+    useFixture("report", fixtureName, gradleVersion, emptyMap(), testWork)

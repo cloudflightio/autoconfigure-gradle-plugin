@@ -10,7 +10,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.nio.file.Paths
 import java.util.stream.Stream
 
 data class TestOptions(
@@ -76,10 +75,9 @@ class NodeConfigurePluginTest {
 }
 
 
-private val NODE_FIXTURE_PATH = Paths.get("node")
 private fun <T : Any> nodeFixture(
     fixtureName: String,
     environment: Map<String, String>,
     testWork: ProjectFixture.() -> T
 ): T =
-    useFixture(NODE_FIXTURE_PATH, fixtureName, null, environment, testWork)
+    useFixture("node", fixtureName, null, environment, testWork)
