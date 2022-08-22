@@ -32,6 +32,9 @@ All the plugin does by itself is scan the module and all sub-modules and apply
 any of the internal plugins mentioned below depending on the layout. Instead of requiring you
 to apply the same default over and over again, we do that automatically for you.
 
+## Samples
+
+A good starting point to understand how this plugin works might be to go through our [samples of real-life applications](samples/samples.md).
 
 ## Plugins
 

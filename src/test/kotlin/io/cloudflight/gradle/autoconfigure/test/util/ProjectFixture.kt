@@ -6,16 +6,12 @@ import org.gradle.testkit.runner.GradleRunner
 import java.nio.file.Path
 import java.nio.file.Paths
 
-private val FIXTURES_BASE_DIR = Paths.get("src", "test", "fixtures")
-
 internal class ProjectFixture(
-    fixtureBaseDir: Path,
+    val fixtureDir: Path,
     val fixtureName: String,
     val gradleVersion: String? = null,
     val environment: Map<String, String>? = null
 ) {
-
-    val fixtureDir: Path = FIXTURES_BASE_DIR.resolve(fixtureBaseDir).resolve(fixtureName)
 
     fun runCleanBuild(): BuildResult = run("clean", "build")
 
@@ -58,6 +54,7 @@ internal class ProjectFixture(
     }
 }
 
+
 internal fun <T> useFixture(
     fixtureBaseDir: Path,
     fixtureName: String,
@@ -67,4 +64,19 @@ internal fun <T> useFixture(
 ): T {
     val fixture = ProjectFixture(fixtureBaseDir, fixtureName, gradleVersion, environment)
     return fixture.testWork()
+}
+
+private val FIXTURES_BASE_DIR = Paths.get("src", "test", "fixtures")
+
+/**
+ * @param fixtureBaseDir the name of the directory inside `src/test/fixtures`
+ */
+internal fun <T> useFixture(
+    fixtureBaseDir: String,
+    fixtureName: String,
+    gradleVersion: String?,
+    environment: Map<String, String>? = emptyMap(),
+    testWork: ProjectFixture.() -> T
+): T {
+    return useFixture(FIXTURES_BASE_DIR.resolve(fixtureBaseDir).resolve(fixtureName), fixtureName, gradleVersion, environment, testWork)
 }
