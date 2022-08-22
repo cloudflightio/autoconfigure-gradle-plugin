@@ -6,6 +6,16 @@
 This plugin is an opinionated approach to configure a Gradle project automatically by convention. 
 It supports to automatically configure various plugins to reduce boilerplate code in Gradle projects.
 
+As an example, instead of applying the Kotlin Plugin manually, the AutoConfigure-Plugin does that automatically for you
+when we detect a folder `src/main/kotlin` inside your module, and we also automatically configure the Kotlin
+plugin with sensible defaults (encoding, JVM runtime).
+
+The idea is similar to Spring Boot, where beans are being auto-generated and auto-configured based on the current classpath.
+
+## Requirements
+
+This plugin requires at least Gradle 7.4 and Java 8.
+
 ## Installation
 
 You can apply that plugin via the [Gradle Plugin Portal](https://plugins.gradle.org/plugin/io.cloudflight.autoconfigure-gradle)
@@ -13,15 +23,9 @@ by adding the following block to your `build.gradle.kts`:
 
 ````kotlin
 plugins {
-    id("io.cloudflight.autoconfigure-gradle") version "0.4.0"
+    id("io.cloudflight.autoconfigure-gradle") version "0.6.5"
 }
 ````
-
-## Requirements
-
-This plugin requires at least Gradle 7.4 and Java 8.
-
-## Main Concept
 
 This plugin is meant to be applied only at the root module of your project - never on sub-modules if you have one.
 All the plugin does by itself is scan the module and all sub-modules and apply
