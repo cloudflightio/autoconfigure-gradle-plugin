@@ -25,17 +25,17 @@ class SwaggerConfigurePluginTest {
     fun `the supplied options are used to configure the Swaggerplugin`(
         options: TestOptions
     ): Unit = swaggerFixture(options.fixtureName) {
-        val result = run("clean", "build")
+        val result = runCleanBuild()
 
-        assertThat(fixtureDir.resolve("build/generated/resources/openapi/${options.swaggerFileName}.json")).exists()
-        assertThat(fixtureDir.resolve("build/generated/resources/openapi/${options.swaggerFileName}.yaml")).exists()
+        assertThat(buildDir().resolve("generated/resources/openapi/${options.swaggerFileName}.json")).exists()
+        assertThat(buildDir().resolve("generated/resources/openapi/${options.swaggerFileName}.yaml")).exists()
     }
 
     @Test
     fun `create client from file`(): Unit = swaggerFixture("generate-swagger-from-file") {
-        val result = run(LifecycleBasePlugin.CLEAN_TASK_NAME, LifecycleBasePlugin.BUILD_TASK_NAME)
+        val result = runCleanBuild()
 
-
+        assertThat(buildDir("petstore-client").resolve("swagger-code-petstore-api/src/main/java/io/cloudflight/petstore/client/ApiClient.java")).exists()
     }
 
     companion object {

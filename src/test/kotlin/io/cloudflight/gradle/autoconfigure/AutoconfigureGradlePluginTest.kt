@@ -11,7 +11,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.nio.file.Paths
 import java.util.stream.Stream
 
 data class TestOptions(
@@ -21,6 +20,8 @@ data class TestOptions(
     val vendorName: String,
     val applicationBuild: Boolean
 )
+
+private const val s = "java-module"
 
 class AutoconfigureGradlePluginTest {
 
@@ -79,6 +80,19 @@ class AutoconfigureGradlePluginTest {
             assertThat(javaModuleOutput).contains(JavaConfigurePlugin::class.simpleName)
             println(result.normalizedOutput)
             assertThat(result.normalizedOutput).contains("BUILD EXECUTION TIMES")
+        }
+
+    @Test
+    fun `in a multi module project the Autoconfigure plugin automatically propagates the root project version to the subprojects if they don't define it themselves`(): Unit =
+        autoconfigureFixture("multi-module") {
+            val result = runCleanBuild()
+            val javaModule = "java-module"
+            val javaModuleJar = this.buildDir(javaModule).resolve("libs/${javaModule}-1.0.0.jar")
+            val kotlinModule = "kotlin-module"
+            val kotlinModuleJar = this.buildDir(kotlinModule).resolve("libs/${kotlinModule}-1.1.0.jar")
+
+            assertThat(javaModuleJar).exists()
+            assertThat(kotlinModuleJar).exists()
         }
 
     @Test

@@ -38,7 +38,7 @@ class KotlinConfigurePluginTest {
     ): Unit = javaFixture(options.fixtureName, options.gradleVersion) {
         val result = run("clean", "build", "dependencies", "--configuration", "runtimeClasspath")
 
-        val outJarDirPath = fixtureDir.resolve("build/libs")
+        val outJarDirPath = buildDir().resolve("libs")
         val versionSuffix = if (options.hasVersionSuffixOnJar) "-1.0.0" else ""
         val outJarLibPath = outJarDirPath.resolve("$fixtureName$versionSuffix.jar")
         assertThat(outJarLibPath).exists().isRegularFile
@@ -52,7 +52,7 @@ class KotlinConfigurePluginTest {
             assertThat(outJarSourcesPath).doesNotExist()
         }
 
-        val manifestPath = fixtureDir.resolve("build/tmp/jar/MANIFEST.MF")
+        val manifestPath = buildDir().resolve("tmp/jar/MANIFEST.MF")
         val manifest = Manifest(manifestPath.inputStream()).mainAttributes
         assertThat(manifest)
             .containsEntry(Name.IMPLEMENTATION_VENDOR, options.implementationVendor)
