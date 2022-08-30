@@ -15,7 +15,7 @@ import java.util.jar.Manifest
 import java.util.stream.Stream
 import kotlin.io.path.inputStream
 
-data class TestOptions(
+internal data class TestOptions(
     val fixtureName: String,
     val languageVersion: Int,
     val encoding: String,
@@ -28,10 +28,10 @@ data class TestOptions(
     val environment: Map<String, String> = emptyMap(),
     val checkConfigurationInTestOutput: Boolean = true,
     val classpath: String = "",
-    val additionalChecks: ((fixtureDir: Path) -> (Unit))? = null
+    val additionalChecks: (ProjectFixture.() -> (Unit))? = null
 )
 
-class JavaConfigurePluginTest {
+internal class JavaConfigurePluginTest {
 
     private fun Int.toJavaVersion(): String {
         return if (this == 8) {
@@ -66,7 +66,7 @@ class JavaConfigurePluginTest {
             assertThat(result.normalizedOutput).contains("SUCCESS: Executed ${options.successfulTestCount} tests")
         }
 
-        val outJarDirPath = fixtureDir.resolve("build/libs")
+        val outJarDirPath = buildDir().resolve("libs")
         val versionSuffix = if (options.hasVersionSuffixOnJar) "-1.0.0" else ""
         val outJarLibPath = outJarDirPath.resolve("$fixtureName$versionSuffix.jar")
         assertThat(outJarLibPath).exists().isRegularFile
@@ -81,7 +81,7 @@ class JavaConfigurePluginTest {
         }
 
         val manifestPath =
-            if (options.hasVersionSuffixOnJar) fixtureDir.resolve("build/tmp/jar/MANIFEST.MF") else fixtureDir.resolve("build/tmp/bootJar/MANIFEST.MF")
+            if (options.hasVersionSuffixOnJar) buildDir().resolve("tmp/jar/MANIFEST.MF") else buildDir().resolve("tmp/bootJar/MANIFEST.MF")
         val manifest = Manifest(manifestPath.inputStream()).mainAttributes
         assertThat(manifest)
             .containsEntry(Name.CLASS_PATH, options.classpath)
@@ -89,7 +89,7 @@ class JavaConfigurePluginTest {
             .containsEntry(Name.IMPLEMENTATION_TITLE, fixtureName)
             .containsEntry(Name.IMPLEMENTATION_VERSION, "1.0.0")
 
-        options.additionalChecks?.invoke(fixtureDir)
+        options.additionalChecks?.invoke(this)
     }
 
     companion object {
@@ -171,9 +171,9 @@ class JavaConfigurePluginTest {
                         implementationVendor = "Cloudflight Test Vendor",
                         inferModulePath = true,
                         environment = mapOf(EnvironmentUtils.ENV_DEFAULT_BUILD to true.toString()),
-                        additionalChecks = { fixtureDir ->
+                        additionalChecks = {
                             val developmentProperties =
-                                fixtureDir.resolve("build/resources/main/development.properties")
+                                buildDir().resolve("resources/main/development.properties")
                             assertThat(developmentProperties).doesNotExist()
                         }
                     )
@@ -186,9 +186,9 @@ class JavaConfigurePluginTest {
                         createsSourceJar = false,
                         implementationVendor = "Cloudflight Test Vendor",
                         inferModulePath = true,
-                        additionalChecks = { fixtureDir ->
+                        additionalChecks = {
                             val developmentProperties =
-                                fixtureDir.resolve("build/resources/main/development.properties")
+                                buildDir().resolve("resources/main/development.properties")
                             assertThat(developmentProperties).exists()
                         }
                     )

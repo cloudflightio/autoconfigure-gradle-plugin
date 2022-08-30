@@ -376,7 +376,7 @@ There are two ways to override that:
 1. override the property `swaggerCodegenCliVersion` in your `build.gradle` to use another version of `io.swagger.codegen.v3:swagger-codegen-cli`. 
 ````groovy
 swaggerCodgenConfigure {
-    swaggerCodegenCliVersion = 3.0.30
+    swaggerCodegenCliVersion = "3.0.30"
 }
 ````
 2. define your own generator within the `swaggerCodegen` as described in the [official plugin documentation](https://github.com/int128/gradle-swagger-generator-plugin#code-generation).
@@ -418,6 +418,16 @@ autoConfigure {
 Each property here comes with an equivalent to the above mentioned sub-plugins. If you set a default value
 on the root module here, and override it with a more specific value in the sub-module, then the latter will
 always win.
+
+### Version and Group
+
+To reduce unnecessary code for setting the version and group of all sub-modules we automatically set the version and group
+of all sub-modules to the values defined for the root-module.   
+If you want to have a different version or group, just define it in the sub-module. Any values defined in the `build.gradle` of a sub-module will not be overridden.
+```kotlin
+version = "1.1.1"
+group = "com.project.module.other.group"
+```
 
 ## Contributing
 
