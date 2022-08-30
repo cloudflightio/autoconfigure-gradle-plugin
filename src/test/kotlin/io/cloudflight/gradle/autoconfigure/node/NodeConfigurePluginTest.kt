@@ -36,7 +36,7 @@ class NodeConfigurePluginTest {
             assertThat(map).containsAnyElementsOf(options.tasksThatShouldHaveRun)
         }
 
-        val outJarDirPath = fixtureDir.resolve("build/libs")
+        val outJarDirPath = buildDir().resolve("libs")
         val outJarSourcesPath = outJarDirPath.resolve("$fixtureName-1.0.0-sources.jar")
         assertThat(outJarSourcesPath).doesNotExist()
 

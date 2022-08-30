@@ -1,6 +1,7 @@
 package io.cloudflight.gradle.autoconfigure.test.util
 
 import org.assertj.core.api.Assertions.assertThat
+import org.gradle.language.base.plugins.LifecycleBasePlugin
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import java.nio.file.Path
@@ -13,9 +14,9 @@ internal class ProjectFixture(
     val environment: Map<String, String>? = null
 ) {
 
-    fun runCleanBuild(): BuildResult = run("clean", "build")
+    fun runCleanBuild(): BuildResult = run(LifecycleBasePlugin.CLEAN_TASK_NAME, LifecycleBasePlugin.BUILD_TASK_NAME)
 
-    fun runBuild(): BuildResult = run("build")
+    fun runBuild(): BuildResult = run(LifecycleBasePlugin.BUILD_TASK_NAME)
 
     fun runTasks() = run("tasks")
 
@@ -52,6 +53,8 @@ internal class ProjectFixture(
 
         return runner
     }
+
+    fun buildDir(subModuleName: String? = null): Path = this.fixtureDir.resolve(subModuleName ?: "").resolve("build")
 }
 
 
