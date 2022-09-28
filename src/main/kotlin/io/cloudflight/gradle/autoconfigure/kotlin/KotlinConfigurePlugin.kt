@@ -53,7 +53,7 @@ class KotlinConfigurePlugin : Plugin<Project> {
                 .map { project.dependencies.platform("org.jetbrains.kotlin:kotlin-bom:$it") }
             )
             this.implementation(kotlinConfigureExtension.kotlinVersion
-                .map { "org.jetbrains.kotlin:kotlin-stdlib-jdk8" }
+                .map { "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$it" }
             )
         }
 
