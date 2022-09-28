@@ -59,7 +59,9 @@ class KotlinConfigurePluginTest {
             .containsEntry(Name.IMPLEMENTATION_TITLE, fixtureName)
             .containsEntry(Name.IMPLEMENTATION_VERSION, "1.0.0")
 
-        assertThat(result.normalizedOutput).contains("--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:${options.kotlinVersion}")
+        println(result.normalizedOutput)
+
+        assertThat(result.normalizedOutput).contains("--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:${options.kotlinVersion}\n")
 
         // validate that Kotlin uses the jdk configured by the java toolchain
         val jdkHome = result.extractJavaToolchainJdkHome()
