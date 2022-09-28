@@ -14,7 +14,8 @@ The idea is similar to Spring Boot, where beans are being auto-generated and aut
 
 ## Requirements
 
-This plugin requires at least Gradle 7.4 and Java 8.
+This plugin requires at least Gradle 7.4 and Java 11. You can still configure this plugin to use Java 8 (or any other Java version)
+to compile your codebase.
 
 ## Installation
 
