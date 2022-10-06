@@ -2,3 +2,4 @@ rootProject.name = 'generate-swagger-from-file'
 
 include('petstore-api')
 include('petstore-client')
+include('petstore-client-node-overwrite')
