@@ -45,6 +45,7 @@ class SwaggerCodegenConfigurePlugin : Plugin<Project> {
 
         val extension = project.extensions.create(EXTENSION_NAME, SwaggerCodegenConfigurePluginExtension::class).apply {
             swaggerCodegenCliVersion.convention("3.0.34")
+            nodeSwaggerGenerator.convention("typescript-angular")
         }
 
         // generate api after evaluation of all projects, i.e. after 'swaggerApi' dependencies have been processed
@@ -142,7 +143,7 @@ class SwaggerCodegenConfigurePlugin : Plugin<Project> {
                         val sourceSetTest = javaPluginExtension.sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
 
                         if (isNodeProject(project)) {
-                            swaggerGenerator = "typescript-angular"
+                            swaggerGenerator = extension.nodeSwaggerGenerator.get()
                             swaggerLibrary = null
                             npmBuild!!.inputs.files(project.fileTree(outputDir))
 

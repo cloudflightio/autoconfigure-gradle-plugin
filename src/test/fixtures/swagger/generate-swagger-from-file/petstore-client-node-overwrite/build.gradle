@@ -1,0 +1,21 @@
+plugins {
+    id "io.cloudflight.autoconfigure.swagger-codegen-configure"
+    id 'java'
+}
+
+dependencies {
+    swaggerApi project(':petstore-api')
+
+    implementation('org.springframework:spring-web:5.2.0.RELEASE')
+    implementation('javax.servlet:javax.servlet-api:4.0.1')
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.13.2.1')
+    implementation('javax.validation:validation-api:2.0.1.Final')
+
+    implementation('io.springfox:springfox-swagger2:2.9.2')
+
+    swaggerCodegen('io.swagger:swagger-codegen-cli:2.3.1')
+}
+
+swaggerCodgenConfigure {
+    nodeSwaggerGenerator = "typescript-fetch"
+}

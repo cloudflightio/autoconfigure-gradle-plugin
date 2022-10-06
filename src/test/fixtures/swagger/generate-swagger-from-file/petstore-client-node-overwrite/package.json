@@ -1,0 +1,13 @@
+{
+  "name": "petstore-client-node-overwrite",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "tsc",
+    "lint": "echo 'no linting exists'",
+    "test": "echo 'no tests exists'"
+  },
+  "dependencies": {
+    "typescript": "4.8.4",
+    "url": "0.11.0"
+  }
+}

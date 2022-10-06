@@ -374,13 +374,24 @@ Per default, we are using the module `io.swagger.codegen.v3:swagger-codegen-cli:
 
 There are two ways to override that:
 
-1. override the property `swaggerCodegenCliVersion` in your `build.gradle` to use another version of `io.swagger.codegen.v3:swagger-codegen-cli`. 
+1. override the property `swaggerCodegenCliVersion` in your `build.gradle` to use another version of `io.swagger.codegen.v3:swagger-codegen-cli`.
 ````groovy
 swaggerCodgenConfigure {
     swaggerCodegenCliVersion = "3.0.30"
 }
 ````
 2. define your own generator within the `swaggerCodegen` as described in the [official plugin documentation](https://github.com/int128/gradle-swagger-generator-plugin#code-generation).
+
+#### Setting the generator for node projects
+
+`typescript-angular` is the default generator for node projects. This is not what you want in case you are using other frameworks.
+
+To change the generator, override the property `nodeSwaggerGenerator` in your `build.gradle`.
+````groovy
+swaggerCodgenConfigure {
+    nodeSwaggerGenerator = "typescript-fetch"
+}
+````
 
 #### Adding custom templates
 

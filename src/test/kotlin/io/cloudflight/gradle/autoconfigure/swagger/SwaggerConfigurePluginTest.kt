@@ -38,6 +38,13 @@ class SwaggerConfigurePluginTest {
         assertThat(buildDir("petstore-client").resolve("swagger-code-petstore-api/src/main/java/io/cloudflight/petstore/client/ApiClient.java")).exists()
     }
 
+    @Test
+    fun `create client from file with custom node generator`(): Unit = swaggerFixture("generate-swagger-from-file") {
+        val result = runCleanBuild()
+
+        assertThat(buildDir("petstore-client-node-overwrite").resolve("swagger-code-petstore-api/api.ts")).exists()
+    }
+
     companion object {
 
         @JvmStatic
