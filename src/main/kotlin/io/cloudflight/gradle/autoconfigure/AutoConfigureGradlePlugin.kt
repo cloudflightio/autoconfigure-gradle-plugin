@@ -16,10 +16,9 @@ import io.cloudflight.license.gradle.LicensePlugin
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.logging.Logging
-import org.gradle.api.plugins.PluginContainer
 import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 import org.slf4j.LoggerFactory
+import kotlin.reflect.KClass
 
 class AutoConfigureGradlePlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -46,7 +45,7 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
             applyPlugins(project, autoConfigure)
         }
 
-        target.plugins.apply(ReportConfigurePlugin::class.java)
+        target.applyAndLog(ReportConfigurePlugin::class)
 
         // Setting the group and version of all sub-modules here still allows the user to override it in the sub-modules build.gradle directly.
         // This is because afterEvaluate of the root-module runs directly after the build.gradle of the root-module finished and
@@ -59,25 +58,19 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
         }
     }
 
-    companion object {
-        const val EXTENSION_NAME = "autoConfigure"
-        const val TASK_GROUP = "cloudflight"
-    }
-
     private fun applyPlugins(project: Project, autoConfigure: AutoConfigureExtension) {
-        val plugins = project.plugins
 
         if (isJavaProject(project)) {
-            applyJava(plugins, project, autoConfigure)
+            applyJava(project, autoConfigure)
         }
 
         if (isKotlinProject(project)) {
-            applyJava(plugins, project, autoConfigure)
-            applyKotlin(plugins, project, autoConfigure)
+            applyJava(project, autoConfigure)
+            applyKotlin(project, autoConfigure)
         }
 
         if (isNodeProject(project)) {
-            applyJava(plugins, project, autoConfigure)
+            applyJava(project, autoConfigure)
             applyNode(project)
         }
 
@@ -87,11 +80,10 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
     }
 
     private fun applyKotlin(
-        plugins: PluginContainer,
         project: Project,
         autoConfigure: AutoConfigureExtension
     ) {
-        plugins.apply(KotlinConfigurePlugin::class)
+        project.applyAndLog(KotlinConfigurePlugin::class)
         val extension = project.extensions.getByType(KotlinConfigurePluginExtension::class)
         val kotlinConfigure = autoConfigure.kotlin
         extension.apply {
@@ -100,11 +92,10 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
     }
 
     private fun applyJava(
-        plugins: PluginContainer,
         project: Project,
         autoConfigure: AutoConfigureExtension
     ) {
-        plugins.apply(JavaConfigurePlugin::class)
+        project.applyAndLog(JavaConfigurePlugin::class)
         val extension = project.extensions.getByType(JavaConfigurePluginExtension::class)
         val javaConfigure = autoConfigure.java
         extension.apply {
@@ -116,6 +107,19 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
     }
 
     private fun applyNode(project: Project) {
-        project.plugins.apply(NodeConfigurePlugin::class)
+        project.applyAndLog(NodeConfigurePlugin::class)
+    }
+
+    private fun <T : Plugin<*>> Project.applyAndLog(klass: KClass<T>) {
+        plugins.apply(klass).also {
+            LOG.info("Auto-applied ${klass.simpleName} to ${project.name}")
+        }
+    }
+
+    companion object {
+        const val EXTENSION_NAME = "autoConfigure"
+        const val TASK_GROUP = "cloudflight"
+
+        private val LOG = LoggerFactory.getLogger(AutoConfigureGradlePlugin::class.java)
     }
 }

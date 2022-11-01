@@ -5,7 +5,3 @@ plugins {
 description "Cloudflight Gradle Test"
 group "io.cloudflight.gradle"
 version "1.0.0"
-
-plugins.forEach {
-    logger.quiet("Plugin {} applied", it.class.name)
-}

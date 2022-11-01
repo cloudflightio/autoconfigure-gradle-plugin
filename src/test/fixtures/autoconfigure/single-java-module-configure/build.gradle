@@ -6,10 +6,6 @@ description "The JavaConfigurePlugin is automatically applied and the custom con
 group "io.cloudflight.gradle"
 version "1.0.0"
 
-plugins.forEach {
-    logger.quiet("Plugin {} applied", it.class.name)
-}
-
 javaConfigure {
     languageVersion = JavaLanguageVersion.of(16)
     encoding = "UTF-16"

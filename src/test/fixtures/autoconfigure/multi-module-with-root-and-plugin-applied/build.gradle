@@ -7,11 +7,3 @@ group "io.cloudflight.gradle"
 version "1.0.0"
 
 apply plugin: 'java'
-
-project.allprojects { current ->
-    logger.quiet("Project {} start", current.name)
-    current.plugins.forEach {
-        logger.quiet("Plugin {} applied", it.class.name)
-    }
-    logger.quiet("Project {} stop", current.name)
-}
