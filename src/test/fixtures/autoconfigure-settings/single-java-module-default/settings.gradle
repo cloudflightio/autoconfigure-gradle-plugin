@@ -1,0 +1,5 @@
+plugins {
+    id "io.cloudflight.autoconfigure-settings"
+}
+
+rootProject.name = 'single-java-module-default'

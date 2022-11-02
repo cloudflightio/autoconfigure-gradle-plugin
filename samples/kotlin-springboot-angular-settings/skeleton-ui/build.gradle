@@ -1,0 +1,8 @@
+plugins {
+    id 'io.cloudflight.autoconfigure.node-configure'
+    id 'io.cloudflight.autoconfigure.swagger-codegen-configure'
+}
+
+dependencies {
+    swaggerApi project(':skeleton-api')
+}

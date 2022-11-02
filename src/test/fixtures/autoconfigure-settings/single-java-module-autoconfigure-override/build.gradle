@@ -1,0 +1,23 @@
+description "The JavaConfigurePlugin is automatically applied and the configuration of the AutoConfigurePlugin is used"
+group "io.cloudflight.gradle"
+
+javaConfigure {
+    languageVersion = JavaLanguageVersion.of(16)
+    vendorName = "Cloudflight XYZ"
+}
+
+autoConfigure {
+    java {
+        languageVersion = JavaLanguageVersion.of(16)
+        vendorName = "Cloudflight XYZ"
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+}

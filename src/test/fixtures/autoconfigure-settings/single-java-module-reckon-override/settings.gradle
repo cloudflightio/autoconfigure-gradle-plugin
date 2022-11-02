@@ -1,0 +1,11 @@
+plugins {
+    id "io.cloudflight.autoconfigure-settings"
+}
+
+reckon {
+    snapshots()
+    scopeCalc = calcScopeFromProp()
+    stageCalc = calcStageFromProp()
+}
+
+rootProject.name = 'single-java-module-reckon-override'

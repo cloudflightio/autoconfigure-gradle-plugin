@@ -1,0 +1,18 @@
+<div class="flex flex-auto flex-column justify-content-center align-items-center p-3">
+
+    <h1>Kotlin-Springboot-Angular Skeleton</h1>
+    <div class="formgrid grid">
+        <div class="field col-12 lg:col-6">
+            <label>{{'login' | translate}}</label>
+            <input type="text" class="w-full" pInputText [(ngModel)]="username">
+        </div>
+        <div class="field col-12 lg:col-6">
+            <label>{{'password' | translate}}</label>
+            <p-password [(ngModel)]="password" styleClass="w-full" inputStyleClass="w-full"
+                        [toggleMask]="true" [feedback]="false"></p-password>
+        </div>
+        <div class="field col-12">
+            <button pRipple pButton (click)="login()">{{'login' | translate}}</button>
+        </div>
+    </div>
+</div>

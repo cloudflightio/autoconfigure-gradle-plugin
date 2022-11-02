@@ -19,12 +19,22 @@ to compile your codebase.
 
 ## Installation
 
+There are two different ways how to apply the AutoConfigure plugin:
+
+1. As normal project plugin inside `build.gradle` or `build.gradle.kts`
+2. As settings-plugin inside `settings.gradle` or `settings.gradle.kts`
+
+Where the latter approach has the advantage that we also include the awesome [Reckon-Plugin](https://github.com/ajoberstar/reckon) 
+for semantic versioning
+
+### Install as project plugin
+
 You can apply that plugin via the [Gradle Plugin Portal](https://plugins.gradle.org/plugin/io.cloudflight.autoconfigure-gradle)
 by adding the following block to your `build.gradle.kts`:
 
 ````kotlin
 plugins {
-    id("io.cloudflight.autoconfigure-gradle") version "0.7.1"
+    id("io.cloudflight.autoconfigure-gradle") version "0.8.0"
 }
 ````
 
@@ -32,6 +42,36 @@ This plugin is meant to be applied only at the root module of your project - nev
 All the plugin does by itself is scan the module and all sub-modules and apply
 any of the internal plugins mentioned below depending on the layout. Instead of requiring you
 to apply the same default over and over again, we do that automatically for you.
+
+### Install as settings plugin
+
+Alternatively, you can also apply the AutoConfigure-Plugin as Settings plugin in your `settings.gradle.kts`:
+
+````kotlin
+plugins {
+    id("io.cloudflight.autoconfigure-settings") version "0.8.0"
+}
+````
+
+We will then automatically apply the [Reckon-Plugin](https://github.com/ajoberstar/reckon) for you and pre-configure
+it with the following default:
+
+````groovy
+reckon {
+    stages('rc', 'final')
+    scopeCalc = calcScopeFromProp()
+    stageCalc = calcStageFromProp()
+}
+````
+
+If this is fine for you, you don't need to add anything to your `settings.gradle`, but feel free to override
+this with any of your desired values.
+
+In any way, you can omit the `version` property from your `build.gradle` file then, Reckon will take care of it.
+
+Additionally, we will also automatically apply the `io.cloudflight.autoconfigure-gradle` plugin for you, so you don't need
+to do that on your own. 
+
 
 ## Samples
 

@@ -1,0 +1,19 @@
+allprojects {
+    description "Cloudflight Angular Kotlin Skeleton"
+    group "io.cloudflight.skeleton.angular"
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    if (!it.name.endsWith("-ui")) {
+        dependencies {
+            implementation platform(libs.cloudflight.platform.spring.bom)
+            annotationProcessor platform(libs.cloudflight.platform.spring.bom)
+            testImplementation platform(libs.cloudflight.platform.spring.test.bom)
+            kapt platform(libs.cloudflight.platform.spring.bom)
+        }
+    }
+}
