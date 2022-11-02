@@ -6,10 +6,6 @@ description "The JavaConfigurePlugin is automatically applied and the default co
 group "io.cloudflight.gradle"
 version "1.0.0"
 
-plugins.forEach {
-    logger.quiet("Plugin {} applied", it.class.name)
-}
-
 def javaConfigurePluginExtension = project.extensions.getByType(io.cloudflight.gradle.autoconfigure.java.JavaConfigurePluginExtension)
 logger.quiet("javaConfigurePluginExtension.languageVersion: {}", javaConfigurePluginExtension.languageVersion.get())
 logger.quiet("javaConfigurePluginExtension.encoding: {}", javaConfigurePluginExtension.encoding.get())

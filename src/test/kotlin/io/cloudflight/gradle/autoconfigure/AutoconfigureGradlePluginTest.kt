@@ -21,8 +21,6 @@ data class TestOptions(
     val applicationBuild: Boolean
 )
 
-private const val s = "java-module"
-
 class AutoconfigureGradlePluginTest {
 
     @Test
@@ -66,18 +64,12 @@ class AutoconfigureGradlePluginTest {
         autoconfigureFixture("multi-module") {
             val result = runTasks()
 
-            val startIndexNoPluginApplied = result.normalizedOutput.indexOf("Project no-plugin-applied start")
-            val endIndexNoPluginApplied =
-                result.normalizedOutput.indexOf("Project no-plugin-applied stop", startIndexNoPluginApplied)
-            val noPluginAppliedOutput =
-                result.normalizedOutput.substring(startIndexNoPluginApplied, endIndexNoPluginApplied)
+            println(result.normalizedOutput)
 
-            val startIndexJavaModule = result.normalizedOutput.indexOf("Project java-module start")
-            val endIndexJavaModule = result.normalizedOutput.indexOf("Project java-module stop", startIndexJavaModule)
-            val javaModuleOutput = result.normalizedOutput.substring(startIndexJavaModule, endIndexJavaModule)
+            assertThat(result.normalizedOutput)
+                .contains("Auto-applied JavaConfigurePlugin to java-module")
+                .doesNotContain("Auto-applied JavaConfigurePlugin to no-plugin-applied")
 
-            assertThat(noPluginAppliedOutput).doesNotContain(JavaConfigurePlugin::class.simpleName)
-            assertThat(javaModuleOutput).contains(JavaConfigurePlugin::class.simpleName)
             println(result.normalizedOutput)
             assertThat(result.normalizedOutput).contains("BUILD EXECUTION TIMES")
         }
@@ -85,7 +77,7 @@ class AutoconfigureGradlePluginTest {
     @Test
     fun `in a multi module project the Autoconfigure plugin automatically propagates the root project version to the subprojects if they don't define it themselves`(): Unit =
         autoconfigureFixture("multi-module") {
-            val result = runCleanBuild()
+            runCleanBuild()
             val javaModule = "java-module"
             val javaModuleJar = this.buildDir(javaModule).resolve("libs/${javaModule}-1.0.0.jar")
             val kotlinModule = "kotlin-module"
