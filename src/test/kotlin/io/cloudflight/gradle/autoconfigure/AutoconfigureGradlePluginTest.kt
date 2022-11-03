@@ -23,17 +23,6 @@ class AutoconfigureGradlePluginTest {
         assertThat(result.normalizedOutput).doesNotContain(JavaConfigurePlugin::class.simpleName)
     }
 
-    @Test
-    fun `build execution times are reported correctly`(): Unit =
-        autoconfigureFixture("multi-module") {
-            val result = runCleanBuild()
-            // it's hard to automatically test formatting of the build execution times, because
-            // the build times change from run to run (and therefore the content of the log), but we
-            // print the output here on purpose to be able to have a look at that manually
-            println(result.normalizedOutput)
-            assertThat(result.normalizedOutput).contains("BUILD EXECUTION TIMES")
-        }
-
     @ParameterizedTest
     @MethodSource("autoConfigureGradleArguments")
     fun `JavaConfigurePlugin is applied to a single-module java project and configured options are respected`(options: TestOptions): Unit =
@@ -62,9 +51,6 @@ class AutoconfigureGradlePluginTest {
             assertThat(result.normalizedOutput)
                 .contains("Auto-applied JavaConfigurePlugin to java-module")
                 .doesNotContain("Auto-applied JavaConfigurePlugin to no-plugin-applied")
-
-            println(result.normalizedOutput)
-            assertThat(result.normalizedOutput).contains("BUILD EXECUTION TIMES")
         }
 
     @Test
@@ -83,15 +69,13 @@ class AutoconfigureGradlePluginTest {
     @Test
     fun `in a multi module project also the root project can be a java project`(): Unit =
         autoconfigureFixture("multi-module-with-root") {
-            val result = runTasks()
-            assertThat(result.normalizedOutput).contains("BUILD EXECUTION TIMES")
+            runTasks()
         }
 
     @Test
     fun `in a multi module project also the root project can be a java project and the plugin can be applied`(): Unit =
         autoconfigureFixture("multi-module-with-root-and-plugin-applied") {
-            val result = runTasks()
-            assertThat(result.normalizedOutput).contains("BUILD EXECUTION TIMES")
+            runTasks()
         }
 
     companion object {
