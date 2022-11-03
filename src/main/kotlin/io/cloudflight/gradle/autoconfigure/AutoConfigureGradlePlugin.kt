@@ -10,7 +10,6 @@ import io.cloudflight.gradle.autoconfigure.kotlin.isKotlinProject
 import io.cloudflight.gradle.autoconfigure.node.NodeConfigurePlugin
 import io.cloudflight.gradle.autoconfigure.node.isNodeProject
 import io.cloudflight.gradle.autoconfigure.report.ReportConfigurePlugin
-import io.cloudflight.gradle.autoconfigure.util.BuildExecutionTimeListener
 import io.cloudflight.gradle.autoconfigure.util.isServerProject
 import io.cloudflight.license.gradle.LicensePlugin
 import org.gradle.api.GradleException
@@ -23,12 +22,6 @@ import kotlin.reflect.KClass
 class AutoConfigureGradlePlugin : Plugin<Project> {
     override fun apply(target: Project) {
         if (target != target.rootProject) throw GradleException("'autoconfigure-gradle' plugin can only be applied to the root project.")
-
-        if (!target.gradle.startParameter.isParallelProjectExecutionEnabled) {
-            target.gradle.addListener(BuildExecutionTimeListener())
-        } else {
-            target.logger.info("Parallel builds are enabled. Build Execution Times are not calculated as this is not yet supported")
-        }
 
         val autoConfigure = target.extensions.create(EXTENSION_NAME, AutoConfigureExtension::class)
         with(autoConfigure.java) {
