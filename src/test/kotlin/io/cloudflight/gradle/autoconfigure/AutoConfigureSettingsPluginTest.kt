@@ -4,6 +4,7 @@ import io.cloudflight.gradle.autoconfigure.test.util.ProjectFixture
 import io.cloudflight.gradle.autoconfigure.test.util.normalizedOutput
 import io.cloudflight.gradle.autoconfigure.test.util.useFixture
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
@@ -24,6 +25,14 @@ class AutoConfigureSettingsPluginTest {
             ).isEmpty()
         }
 
+    @Test
+    fun `print version number`(): Unit =
+        autoConfigureSettingsFixture("single-java-module-default") {
+            val result = run("-q", "clfPrintVersion", infoLoggerEnabled = false)
+            // we are just checking that there is just one line here, the content itself is determined by the reckon plugin
+            assertThat(result.normalizedOutput.trim())
+                .hasLineCount(1)
+        }
 
     companion object {
         @JvmStatic

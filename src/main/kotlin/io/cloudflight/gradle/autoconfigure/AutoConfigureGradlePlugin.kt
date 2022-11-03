@@ -40,6 +40,14 @@ class AutoConfigureGradlePlugin : Plugin<Project> {
 
         target.applyAndLog(ReportConfigurePlugin::class)
 
+        target.tasks.create("clfPrintVersion") {
+            it.group = TASK_GROUP
+            it.description = "prints the current project version to the quiet logger"
+            it.doLast {
+                target.logger.quiet(target.version.toString())
+            }
+        }
+
         // Setting the group and version of all sub-modules here still allows the user to override it in the sub-modules build.gradle directly.
         // This is because afterEvaluate of the root-module runs directly after the build.gradle of the root-module finished and
         // the build.gradle of a sub-module is evaluated
