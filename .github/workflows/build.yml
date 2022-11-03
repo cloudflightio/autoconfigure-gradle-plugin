@@ -14,7 +14,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Clone repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
@@ -36,6 +39,12 @@ jobs:
         with:
           arguments: check
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+      - name : Retrieve Version
+        run: echo "VERSION_NAME=$(${{github.workspace}}/gradlew -q clfPrintVersion)" >> $GITHUB_OUTPUT
+        id: retrieve_version
+      - name: Publish version to Github
+        run: |
+          echo "# ${{steps.retrieve_version.outputs.VERSION_NAME}}" >> $GITHUB_STEP_SUMMARY
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v2
         if: always()
