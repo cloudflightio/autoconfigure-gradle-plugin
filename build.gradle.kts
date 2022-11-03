@@ -1,5 +1,4 @@
 plugins {
-    id("io.cloudflight.autoconfigure-gradle") version "0.6.5"
     id("java-gradle-plugin")
     id("maven-publish")
     id("com.gradle.plugin-publish") version "0.18.0"
@@ -7,9 +6,6 @@ plugins {
 
 description = "A opinionated approach to configure a gradle project automatically by convention. It supports to automatically configure various plugins to reduce boilerplate code in gradle projects."
 group = "io.cloudflight.gradle"
-if (System.getenv("RELEASE") != "true") {
-    version = "$version-SNAPSHOT"
-}
 
 autoConfigure {
     java {
