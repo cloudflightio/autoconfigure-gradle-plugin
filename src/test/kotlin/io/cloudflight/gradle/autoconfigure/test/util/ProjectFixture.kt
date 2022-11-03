@@ -20,13 +20,21 @@ internal class ProjectFixture(
 
     fun runTasks() = run("tasks")
 
-    fun run(first: String, vararg tasks: String, printStackTrace: Boolean = true, forceRerunTasks: Boolean = true): BuildResult {
+    fun run(
+        first: String,
+        vararg tasks: String,
+        printStackTrace: Boolean = true,
+        forceRerunTasks: Boolean = true,
+        infoLoggerEnabled: Boolean = true
+    ): BuildResult {
         val arguments = mutableListOf(first)
         arguments.addAll(tasks)
         if (printStackTrace) {
             arguments.add("--stacktrace")
         }
-        arguments.add("--info")
+        if (infoLoggerEnabled) {
+            arguments.add("--info")
+        }
         if (forceRerunTasks) {
             arguments.add("--rerun-tasks")
         }
@@ -81,5 +89,11 @@ internal fun <T> useFixture(
     environment: Map<String, String>? = emptyMap(),
     testWork: ProjectFixture.() -> T
 ): T {
-    return useFixture(FIXTURES_BASE_DIR.resolve(fixtureBaseDir).resolve(fixtureName), fixtureName, gradleVersion, environment, testWork)
+    return useFixture(
+        FIXTURES_BASE_DIR.resolve(fixtureBaseDir).resolve(fixtureName),
+        fixtureName,
+        gradleVersion,
+        environment,
+        testWork
+    )
 }

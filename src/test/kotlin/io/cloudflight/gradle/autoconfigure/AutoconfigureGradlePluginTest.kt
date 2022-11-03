@@ -78,6 +78,13 @@ class AutoconfigureGradlePluginTest {
             runTasks()
         }
 
+    @Test
+    fun `print version number`(): Unit =
+        autoconfigureFixture("multi-module") {
+            val result = run("-q", "clfPrintVersion", infoLoggerEnabled = false)
+            assertThat(result.normalizedOutput.trim()).isEqualTo("1.0.0")
+        }
+
     companion object {
         @JvmStatic
         fun autoConfigureGradleArguments(): Stream<Arguments> {
