@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <include resource="io/cloudflight/platform/logging/clf-base.xml" />
+
+    <logger name="io.cloudflight" level="DEBUG"/>
+
+    <root level="WARN"/>
+</configuration>

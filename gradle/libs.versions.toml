@@ -25,6 +25,8 @@ json-wrapper = { module = "io.cloudflight.json:json-wrapper", version = "0.3.5" 
 
 maven-artifact = { module = "org.apache.maven:maven-artifact", version.ref = "maven-artifact" }
 
+reckon-plugin = { module = "org.ajoberstar.reckon:org.ajoberstar.reckon.gradle.plugin", version = "0.17.0-beta.4" }
+
 # IMPORTANT: do not update, see https://github.com/gigaSproule/swagger-gradle-plugin/issues/186
 swagger-gradle-plugin = { module = "com.benjaminsproule:swagger-gradle-plugin", version = "1.0.8" }
 swagger-codegen-plugin = { module = "gradle.plugin.org.hidetake:gradle-swagger-generator-plugin", version = "2.19.1" }

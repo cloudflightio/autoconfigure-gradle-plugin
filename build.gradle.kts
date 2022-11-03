@@ -42,6 +42,8 @@ dependencies {
     implementation(libs.spring.boot.plugin)
     implementation(libs.shadow.plugin)
 
+    implementation(libs.reckon.plugin)
+
     implementation(libs.node.plugin)
     implementation(libs.json.wrapper)
 
@@ -92,8 +94,15 @@ gradlePlugin {
             id = "io.cloudflight.autoconfigure-gradle"
             displayName = "Autoconfigure-Gradle"
             description =
-                "A opinionated approach to configure a gradle project automatically by convention. It supports to automatically configure various plugins to reduce boilerplate code in gradle projects."
+                "An opinionated approach to configure a gradle project automatically by convention. It supports to automatically configure various plugins to reduce boilerplate code in gradle projects."
             implementationClass = "io.cloudflight.gradle.autoconfigure.AutoConfigureGradlePlugin"
+        }
+        create("autoconfigure-settings") {
+            id = "io.cloudflight.autoconfigure-settings"
+            displayName = "Autoconfigure-Settings"
+            description =
+                "An opinionated approach to configure a gradle project automatically by convention. It supports to automatically configure various plugins to reduce boilerplate code in gradle projects."
+            implementationClass = "io.cloudflight.gradle.autoconfigure.AutoConfigureSettingsPlugin"
         }
         create("java-configure") {
             id = "io.cloudflight.autoconfigure.java-configure"

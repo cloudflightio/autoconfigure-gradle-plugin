@@ -112,6 +112,8 @@ modules.xml
 # https://plugins.jetbrains.com/plugin/12206-codestream
 .idea/codestream.xml
 
+.idea/kotlinc.xml
+
 ### Java ###
 # Compiled class file
 *.class

@@ -1,0 +1,9 @@
+plugins {
+    id "io.cloudflight.autoconfigure-settings"
+}
+
+rootProject.name = 'kotlin-springboot-angular'
+
+include 'skeleton-api'
+include 'skeleton-server'
+include 'skeleton-ui'

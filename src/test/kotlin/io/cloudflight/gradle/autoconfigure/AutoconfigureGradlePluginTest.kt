@@ -13,13 +13,6 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
-data class TestOptions(
-    val fixtureName: String,
-    val languageVersion: Int,
-    val encoding: String,
-    val vendorName: String,
-    val applicationBuild: Boolean
-)
 
 class AutoconfigureGradlePluginTest {
 
@@ -42,7 +35,7 @@ class AutoconfigureGradlePluginTest {
         }
 
     @ParameterizedTest
-    @MethodSource("singleJavaModuleArguments")
+    @MethodSource("autoConfigureGradleArguments")
     fun `JavaConfigurePlugin is applied to a single-module java project and configured options are respected`(options: TestOptions): Unit =
         autoconfigureFixture(options.fixtureName) {
             val result = runTasks()
@@ -103,7 +96,7 @@ class AutoconfigureGradlePluginTest {
 
     companion object {
         @JvmStatic
-        fun singleJavaModuleArguments(): Stream<Arguments> {
+        fun autoConfigureGradleArguments(): Stream<Arguments> {
             return Stream.of(
                 arguments(
                     TestOptions(
@@ -136,12 +129,21 @@ class AutoconfigureGradlePluginTest {
         }
     }
 
+    data class TestOptions(
+        val fixtureName: String,
+        val languageVersion: Int,
+        val encoding: String,
+        val vendorName: String,
+        val applicationBuild: Boolean
+    )
+
+    private fun <T : Any> autoconfigureFixture(
+        fixtureName: String,
+        gradleVersion: String? = null,
+        environment: Map<String, String> = emptyMap(),
+        testWork: ProjectFixture .() -> T
+    ): T =
+        useFixture("autoconfigure", fixtureName, gradleVersion, environment, testWork)
 }
 
-private fun <T : Any> autoconfigureFixture(
-    fixtureName: String,
-    gradleVersion: String? = null,
-    environment: Map<String, String> = emptyMap(),
-    testWork: ProjectFixture .() -> T
-): T =
-    useFixture("autoconfigure", fixtureName, gradleVersion, environment, testWork)
+

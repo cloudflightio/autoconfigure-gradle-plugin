@@ -1,0 +1,10 @@
+api:
+  base-path: /api
+
+spring:
+  messages:
+    basename: classpath:/messages
+#  datasource:
+#    url: jdbc:mariadb://localhost/CHANGEME
+#    username: CHANGEME
+#    password: CHANGEME
