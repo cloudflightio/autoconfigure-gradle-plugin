@@ -12,6 +12,7 @@ class AutoConfigureSettingsPlugin : Plugin<Settings> {
             stages("rc", "final")
             setStageCalc(calcStageFromProp())
             setScopeCalc(calcScopeFromProp())
+            setDefaultInferredScope("patch")
         }
         settings.gradle.projectsLoaded {
             it.rootProject.plugins.apply(AutoConfigureGradlePlugin::class.java)

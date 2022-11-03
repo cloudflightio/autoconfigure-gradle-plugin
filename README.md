@@ -54,13 +54,14 @@ plugins {
 ````
 
 We will then automatically apply the [Reckon-Plugin](https://github.com/ajoberstar/reckon) for you and pre-configure
-it with the following default:
+it with the following defaults:
 
 ````groovy
 reckon {
     stages('rc', 'final')
     scopeCalc = calcScopeFromProp()
     stageCalc = calcStageFromProp()
+    defaultInferredScope = 'patch'
 }
 ````
 
