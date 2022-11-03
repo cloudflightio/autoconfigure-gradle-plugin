@@ -1,7 +1,6 @@
 package io.cloudflight.gradle.autoconfigure.node
 
 import com.github.gradle.node.NodeExtension
-import com.github.gradle.node.NodeExtension.Companion.DEFAULT_NPM_VERSION
 import com.github.gradle.node.NodePlugin
 import com.github.gradle.node.npm.task.NpmInstallTask
 import com.github.gradle.node.npm.task.NpmTask
@@ -36,7 +35,7 @@ class NodeConfigurePlugin : Plugin<Project> {
         val nodeExtension = project.extensions.create(EXTENSION_NAME, NodeConfigurePluginExtension::class).apply {
             nodeVersion.convention(NODE_VERSION)
             downloadNode.convention(true)
-            npm.npmVersion.convention(DEFAULT_NPM_VERSION)
+            npm.npmVersion.convention(NPM_VERSION)
             npm.destinationDir.convention(File(project.buildDir, "/generated-resources/"))
             npm.inputFiles.convention(
                 NpmHelper.determineSourceDirs(project).map { project.fileTree(it) } +

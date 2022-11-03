@@ -1,3 +1,5 @@
 package io.cloudflight.gradle.autoconfigure.node
 
-val NODE_VERSION = "16.15.1"
+const val NODE_VERSION = "18.12.0"
+
+const val NPM_VERSION = "8.19.2"
