@@ -48,6 +48,12 @@ internal class ProjectFixture(
     fun createRunner(arguments: List<String>): GradleRunner {
         val sysEnv = mutableMapOf<String, String>()
         sysEnv.putAll(System.getenv())
+
+        // we don't wanna pollute our test cases with the System Environment from Github Actions. If wanna simulate
+        // a CI build, that should come directly from the TestFixture
+        sysEnv.remove("GITHUB_ACTIONS")
+        sysEnv.remove("GITHUB_EVENT_NAME")
+
         environment?.let { sysEnv.putAll(it) }
         var runner = GradleRunner.create()
             .withProjectDir(fixtureDir.toFile())

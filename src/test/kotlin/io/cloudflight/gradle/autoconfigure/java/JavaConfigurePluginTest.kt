@@ -170,7 +170,7 @@ internal class JavaConfigurePluginTest {
                         hasVersionSuffixOnJar = false,
                         implementationVendor = "Cloudflight Test Vendor",
                         inferModulePath = true,
-                        environment = mapOf(EnvironmentUtils.ENV_DEFAULT_BUILD to true.toString()),
+                        environment = mapOf("GITHUB_ACTIONS" to true.toString()),
                         additionalChecks = {
                             val developmentProperties =
                                 buildDir().resolve("resources/main/development.properties")

@@ -1,5 +1,6 @@
 package io.cloudflight.gradle.autoconfigure
 
+import io.cloudflight.ci.info.CI
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.apply
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
@@ -22,6 +23,9 @@ import kotlin.reflect.KClass
 class AutoConfigureGradlePlugin : Plugin<Project> {
     override fun apply(target: Project) {
         if (target != target.rootProject) throw GradleException("'autoconfigure-gradle' plugin can only be applied to the root project.")
+        if (CI.isCI) {
+            target.logger.info("Configuring AutoConfigureGradlePlugin on ${CI.server}.")
+        }
 
         val autoConfigure = target.extensions.create(EXTENSION_NAME, AutoConfigureExtension::class)
         with(autoConfigure.java) {

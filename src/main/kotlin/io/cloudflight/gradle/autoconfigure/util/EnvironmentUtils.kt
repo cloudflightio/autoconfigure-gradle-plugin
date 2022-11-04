@@ -1,12 +1,14 @@
 package io.cloudflight.gradle.autoconfigure.util
 
+import io.cloudflight.ci.info.CI
+
 object EnvironmentUtils {
     fun isDefaultBuild(): Boolean {
-        return getBoolean(ENV_DEFAULT_BUILD)
+        return getBoolean(ENV_DEFAULT_BUILD) || (CI.isCI && CI.isPR != false)
     }
 
     fun isVerifyBuild(): Boolean {
-        return getBoolean(ENV_VERIFY_BUILD)
+        return getBoolean(ENV_VERIFY_BUILD) || CI.isPR == true
     }
 
     fun isPublishBuild(): Boolean {
