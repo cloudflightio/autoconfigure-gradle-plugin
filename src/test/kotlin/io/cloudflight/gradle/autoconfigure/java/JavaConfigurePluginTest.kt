@@ -3,13 +3,12 @@ package io.cloudflight.gradle.autoconfigure.java
 import io.cloudflight.gradle.autoconfigure.test.util.ProjectFixture
 import io.cloudflight.gradle.autoconfigure.test.util.normalizedOutput
 import io.cloudflight.gradle.autoconfigure.test.util.useFixture
-import io.cloudflight.gradle.autoconfigure.util.EnvironmentUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.nio.file.Path
+import java.lang.AssertionError
 import java.util.jar.Attributes.Name
 import java.util.jar.Manifest
 import java.util.stream.Stream
@@ -47,49 +46,54 @@ internal class JavaConfigurePluginTest {
         options: TestOptions
     ): Unit = javaFixture(options.fixtureName, options.gradleVersion, options.environment) {
         val result = runCleanBuild()
-        if (options.checkConfigurationInTestOutput) {
-            assertThat(result.normalizedOutput).contains(
-                """
+        try {
+            if (options.checkConfigurationInTestOutput) {
+                assertThat(result.normalizedOutput).contains(
+                    """
                 javaPluginExtension.modularity.inferModulePath: ${options.inferModulePath}
                 javaPluginExtension.sourceCompatibility: ${options.languageVersion.toJavaVersion()}
                 javaPluginExtension.targetCompatibility: ${options.languageVersion.toJavaVersion()}
                 compileJava.options.encoding: ${options.encoding}
             """.trimIndent()
-            ).contains(
-                """
+                ).contains(
+                    """
                 compileTestJava.options.encoding: ${options.encoding}
             """.trimIndent()
-            )
+                )
+            }
+
+            if (options.successfulTestCount != null) {
+                assertThat(result.normalizedOutput).contains("SUCCESS: Executed ${options.successfulTestCount} tests")
+            }
+
+            val outJarDirPath = buildDir().resolve("libs")
+            val versionSuffix = if (options.hasVersionSuffixOnJar) "-1.0.0" else ""
+            val outJarLibPath = outJarDirPath.resolve("$fixtureName$versionSuffix.jar")
+            assertThat(outJarLibPath).exists().isRegularFile
+
+            val outJarSourcesPath = outJarDirPath.resolve("$fixtureName$versionSuffix-sources.jar")
+            val outJarJavadocPath = outJarDirPath.resolve("$fixtureName$versionSuffix-javadoc.jar")
+            if (options.createsSourceJar) {
+                assertThat(outJarSourcesPath).exists().isRegularFile
+                assertThat(outJarJavadocPath).exists().isRegularFile
+            } else {
+                assertThat(outJarSourcesPath).doesNotExist()
+            }
+
+            val manifestPath =
+                if (options.hasVersionSuffixOnJar) buildDir().resolve("tmp/jar/MANIFEST.MF") else buildDir().resolve("tmp/bootJar/MANIFEST.MF")
+            val manifest = Manifest(manifestPath.inputStream()).mainAttributes
+            assertThat(manifest)
+                .containsEntry(Name.CLASS_PATH, options.classpath)
+                .containsEntry(Name.IMPLEMENTATION_VENDOR, options.implementationVendor)
+                .containsEntry(Name.IMPLEMENTATION_TITLE, fixtureName)
+                .containsEntry(Name.IMPLEMENTATION_VERSION, "1.0.0")
+
+            options.additionalChecks?.invoke(this)
+        } catch (e: AssertionError) {
+            println(result.normalizedOutput)
+            throw e
         }
-
-        if (options.successfulTestCount != null) {
-            assertThat(result.normalizedOutput).contains("SUCCESS: Executed ${options.successfulTestCount} tests")
-        }
-
-        val outJarDirPath = buildDir().resolve("libs")
-        val versionSuffix = if (options.hasVersionSuffixOnJar) "-1.0.0" else ""
-        val outJarLibPath = outJarDirPath.resolve("$fixtureName$versionSuffix.jar")
-        assertThat(outJarLibPath).exists().isRegularFile
-
-        val outJarSourcesPath = outJarDirPath.resolve("$fixtureName$versionSuffix-sources.jar")
-        val outJarJavadocPath = outJarDirPath.resolve("$fixtureName$versionSuffix-javadoc.jar")
-        if (options.createsSourceJar) {
-            assertThat(outJarSourcesPath).exists().isRegularFile
-            assertThat(outJarJavadocPath).exists().isRegularFile
-        } else {
-            assertThat(outJarSourcesPath).doesNotExist()
-        }
-
-        val manifestPath =
-            if (options.hasVersionSuffixOnJar) buildDir().resolve("tmp/jar/MANIFEST.MF") else buildDir().resolve("tmp/bootJar/MANIFEST.MF")
-        val manifest = Manifest(manifestPath.inputStream()).mainAttributes
-        assertThat(manifest)
-            .containsEntry(Name.CLASS_PATH, options.classpath)
-            .containsEntry(Name.IMPLEMENTATION_VENDOR, options.implementationVendor)
-            .containsEntry(Name.IMPLEMENTATION_TITLE, fixtureName)
-            .containsEntry(Name.IMPLEMENTATION_VERSION, "1.0.0")
-
-        options.additionalChecks?.invoke(this)
     }
 
     companion object {
