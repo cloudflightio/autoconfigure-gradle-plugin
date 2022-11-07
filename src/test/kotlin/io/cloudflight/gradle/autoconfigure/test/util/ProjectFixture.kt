@@ -6,6 +6,7 @@ import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.concurrent.atomic.AtomicLong
 
 internal class ProjectFixture(
     val fixtureDir: Path,
@@ -45,15 +46,27 @@ internal class ProjectFixture(
         }
     }
 
+
     fun createRunner(arguments: List<String>): GradleRunner {
         val sysEnv = mutableMapOf<String, String>()
         sysEnv.putAll(System.getenv())
+
+        // we don't wanna pollute our test cases with the System Environment from Github Actions. If wanna simulate
+        // a CI build, that should come directly from the TestFixture
+        sysEnv.remove("GITHUB_ACTIONS")
+        sysEnv.remove("GITHUB_EVENT_NAME")
+
         environment?.let { sysEnv.putAll(it) }
+
         var runner = GradleRunner.create()
             .withProjectDir(fixtureDir.toFile())
             .withPluginClasspath()
             .withEnvironment(sysEnv)
-            .withArguments(arguments)
+            // we need to ensure that we start a new gradle daemon on every run in order to not re-use the class io.cloudflight.ci.info.CI which intializes itself
+            // once at startup with the current environment, but if the environment changes (which can't be the case in a real-life scenario) then
+            // we don't recognize this any more. And the only - very dirty - way to ensure we're not re-using a daemon turns our to be
+            // that one: https://discuss.gradle.org/t/testkit-how-to-turn-off-daemon/17843/6
+            .withArguments(arguments + ("-Dorg.gradle.jvmargs=-Xmx" + (256 * 1024 * 1024 + counter.incrementAndGet())))
 
         if (gradleVersion != null) {
             runner = runner.withGradleVersion(gradleVersion)
@@ -63,6 +76,10 @@ internal class ProjectFixture(
     }
 
     fun buildDir(subModuleName: String? = null): Path = this.fixtureDir.resolve(subModuleName ?: "").resolve("build")
+
+    companion object {
+        private val counter = AtomicLong(0)
+    }
 }
 
 

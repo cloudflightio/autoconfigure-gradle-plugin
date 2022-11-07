@@ -64,7 +64,7 @@ class NodeConfigurePluginTest {
                 arguments(
                     TestOptions(
                         fixtureName = "single-ts-module",
-                        environment = mapOf(EnvironmentUtils.ENV_DEFAULT_BUILD to true.toString()),
+                        environment = mapOf("GITHUB_ACTIONS" to true.toString()),
                         tasksThatShouldHaveRun = setOf("clfNpmUpdateVersion"),
                         assertUpToDateRerun = false
                     )

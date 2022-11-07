@@ -42,6 +42,7 @@ dependencies {
 
     implementation(libs.node.plugin)
     implementation(libs.json.wrapper)
+    implementation(libs.ci.info)
 
     implementation(libs.swagger.gradle.plugin)
     implementation(libs.swagger.codegen.plugin)
