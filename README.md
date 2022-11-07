@@ -34,7 +34,7 @@ by adding the following block to your `build.gradle.kts`:
 
 ````kotlin
 plugins {
-    id("io.cloudflight.autoconfigure-gradle") version "0.8.2"
+    id("io.cloudflight.autoconfigure-gradle") version "0.8.3"
 }
 ````
 
@@ -49,7 +49,7 @@ Alternatively, you can also apply the AutoConfigure-Plugin as Settings plugin in
 
 ````kotlin
 plugins {
-    id("io.cloudflight.autoconfigure-settings") version "0.8.2"
+    id("io.cloudflight.autoconfigure-settings") version "0.8.3"
 }
 ````
 
