@@ -28,7 +28,6 @@ dependencies {
     implementation(libs.license.plugin)
 
     implementation(libs.maven.artifact)
-    implementation(libs.kotlin.logging)
 
     implementation(libs.kotlin.allopen)
     implementation(libs.kotlin.gradleplugin)
