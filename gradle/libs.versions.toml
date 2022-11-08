@@ -12,7 +12,7 @@ kotlin-noarg = { module = "org.jetbrains.kotlin:kotlin-noarg", version.ref = "ko
 
 jackson = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
 
-license-plugin = { module = "io.cloudflight.license.gradle:license-gradle-plugin", version = "1.1.0" }
+license-plugin = { module = "io.cloudflight.license.gradle:license-gradle-plugin", version = "1.2.0" }
 
 git-properties-plugin = { module = "com.gorylenko.gradle-git-properties:gradle-git-properties", version = "2.4.1" }
 spring-boot-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "2.7.4" }
