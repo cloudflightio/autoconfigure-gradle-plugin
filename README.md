@@ -53,8 +53,8 @@ plugins {
 }
 ````
 
-We will then automatically apply the [Reckon-Plugin](https://github.com/ajoberstar/reckon) for you and pre-configure
-it with the following defaults:
+In case your [code is running on a CI-Server](https://github.com/cloudflightio/ci-info), we will then automatically apply the [Reckon-Plugin](https://github.com/ajoberstar/reckon) for you in 
+and pre-configure it with the following defaults:
 
 ````groovy
 reckon {
@@ -70,7 +70,11 @@ this with any of your desired values.
 
 In any way, you can omit the `version` property from your `build.gradle` file then, Reckon will take care of it.
 
-Additionally, we will also automatically apply the `io.cloudflight.autoconfigure-gradle` plugin for you, so you don't need
+If you are not running on a CI-Server (i.e. you are doing local development), the Reckon-Plugin is NOT applied, instead
+we hardcode the version to `1.0.0-SNAPSHOT` (but you're free to override that in the `build.gradle` temporarily). The 
+reason for this behaviour is [this ticket](https://github.com/ajoberstar/reckon/issues/189).
+
+In any case, the Settings-Plugin, we will also automatically apply the `io.cloudflight.autoconfigure-gradle` plugin for you, so you don't need
 to do that on your own. 
 
 

@@ -16,7 +16,7 @@ class AutoConfigureSettingsPluginTest {
     @ParameterizedTest
     @MethodSource("autoConfigureSettingsArguments")
     fun `AutoConfigureSettings plugin is applied correctly`(options: TestOptions): Unit =
-        autoConfigureSettingsFixture(options.fixtureName) {
+        autoConfigureSettingsFixture(options.fixtureName, environment = CI_ENV) {
             val result = runCleanBuild()
             assertThat(result.normalizedOutput).contains("Reckoned version")
             assertThat(
@@ -26,12 +26,22 @@ class AutoConfigureSettingsPluginTest {
         }
 
     @Test
-    fun `print version number`(): Unit =
-        autoConfigureSettingsFixture("single-java-module-default") {
+    fun `print version number on CI server`(): Unit =
+        autoConfigureSettingsFixture("single-java-module-default", environment = CI_ENV) {
             val result = run("-q", "clfPrintVersion", infoLoggerEnabled = false)
             // we are just checking that there is just one line here, the content itself is determined by the reckon plugin
             assertThat(result.normalizedOutput.trim())
                 .hasLineCount(1)
+                .isNotEqualTo("1.0.0-SNAPSHOT")
+        }
+
+    @Test
+    fun `print version number locally`(): Unit =
+        autoConfigureSettingsFixture("single-java-module-default") {
+            val result = run("-q", "clfPrintVersion", infoLoggerEnabled = false)
+            assertThat(result.normalizedOutput.trim())
+                .hasLineCount(1)
+                .isEqualTo("1.0.0-SNAPSHOT")
         }
 
     companion object {
@@ -55,6 +65,8 @@ class AutoConfigureSettingsPluginTest {
                 )
             )
         }
+
+        val CI_ENV = mapOf("GITLAB_CI" to "true")
     }
 
     data class TestOptions(
