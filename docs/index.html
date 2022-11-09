@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/theme/black.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/highlight/monokai.min.css">
+    <style>
+        section {
+            text-align: left;
+        }
+    </style>
+    <title>Convention over Configuration</title>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h1>Convention over Configuration</h1>
+            <p>Applying Spring Boot's AutoConfigure to Gradle, having the shortest build files possible</p>
+            <img src="gradle-logo-horizontal.svg"/>
+        </section>
+        <section>
+            <section>
+                <h2>Spring Boot</h2>
+                <p>Spring Boot makes it easy to create stand-alone, production-grade Spring based Applications that
+                    you can "just run".</p>
+                <p>"We take an opinionated view of the Spring platform and third-party libraries so you can get
+                    started with minimum fuss. Most Spring Boot applications need minimal Spring configuration."
+                </p>
+                <img src="spring-logo.svg"/>
+            </section>
+            <section>
+                <h2>Hello Web-World</h2>
+                <p>Add a dependency to <code>spring-boot-starter-web</code></p>
+                <pre><code class="language-kotlin" data-trim data-noescape>
+dependencies {
+  implementation(
+    "org.springframework.boot:spring-boot-starter-web:2.7.3"
+  )
+}
+  </code></pre>
+            </section>
+            <section>
+                <h2>Hello Web-World</h2>
+                <p>Create a main class</p>
+                <pre><code class="language-kotlin" data-trim data-noescape>
+package io.cloudflight.hello
+
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
+
+@SpringBootApplication
+class HelloWorldApplication
+
+fun main(args: Array<String>) {
+  runApplication<HelloWorldApplication>(*args)
+}
+ </code></pre>
+            </section>
+            <section>
+                <h2>Hello Web-World</h2>
+                <pre><code class="language-kotlin" data-trim data-noescape>
+package io.cloudflight.hello
+
+import org.springframework.web.bind.annotation.*
+
+@RestController
+class HelloWorldController {
+
+    @GetMapping("/")
+    fun sayHello() : Greeting {
+        return Greeting("Hello", "DevTreff")
+    }
+
+    data class Greeting(val greeting:String, val person:String)
+}
+
+ </code></pre>
+            </section>
+            <section>
+                <h2>Hello Web-World</h2>
+                <p>Start the application and visit </p>
+                <pre>GET http://localhost:8080/</pre>
+                <p>Your browser will print</p>
+                <pre>{"greeting":"Hello","person":"DevTreff"}</pre>
+            </section>
+            <section>
+                <h2>Convention over configuration</h2>
+                <p>Without configuring any of those you got:</p>
+                <ul>
+                    <li>An embedded Apache Tomcat Web Server running on port 8080</li>
+                    <li>Servlet mappings automatically configured with JSON response mappings</li>
+                    <li>Automatic mapping of Kotlin Data classes to JSON using Jackson</li>
+                </ul>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>Gradle</h2>
+                <p><b>Accelerate developer productivity</b></p>
+                <blockquote>From mobile apps to microservices, from small startups to big enterprises, Gradle helps
+                    teams
+                    build,
+                    automate and deliver better software, faster.
+                </blockquote>
+                <img src="gradle-logo-horizontal.svg"/>
+            </section>
+            <section>
+                <h2>Empty Java Gradle project</h2>
+                <p>Create a <code>build.gradle.kts</code> file as follows:</p>
+                <pre><code class="language-kotlin" data-trim data-noescape>
+plugins {
+    java
+}
+
+group = "io.cloudflight.gradle.sample"
+version = "1.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+  </code></pre>
+            </section>
+            <section>
+                <h2>Configure JUnit5</h2>
+                <p>Because we love TDD!</p>
+                <pre><code class="language-kotlin" data-trim data-noescape>
+tasks.test {
+    useJUnitPlatform()
+}
+  </code></pre>
+            </section>
+            <section>
+                <h2>Add Manifest.MF</h2>
+                <p>Proper metadata in your JARs are important!</p>
+                <pre><code class="language-kotlin" data-trim data-noescape>
+tasks.jar {
+    manifest {
+        attributes(
+            "Implementation-Title" to project.name,
+            "Implementation-Version" to project.version,
+            "Implementation-Vendor" to "Cloudflight",
+        )
+    }
+}  </code></pre>
+
+            </section>
+            <section>
+                <h2>Encoding</h2>
+                <p>Cause we don't wanna rely on system defaults:</p>
+                <pre><code class="language-kotlin" data-trim data-noescape>
+tasks.compileJava {
+    options.encoding = "UTF-8"
+}
+
+tasks.compileTestJava {
+    options.encoding = "UTF-8"
+}  </code></pre>
+
+            </section>
+            <section>
+                <h2>Add Sources and JavaDoc</h2>
+                <p>We want our users to browse through our code</p>
+                <pre><code class="language-kotlin" data-trim data-noescape>
+java {
+    withSourcesJar()
+    withJavadocJar()
+}  </code></pre>
+
+            </section>
+            <section>
+                <h2>Switch to Java 17</h2>
+                <pre><code class="language-kotlin" data-trim data-noescape>
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+                </code></pre>
+
+            </section>
+            <section>
+                <h2>Add Kotlin</h2>
+                <pre><code class="language-kotlin" data-trim data-noescape>
+plugins {
+    kotlin("jvm") version "1.7.20"
+    kotlin("kapt") version "1.7.20"
+}
+
+kotlin {
+    jvmToolchain {
+        this.languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+                </code></pre>
+                <img src="kotlin.svg"/>
+            </section>
+            <section id="full-example">
+                <h2>Full Example</h2>
+                <pre><code class="language-kotlin" data-line-numbers data-trim data-noescape>
+plugins {
+    kotlin("jvm") version "1.7.20"
+    kotlin("kapt") version "1.7.20"
+}
+
+group = "io.cloudflight.gradle.sample"
+version = "1.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
+tasks.compileJava {
+    options.encoding = "UTF-8"
+}
+
+tasks.compileTestJava {
+    options.encoding = "UTF-8"
+}
+
+tasks.jar {
+    manifest {
+        attributes(
+            "Implementation-Title" to project.name,
+            "Implementation-Version" to project.version,
+            "Implementation-Vendor" to "Cloudflight",
+        )
+    }
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+    withSourcesJar()
+    withJavadocJar()
+}
+
+kotlin {
+    jvmToolchain {
+        this.languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}                </code></pre>
+
+            </section>
+            <section>
+                <h2>Summary</h2>
+                <ul>
+                    <li>So we now have <b>47 lines</b> of Gradle Kotlin DSL for <a href="#/full-example">a fully running
+                        Kotlin+Java example</a></li>
+                    <li class="fragment fade-in">Is that too much or even a problem?</li>
+                    <li class="fragment fade-in">Not if you're doing just one project.</li>
+                    <li class="fragment fade-in">But it is, if you're running 100s of projects in parallel like we are
+                        doing at <a
+                                href="https://cloudflight.io">Cloudflight</a>.
+                    </li>
+                </ul>
+            </section>
+        </section>
+        <section>
+            <section data-auto-animate>
+                <h2>Problem #1</h2>
+                <p>Suppose you have those 47 lines spread over 100 projects and want to introduce something new</p>
+                <ul>
+                    <li>Update the version of the Kotlin Plugin</li>
+                    <li>Add a new value to the <code>Manifest.MF</code></li>
+                    <li>Apply Jacoco in every Java project</li>
+                </ul>
+            </section>
+            <section data-auto-animate>
+                <h2>Problem #1</h2>
+                <p>Suppose you have those 47 lines spread over 100 projects and want to introduce something new</p>
+                <ul>
+                    <li>Create more or less complicated changelogs</li>
+                    <li>More or less force the projects to apply those changelogs</li>
+                    <li>Hope that no-one did manual updates which make applying the changelog a pain</li>
+                </ul>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>Problem #2</h2>
+                <p>You want to ensure that <b>best practices are applied in all of your projects</b></p>
+                <ul>
+                    <li>Deviations from the standard must be done with good (documented) reason</li>
+                    <li>Don't make developers think too much about the standard, it should be just there and work
+                    </li>
+                </ul>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>That's why we built the AutoConfigure Gradle Plugin</h2>
+                <ul>
+                    <li>Available on <a href="https://github.com/cloudflightio/autoconfigure-gradle-plugin"
+                                        target="_blank">GitHub</a></li>
+                    <li>Licensed under Apache 2.0</li>
+                    <li>Published on the <a
+                            href="https://plugins.gradle.org/plugin/io.cloudflight.autoconfigure-gradle">Gradle Plugin
+                        Portal</a></li>
+                </ul>
+                <p>
+                    <img src="https://img.shields.io/badge/License-Apache_2.0-green.svg"/>
+                    <img src="https://img.shields.io/gradle-plugin-portal/v/io.cloudflight.autoconfigure-gradle?logo=gradle&amp;label=Gradle%20Plugin%20Portal"/>
+                </p>
+
+                <img src="gradle-logo-horizontal.svg"/>
+
+            </section>
+            <section>
+                <h2>AutoConfigure Plugin</h2>
+                <p>
+                    <img src="https://img.shields.io/badge/License-Apache_2.0-green.svg"/>
+                    <img src="https://img.shields.io/gradle-plugin-portal/v/io.cloudflight.autoconfigure-gradle?logo=gradle&amp;label=Gradle%20Plugin%20Portal"/>
+                </p>
+                <blockquote>"This plugin is an opinionated approach to configure a Gradle project automatically by
+                    convention. It
+                    supports to automatically configure various plugins to reduce boilerplate code in Gradle
+                    projects."
+                </blockquote>
+            </section>
+            <section>
+                <h2>Remember our 47 lines</h2>
+                <pre><code class="language-kotlin" data-line-numbers data-trim data-noescape>
+plugins {
+    kotlin("jvm") version "1.7.20"
+    kotlin("kapt") version "1.7.20"
+}
+
+group = "io.cloudflight.gradle.sample"
+version = "1.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
+tasks.compileJava {
+    options.encoding = "UTF-8"
+}
+
+tasks.compileTestJava {
+    options.encoding = "UTF-8"
+}
+
+tasks.jar {
+    manifest {
+        attributes(
+            "Implementation-Title" to project.name,
+            "Implementation-Version" to project.version,
+            "Implementation-Vendor" to "Cloudflight",
+        )
+    }
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+    withSourcesJar()
+    withJavadocJar()
+}
+
+kotlin {
+    jvmToolchain {
+        this.languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}                </code></pre>
+
+
+            </section>
+            <section>
+                <h2>Our workspace</h2>
+                <p><img src="workspace.png"/></p>
+            </section>
+            <section>
+                <h2>Same with AutoConfigure</h2>
+                <pre><code class="language-kotlin" data-line-numbers data-trim data-noescape>
+plugins {
+    id("io.cloudflight.autoconfigure-gradle") version "0.8.4"
+}
+
+group = "io.cloudflight.gradle.sample"
+version = "1.0-SNAPSHOT"
+
+autoConfigure {
+    java {
+        vendorName.set("Cloudflight")
+    }
+}
+
+repositories {
+    mavenCentral()
+}               </code></pre>
+
+
+            </section>
+            <section>
+                <h1>And you get even more for free</h1>
+            </section>
+            <section>
+                <h2>Advanced Manifest</h2>
+                <p>Adding entries for <code>Class-Path</code> and <code>Created-By</code>:</p>
+                <pre>
+Class-Path: kotlin-stdlib-jdk8-1.7.20.jar kotlin-stdlib-jdk7-1.7.20.jar
+ kotlin-stdlib-1.7.20.jar kotlin-stdlib-common-1.7.20.jar annotations-13
+ .0.jar
+Created-By: 17.0.2+8 (Eclipse Temurin)
+Implementation-Vendor: Cloudflight
+Implementation-Title: sample-gradle-project
+Implementation-Version: 1.0-SNAPSHOT
+Gradle-Version: 7.4.2
+                </pre>
+            </section>
+            <section>
+                <h2>A NOTICE.html with all 3rd party libs</h2>
+                <p>
+                    <img src="notice.png"/>
+                </p>
+            </section>
+            <section>
+                <h2>A Licence Report as JSON</h2>
+                <pre><code>{
+  "project": "IntelliJ IDEA Annotations",
+  "description": "A set of annotations used for code inspection support and code documentation.",
+  "version": "13.0",
+  "developers": [
+    "JetBrains Team"
+  ],
+  "url": "http://www.jetbrains.org",
+  "year": "",
+  "licenses": [
+    {
+      "license": "Apache License 2.0",
+      "license_id": "Apache-2.0",
+      "license_url": "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
+  "dependency": "org.jetbrains:annotations:13.0"
+}</code></pre>
+            </section>
+
+        </section>
+        <section>
+            <section><h2>How does that work?</h2>
+                <p>The magic keyword is <b>"auto-configuration"</b></p>
+            </section>
+            <section>
+                <h2>Java AutoConfigure</h2>
+                <p>If we detect any of the folders</p>
+                <ul>
+                    <li><code>src/main/java</code></li>
+                    <li><code>src/test/java</code></li>
+                </ul>
+                <p>then we</p>
+                <ul>
+                    <li>apply the <code>java-library</code> plugin</li>
+                    <li>set the <code>jvmToolChain</code> to latest Java LTS version (17)</li>
+                    <li>set <code>encoding</code> of all source files to UTF-8</li>
+                    <li>create a proper manifest</li>
+                    <li>apply the plugins for Jacoco and <a
+                            href="https://github.com/cloudflightio/license-gradle-plugin">License-Tracking</a></li>
+                </ul>
+            </section>
+            <section>
+                <h2>Kotlin AutoConfigure</h2>
+                <p>If we detect any of the folders</p>
+                <ul>
+                    <li><code>src/main/kotlin</code></li>
+                    <li><code>src/test/kotlin</code></li>
+                </ul>
+                <p>then we</p>
+                <ul>
+                    <li>apply the Java-AutoConfigure plugin from above</li>
+                    <li>apply the Kotlin Gradle plugins for JVM, KAPT and Spring</li>
+                    <li>set the <code>jvmToolChain</code> for Kotlin to the same Java version</li>
+                </ul>
+            </section>
+            <section>
+                <h2>Overriding defaults</h2>
+                <p>Just like in Spring Boot, you sometimes might want to override the defaults, which you can always
+                    do by overriding the values of the original plugin</p>
+                <pre><code class="language-kotlin" data-trim data-noescape>
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+} </code></pre>
+                <p>Your settings here won't be overridden by our plugin.</p>
+            </section>
+            <section>
+                <h2>Overriding defaults</h2>
+                <p>Especially for multi-module environments we provide an own configuration block for your
+                    root <code>build.gradle.kts</code> which will override the defaults for all modules:
+                </p>
+                <pre><code class="language-kotlin" data-trim data-noescape>
+autoConfigure {
+    java {
+        languageVersion.set(JavaLanguageVersion.of(8))
+        encoding.set("UTF-16")
+        vendorName.set("My cool company")
+    }
+    kotlin {
+        kotlinVersion.set("1.5.31")
+    }
+} </code></pre>
+            </section>
+
+        </section>
+        <section>
+            <h2>What else do we provide?</h2>
+            <p>Besides support for Java and Kotlin, the AutoConfigure plugin also provides sensible defaults for:</p>
+            <ul>
+                <li>Reporting-Extensions with Jacoco for code-coverage</li>
+                <li>the Gradle-Node-Plugin, specifically when working with NPM</li>
+                <li>support for Swagger + OpenAPI (generate specs from code and vice versa)</li>
+                <li>support for Spring Boot + Micronaut for fat-JAR-packaging</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Where to go next?</h2>
+            <ul>
+                <li>Check our <a href="https://github.com/cloudflightio/autoconfigure-gradle-plugin">GitHub-Page</a> and
+                    <b><a href="https://plugins.gradle.org/plugin/io.cloudflight.autoconfigure-gradle" target="_blank">download
+                        the plugin</a></b>
+                </li>
+                <li>Check out our <a
+                        href="https://github.com/cloudflightio/autoconfigure-gradle-plugin/blob/main/samples/samples.md">real-life
+                    samples</a>, one of them being a full-functional Spring Boot App written in Kotlin, providing an
+                    OpenAPI, including an Angular frontend.
+                </li>
+                <li>Give our project a star on GitHub<br/><a
+                        href="https://github.com/cloudflightio/autoconfigure-gradle-plugin"><img alt="GitHub Repo stars"
+                                                                                                 src="https://img.shields.io/github/stars/cloudflightio/autoconfigure-gradle-plugin?style=for-the-badge"></a>
+                </li>
+                <li>Contribute, either by adding issues or by submitting pull requests.</li>
+            </ul>
+        </section>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/highlight/highlight.min.js"></script>
+
+<script>
+    Reveal.initialize({
+        plugins: [RevealHighlight],
+        center: true
+    });
+</script>
+
+</body>
+</html>
+

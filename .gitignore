@@ -183,3 +183,5 @@ lint.js
 
 .angular
 coverage
+
+.idea/jsLibraryMappings.xml
