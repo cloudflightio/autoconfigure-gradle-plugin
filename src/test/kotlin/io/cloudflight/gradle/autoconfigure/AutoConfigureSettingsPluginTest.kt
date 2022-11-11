@@ -41,7 +41,7 @@ class AutoConfigureSettingsPluginTest {
             val result = run("-q", "clfPrintVersion", infoLoggerEnabled = false)
             assertThat(result.normalizedOutput.trim())
                 .hasLineCount(1)
-                .isEqualTo("1.0.0-SNAPSHOT")
+                .endsWith("-SNAPSHOT")
         }
 
     companion object {

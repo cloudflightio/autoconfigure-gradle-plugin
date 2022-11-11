@@ -71,8 +71,8 @@ this with any of your desired values.
 In any way, you can omit the `version` property from your `build.gradle` file then, Reckon will take care of it.
 
 If you are not running on a CI-Server (i.e. you are doing local development), the Reckon-Plugin is NOT applied, instead
-we hardcode the version to `1.0.0-SNAPSHOT` (but you're free to override that in the `build.gradle` temporarily). The 
-reason for this behaviour is [this ticket](https://github.com/ajoberstar/reckon/issues/189).
+we set the version to the `-SNAPSHOT` or the last reckoned version as described in [this ticket](https://github.com/cloudflightio/autoconfigure-gradle-plugin/issues/114) (but you're free to override that in the `build.gradle` temporarily). 
+That means if the Reckon plugin would create `0.8.5-rc.0.0+20221111T075331Z`, we convert that to `0.8.5-SNAPSHOT` locally. The reason for this behaviour is [this ticket](https://github.com/ajoberstar/reckon/issues/189).
 
 In any case, the Settings-Plugin, we will also automatically apply the `io.cloudflight.autoconfigure-gradle` plugin for you, so you don't need
 to do that on your own. 
