@@ -32,7 +32,7 @@ class AutoConfigureSettingsPluginTest {
             // we are just checking that there is just one line here, the content itself is determined by the reckon plugin
             assertThat(result.normalizedOutput.trim())
                 .hasLineCount(1)
-                .isNotEqualTo("1.0.0-SNAPSHOT")
+                .doesNotEndWith("-SNAPSHOT")
         }
 
     @Test

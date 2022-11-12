@@ -27,36 +27,39 @@ class AutoConfigureSettingsPlugin : Plugin<Settings> {
         } else if (!settings.plugins.hasPlugin(ReckonSettingsPlugin::class.java)) {
             // if the ReckonSettingsPlugin hasn't yet been applied by the user,
             // (i.e. it is intended that it is applied also locally)
-            // then set the version number here
-            settings.gradle.allprojects { project ->
+            // then set the version number here.
 
-                // when running without CI server, we are using the Reckoner Core to calculate
-                // a new version based on the staging scheme, but then converting to a snapshot manually.
-                // see https://github.com/cloudflightio/autoconfigure-gradle-plugin/issues/114 why we are doing this
+            // when running without CI server, we are using the Reckoner Core to calculate
+            // a new version based on the staging scheme, but then converting to a snapshot manually.
+            // see https://github.com/cloudflightio/autoconfigure-gradle-plugin/issues/114 why we are doing this
 
-                val grgitService = settings.gradle.sharedServices.registerIfAbsent(
-                    "reckon-grgit",
-                    GrgitService::class.java
-                ) { spec: BuildServiceSpec<GrgitService.Params> ->
-                    spec.parameters.currentDirectory.set(settings.settingsDir)
-                    spec.parameters.initIfNotExists.set(false)
-                    spec.maxParallelUsages.set(1)
-                }
-                val git = grgitService.get().grgit
-                val repo = git.repository.jgit.repository
-                val reckoner = Reckoner.builder()
-                    .git(repo, VersionTagParser.getDefault())
-                    .scopeCalc { _ -> Optional.empty() }
-                    .stageCalc { _, _ -> Optional.empty() }
-                    .defaultInferredScope(Scope.PATCH)
-                    .stages("rc", "final")
-                    .build()
-                val version = DefaultArtifactVersion(reckoner.reckon().toString())
-                project.version =
-                    "${version.majorVersion}.${version.minorVersion}.${version.incrementalVersion}-SNAPSHOT"
-                // analogous to the ReckonExtension.reckonVersion (which we don't call here on purpose)
-                LOG.warn("Reckoned version for local development: ${project.version}")
+            val grgitService = settings.gradle.sharedServices.registerIfAbsent(
+                "reckon-grgit",
+                GrgitService::class.java
+            ) { spec: BuildServiceSpec<GrgitService.Params> ->
+                spec.parameters.currentDirectory.set(settings.settingsDir)
+                spec.parameters.initIfNotExists.set(false)
+                spec.maxParallelUsages.set(1)
             }
+            val git = grgitService.get().grgit
+            val repo = git.repository.jgit.repository
+            val reckoner = Reckoner.builder()
+                .git(repo, VersionTagParser.getDefault())
+                .scopeCalc { _ -> Optional.empty() }
+                .stageCalc { _, _ -> Optional.empty() }
+                .defaultInferredScope(Scope.PATCH)
+                .stages("rc", "final")
+                .build()
+            val reckonedVersion = DefaultArtifactVersion(reckoner.reckon().toString())
+            val developmentVersion =
+                "${reckonedVersion.majorVersion}.${reckonedVersion.minorVersion}.${reckonedVersion.incrementalVersion}-SNAPSHOT"
+
+            settings.gradle.allprojects { project ->
+                project.version = developmentVersion
+            }
+
+            // analogous to the ReckonExtension.reckonVersion (which we don't call here on purpose)
+            LOG.warn("Reckoned version for local development: $developmentVersion")
         }
         settings.gradle.projectsLoaded {
             it.rootProject.plugins.apply(AutoConfigureGradlePlugin::class.java)
