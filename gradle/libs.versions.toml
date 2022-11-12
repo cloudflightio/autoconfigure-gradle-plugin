@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.7.20"
+kotlin = "1.7.21"
 maven-artifact = "3.5.0"
 jupiter = "5.8.1"
 assertj = "3.22.0"
