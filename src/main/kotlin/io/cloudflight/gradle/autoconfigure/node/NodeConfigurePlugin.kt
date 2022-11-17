@@ -2,22 +2,14 @@ package io.cloudflight.gradle.autoconfigure.node
 
 import com.github.gradle.node.NodeExtension
 import com.github.gradle.node.NodePlugin
-import com.github.gradle.node.npm.task.NpmInstallTask
-import com.github.gradle.node.npm.task.NpmTask
-import io.cloudflight.gradle.autoconfigure.AutoConfigureGradlePlugin
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.apply
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.getByType
 import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin
 import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePluginExtension
 import io.cloudflight.gradle.autoconfigure.util.BuildUtils.isIntegrationBuild
-import io.cloudflight.gradle.autoconfigure.util.EnvironmentUtils.isVerifyBuild
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.plugins.JavaPluginExtension
-import org.gradle.api.tasks.SourceSet
-import org.gradle.language.base.plugins.LifecycleBasePlugin
 import java.io.File
 
 class NodeConfigurePlugin : Plugin<Project> {
@@ -46,12 +38,14 @@ class NodeConfigurePlugin : Plugin<Project> {
                             project.file("eslintrc.json")
                         )
             )
+            npmVersion.convention(npm.npmVersion)
+            destinationDir.convention(npm.destinationDir)
+            inputFiles.convention(npm.inputFiles)
         }
 
         project.extensions.getByType(JavaConfigurePluginExtension::class).apply {
             createSourceArtifacts.set(false)
         }
-
 
         val dummy = NodeExtension(project.rootProject)
         // Ensure node is only downloaded once for all subprojects
@@ -62,79 +56,23 @@ class NodeConfigurePlugin : Plugin<Project> {
         node.download.set(nodeExtension.downloadNode)
 
         node.version.set(nodeExtension.nodeVersion)
-        node.npmVersion.set(nodeExtension.npm.npmVersion)
+        node.npmVersion.set(nodeExtension.npmVersion)
 
-        val install = project.tasks.getByName(NpmInstallTask.NAME) as NpmInstallTask
 
-        val lint = project.tasks.create(NPM_LINT_TASK_NAME, NpmTask::class.java) { t ->
-            t.group = AutoConfigureGradlePlugin.TASK_GROUP
-            t.args.set(listOf("run", "lint"))
-            t.dependsOn(install)
-            t.inputs.files(nodeExtension.npm.inputFiles)
-            t.outputs.upToDateWhen { true }
-        }
+        // TODO create a setupYARN
+        /*        val setVersion = project.tasks.create("setYarnVersion", YarnTask::class.java) {t->
+            t.yarnCommand.set(listOf("set", "version", "berry"))
+        }*/
 
-        project.tasks.create("clfNpmBuildDev", NpmTask::class.java) { t ->
-            t.group = AutoConfigureGradlePlugin.TASK_GROUP
-            t.args.set(listOf("run", "build:dev"))
-            t.dependsOn(install)
-        }
+        /*val setVersion = project.tasks.create("importVersionPlugin", YarnTask::class.java) {t->
+            t.yarnCommand.set(listOf("plugin", "import", "version"))
+        }*/
 
-        val updateVersion = project.tasks.create("clfNpmUpdateVersion", NpmTask::class.java) { t ->
-            t.group = AutoConfigureGradlePlugin.TASK_GROUP
-            t.npmCommand.set(listOf("version"))
-            t.args.set(project.provider {
-                listOf(
-                    project.version.toString(),
-                    "--allow-same-version",
-                    "--no-git-tag-version"
-                )
-            })
-            t.inputs.files(nodeExtension.npm.inputFiles)
-        }
 
-        val build = project.tasks.create(NPM_BUILD_TASK_NAME, NpmTask::class.java) { t ->
-            t.group = AutoConfigureGradlePlugin.TASK_GROUP
-            t.args.set(listOf("run", "build"))
-            t.dependsOn(install)
-            t.inputs.files(nodeExtension.npm.inputFiles)
-            t.outputs.dir(nodeExtension.npm.destinationDir)
-        }
-
-        project.tasks.create("clfNpmAudit", NpmTask::class.java) { t ->
-            t.group = AutoConfigureGradlePlugin.TASK_GROUP
-            t.args.set(listOf("audit"))
-            t.dependsOn(install)
-        }
-
-        val packgeJsonFile = project.file(NpmHelper.PACKAGE_JSON)
-
-        if (isIntegrationBuild() && !isVerifyBuild() && packgeJsonFile.exists()) {
-            install.dependsOn(updateVersion)
-        }
-
-        project.tasks.getByName(LifecycleBasePlugin.CHECK_TASK_NAME).dependsOn(lint)
-
-        //this prevents running npmBuild each time when a project is started via intellij
-        project.tasks.getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME).mustRunAfter(build)
-        project.tasks.getByName(JavaPlugin.JAR_TASK_NAME).dependsOn(build)
-
-        val javaPluginExtension = project.extensions.getByType(JavaPluginExtension::class.java)
-        val sourceSetMain = javaPluginExtension.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
-
-        sourceSetMain.java.srcDirs(NpmHelper.determineSourceDirs(project))
-        sourceSetMain.output.dir(mapOf("builtBy" to build), nodeExtension.npm.destinationDir)
-
-        if (NpmHelper.hasScript("test", project.file(NpmHelper.PACKAGE_JSON))) {
-            val npmTest = project.tasks.create("clfNpmTest", NpmTask::class.java) { t ->
-                t.group = AutoConfigureGradlePlugin.TASK_GROUP
-                t.args.set(listOf("run", "test"))
-                t.dependsOn(listOf(install, build))
-                t.inputs.files(nodeExtension.npm.inputFiles)
-                t.environment.put("GRADLE_BUILD", true.toString())
-                t.environment.put("INTEGRATION_BUILD", isIntegrationBuild().toString())
-            }
-            project.tasks.getByName("test").dependsOn(npmTest)
+        if (project.file(".yarnrc.yml").exists()) {
+            YarnConfiguration.apply(project, nodeExtension)
+        } else {
+            NpmConfiguration.apply(project, nodeExtension)
         }
     }
 

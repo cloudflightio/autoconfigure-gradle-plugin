@@ -53,7 +53,6 @@ class NodeConfigurePluginTest {
 
         @JvmStatic
         fun singleNodeModuleArguments(): Stream<Arguments> {
-            // keep in sync with the kotlin version in libs.versions.toml
             return Stream.of(
                 arguments(
                     TestOptions(
@@ -68,7 +67,21 @@ class NodeConfigurePluginTest {
                         tasksThatShouldHaveRun = setOf("clfNpmUpdateVersion"),
                         assertUpToDateRerun = false
                     )
-                )
+                ),
+                arguments(
+                    TestOptions(
+                        fixtureName = "single-ts-module-yarn",
+                        assertUpToDateRerun = false // TODO check why this does not work on Github CI
+                    )
+                ),
+                arguments(
+                    TestOptions(
+                        fixtureName = "single-ts-module-yarn",
+                        environment = mapOf("GITHUB_ACTIONS" to true.toString()),
+                        tasksThatShouldHaveRun = setOf("clfYarnUpdateVersion"),
+                        assertUpToDateRerun = false
+                    )
+                ),
             )
         }
     }
