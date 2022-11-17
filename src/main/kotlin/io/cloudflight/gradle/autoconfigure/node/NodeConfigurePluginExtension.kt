@@ -1,7 +1,6 @@
 package io.cloudflight.gradle.autoconfigure.node
 
 import org.gradle.api.Action
-import org.gradle.api.file.Directory
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
@@ -19,13 +18,23 @@ abstract class NodeConfigurePluginExtension @Inject constructor(
     fun npm(action: Action<NpmConfigurePluginExtension>) {
         action.execute(npm)
     }
-}
-
-abstract class NpmConfigurePluginExtension {
 
     abstract val npmVersion: Property<String>
 
     abstract val destinationDir: Property<File>
+    abstract val inputFiles: ListProperty<Any>
+
+}
+
+abstract class NpmConfigurePluginExtension {
+
+    @Deprecated("use node.npmVersion instead")
+    abstract val npmVersion: Property<String>
+
+    @Deprecated("use node.destinationDir instead")
+    abstract val destinationDir: Property<File>
+
+    @Deprecated("use node.inputFiles instead")
     abstract val inputFiles: ListProperty<Any>
 
 }
