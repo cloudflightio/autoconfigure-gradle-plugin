@@ -68,6 +68,13 @@ class NodeConfigurePluginTest {
                         tasksThatShouldHaveRun = setOf("clfNpmUpdateVersion"),
                         assertUpToDateRerun = false
                     )
+                ),
+                arguments(
+                    TestOptions(
+                        fixtureName = "single-ts-module",
+                        tasksThatShouldHaveRun = setOf("clfNpmClean"),
+                        assertUpToDateRerun = false
+                    )
                 )
             )
         }

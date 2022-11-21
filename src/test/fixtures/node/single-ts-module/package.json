@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
+    "clean": "ng cache clean",
     "start": "ng serve",
     "build": "ng build",
     "lint": "ng lint",
