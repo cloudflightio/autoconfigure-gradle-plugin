@@ -74,13 +74,13 @@ class NodeConfigurePlugin : Plugin<Project> {
             t.outputs.upToDateWhen { true }
         }
 
-        project.tasks.create("clfNpmBuildDev", NpmTask::class.java) { t ->
+        project.tasks.create(NPM_BUILD_DEV_TASK_NAME, NpmTask::class.java) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.args.set(listOf("run", "build:dev"))
             t.dependsOn(install)
         }
 
-        val updateVersion = project.tasks.create("clfNpmUpdateVersion", NpmTask::class.java) { t ->
+        val updateVersion = project.tasks.create(NPM_UPDATE_VERSION_TASK_NAME, NpmTask::class.java) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.npmCommand.set(listOf("version"))
             t.args.set(project.provider {
@@ -107,9 +107,9 @@ class NodeConfigurePlugin : Plugin<Project> {
             t.dependsOn(install)
         }
 
-        val packgeJsonFile = project.file(NpmHelper.PACKAGE_JSON)
+        val packageJsonFile = project.file(NpmHelper.PACKAGE_JSON)
 
-        if (isIntegrationBuild() && !isVerifyBuild() && packgeJsonFile.exists()) {
+        if (isIntegrationBuild() && !isVerifyBuild() && packageJsonFile.exists()) {
             install.dependsOn(updateVersion)
         }
 
@@ -151,8 +151,10 @@ class NodeConfigurePlugin : Plugin<Project> {
     companion object {
         const val NPM_CLEAN_TASK_NAME = "clfNpmClean"
         const val NPM_BUILD_TASK_NAME = "clfNpmBuild"
+        const val NPM_BUILD_DEV_TASK_NAME = "clfNpmBuildDev"
         const val NPM_LINT_TASK_NAME = "clfNpmLint"
         const val NPM_TEST_TASK_NAME = "clfNpmTest"
+        const val NPM_UPDATE_VERSION_TASK_NAME = "clfNpmUpdateVersion"
 
         private const val EXTENSION_NAME = "nodeConfigure"
     }
