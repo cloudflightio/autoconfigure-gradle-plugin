@@ -125,8 +125,10 @@ class NodeConfigurePlugin : Plugin<Project> {
         sourceSetMain.java.srcDirs(NpmHelper.determineSourceDirs(project))
         sourceSetMain.output.dir(mapOf("builtBy" to build), nodeExtension.npm.destinationDir)
 
-        if (NpmHelper.hasScript("test", project.file(NpmHelper.PACKAGE_JSON))) {
-            val npmTest = project.tasks.create("clfNpmTest", NpmTask::class.java) { t ->
+        val packageJson = project.file(NpmHelper.PACKAGE_JSON)
+
+        if (NpmHelper.hasScript("test", packageJson)) {
+            val npmTest = project.tasks.create(NPM_TEST_TASK_NAME, NpmTask::class.java) { t ->
                 t.group = AutoConfigureGradlePlugin.TASK_GROUP
                 t.args.set(listOf("run", "test"))
                 t.dependsOn(listOf(install, build))
@@ -136,11 +138,21 @@ class NodeConfigurePlugin : Plugin<Project> {
             }
             project.tasks.getByName("test").dependsOn(npmTest)
         }
+
+        if (NpmHelper.hasScript("clean", packageJson)) {
+            val npmClean = project.tasks.create(NPM_CLEAN_TASK_NAME, NpmTask::class.java) {                t ->
+                t.group = AutoConfigureGradlePlugin.TASK_GROUP
+                t.args.set(listOf("run", "clean"))
+            }
+            project.tasks.getByName("clean").dependsOn(npmClean)
+        }
     }
 
     companion object {
+        const val NPM_CLEAN_TASK_NAME = "clfNpmClean"
         const val NPM_BUILD_TASK_NAME = "clfNpmBuild"
         const val NPM_LINT_TASK_NAME = "clfNpmLint"
+        const val NPM_TEST_TASK_NAME = "clfNpmTest"
 
         private const val EXTENSION_NAME = "nodeConfigure"
     }
