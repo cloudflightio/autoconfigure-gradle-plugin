@@ -3,8 +3,7 @@ plugins {
 }
 
 reckon {
-    snapshots()
-    scopeCalc = calcScopeFromProp()
+    scopeCalc = calcScopeFromCommitMessages()
     stageCalc = calcStageFromProp()
 }
 
