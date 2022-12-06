@@ -15,7 +15,7 @@ class AutoConfigureSettingsPluginTest {
 
     @ParameterizedTest
     @MethodSource("autoConfigureSettingsArguments")
-    fun `AutoConfigureSettings plugin is applied correctly`(options: TestOptions): Unit =
+    fun `AutoConfigureSettings plugin is applied correctly on CI`(options: TestOptions): Unit =
         autoConfigureSettingsFixture(options.fixtureName, environment = CI_ENV) {
             val result = runCleanBuild()
             assertThat(result.normalizedOutput).contains("Reckoned version")
@@ -24,6 +24,20 @@ class AutoConfigureSettingsPluginTest {
                     .listFiles { _, name -> name.contains("unspecified") }
             ).isEmpty()
         }
+
+    @ParameterizedTest
+    @MethodSource("autoConfigureSettingsArguments")
+    fun `AutoConfigureSettings plugin is applied correctly on locally`(options: TestOptions): Unit =
+        autoConfigureSettingsFixture(options.fixtureName) {
+            val result = runCleanBuild()
+            assertThat(result.normalizedOutput).contains("Reckoned version")
+            assertThat(result.normalizedOutput).containsOnlyOnce("Overriding reckoned version for local development")
+            assertThat(
+                buildDir().resolve("libs").toFile()
+                    .listFiles { _, name -> name.contains("unspecified") }
+            ).isEmpty()
+        }
+
 
     @Test
     fun `print version number on CI server`(): Unit =
@@ -38,6 +52,15 @@ class AutoConfigureSettingsPluginTest {
     @Test
     fun `print version number locally`(): Unit =
         autoConfigureSettingsFixture("single-java-module-default") {
+            val result = run("-q", "clfPrintVersion", infoLoggerEnabled = false)
+            assertThat(result.normalizedOutput.trim())
+                .hasLineCount(1)
+                .endsWith("-SNAPSHOT")
+        }
+
+    @Test
+    fun `print version number locally with reckon override`(): Unit =
+        autoConfigureSettingsFixture("single-java-module-reckon-override") {
             val result = run("-q", "clfPrintVersion", infoLoggerEnabled = false)
             assertThat(result.normalizedOutput.trim())
                 .hasLineCount(1)
