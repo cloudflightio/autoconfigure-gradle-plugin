@@ -13,9 +13,7 @@ autoConfigure {
         vendorName.set("Cloudflight")
     }
     kotlin {
-        // we let the plugin itself by dependent on Kotlin 1.5.31 as this is the version currently being used
-        // by the gradle runtime of version 7.4.1
-        kotlinVersion.set("1.5.31")
+        kotlinVersion.set("1.7.10")
     }
 }
 
