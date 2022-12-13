@@ -44,5 +44,8 @@ junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref 
 
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 
+# https://securitylab.github.com/advisories/GHSL-2022-018_Apache_Commons_Text/
+commons-text = { module = "org.apache.commons:commons-text", version = "1.10.0" }
+
 [bundles]
 testImplementationDependencies = ["junit-api", "junit-params", "assertj-core"]
