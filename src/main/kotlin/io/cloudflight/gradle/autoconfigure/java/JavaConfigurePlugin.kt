@@ -28,7 +28,7 @@ import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 class JavaConfigurePlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        project.plugins.apply(JavaLibraryPlugin::class)
+        project.plugins.apply(JavaPlugin::class)
         project.plugins.apply(JacocoPlugin::class)
 
         if (project.layout.projectDirectory.dir("src/testFixtures").asFile.exists()) {
@@ -45,6 +45,7 @@ class JavaConfigurePlugin : Plugin<Project> {
             applicationBuild.convention(false)
             createSourceArtifacts.convention(applicationBuild.map { !it })
             applicationFramework.convention(ApplicationFramework.SpringBoot)
+            applyApplicationFrameworkPluginForDevelopment.convention(false)
         }
 
         val javaPluginExtension = extensions.getByType(JavaPluginExtension::class)
@@ -69,7 +70,9 @@ class JavaConfigurePlugin : Plugin<Project> {
             if (javaConfigureExtension.applicationBuild.get()){
                 when (javaConfigureExtension.applicationFramework.get()) {
                     ApplicationFramework.SpringBoot -> {
-                        if (BuildUtils.isIntegrationBuild()) {
+                        if (BuildUtils.isIntegrationBuild() ||
+                            javaConfigureExtension.applyApplicationFrameworkPluginForDevelopment.get()
+                        ) {
                             GitExtension.create(project)
                             SpringBootExtension.create(project)
                         } else {
@@ -81,6 +84,8 @@ class JavaConfigurePlugin : Plugin<Project> {
                     }
                     else -> {}
                 }
+            } else {
+                project.plugins.apply(JavaLibraryPlugin::class)
             }
 
             val compileJava = tasks.named(JavaPlugin.COMPILE_JAVA_TASK_NAME, JavaCompile::class)

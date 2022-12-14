@@ -26,6 +26,12 @@ abstract class JavaConfigurePluginExtension {
     abstract val applicationFramework: Property<ApplicationFramework>
 
     /**
+     * if this property is set to `false`, then i.e. the Spring Boot plugin will only
+     * be activated on CI environments
+     */
+    abstract val applyApplicationFrameworkPluginForDevelopment: Property<Boolean>
+
+    /**
      * The version of JDK that is being used to compile Java and Kotlin code.
      * This default is 17.
      */
