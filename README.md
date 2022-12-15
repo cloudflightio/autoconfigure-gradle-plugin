@@ -216,7 +216,7 @@ nodeConfigure {
 }
 ````
 
-Tthese values shown here are also the default values, so you can omit them, i.e. if you're fine with this values simply don't configure anything.
+These values shown here are also the default values, so you can omit them, i.e. if you're fine with this values simply don't configure anything.
 
 You then automatically get the following tasks:
 
