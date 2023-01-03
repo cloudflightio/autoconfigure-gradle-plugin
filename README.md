@@ -187,7 +187,7 @@ there to adjust the JDK or the Manifest entries.
 
 #### Kotlin Version
 
-Per default, we are using the latest version of the Kotlin Plugin (1.7.21) to compile your Kotlin-Code. Still,
+Per default, we are using the latest version of the Kotlin Plugin (1.8.0) to compile your Kotlin-Code. Still,
 you can specify an older version (i.e. 1.5.20), which results in the following behaviour:
 
 * The Kotlin StdLib of the version `1.5.20` is being added to the classpath
