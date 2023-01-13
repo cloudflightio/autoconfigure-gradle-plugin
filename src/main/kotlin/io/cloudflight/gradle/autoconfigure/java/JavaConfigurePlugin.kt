@@ -45,6 +45,7 @@ class JavaConfigurePlugin : Plugin<Project> {
             applicationBuild.convention(false)
             createSourceArtifacts.convention(applicationBuild.map { !it })
             applicationFramework.convention(ApplicationFramework.SpringBoot)
+            applyApplicationFrameworkOnlyOnCI.convention(false)
         }
 
         val javaPluginExtension = extensions.getByType(JavaPluginExtension::class)
@@ -66,19 +67,23 @@ class JavaConfigurePlugin : Plugin<Project> {
                 javaPluginExtension.withJavadocJar()
             }
 
-            if (javaConfigureExtension.applicationBuild.get()){
+            if (javaConfigureExtension.applicationBuild.get()) {
                 when (javaConfigureExtension.applicationFramework.get()) {
                     ApplicationFramework.SpringBoot -> {
-                        if (BuildUtils.isIntegrationBuild()) {
+                        if (javaConfigureExtension.applyApplicationFrameworkOnlyOnCI.get() == false || BuildUtils.isIntegrationBuild()) {
                             GitExtension.create(project)
                             SpringBootExtension.create(project)
                         } else {
                             DevelopmentExtension.create(project)
                         }
                     }
+
                     ApplicationFramework.Micronaut -> {
-                        ShadowExtension.create(project)
+                        if (javaConfigureExtension.applyApplicationFrameworkOnlyOnCI.get() == false) {
+                            ShadowExtension.create(project)
+                        }
                     }
+
                     else -> {}
                 }
             }

@@ -15,6 +15,7 @@ javaConfigure {
     encoding = "UTF-8"
     vendorName = "Cloudflight XYZ"
     applicationBuild = true
+    applyApplicationFrameworkOnlyOnCI = true
 }
 
 dependencies {

@@ -15,6 +15,7 @@ javaConfigure {
     languageVersion = JavaLanguageVersion.of(11)
     encoding = "UTF-8"
     vendorName = "Cloudflight Test Vendor"
+    applyApplicationFrameworkOnlyOnCI = true
 }
 
 dependencies {
