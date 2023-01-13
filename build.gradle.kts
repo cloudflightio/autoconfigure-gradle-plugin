@@ -9,7 +9,7 @@ group = "io.cloudflight.gradle"
 
 autoConfigure {
     java {
-        languageVersion.set(JavaLanguageVersion.of(11))
+        languageVersion.set(JavaLanguageVersion.of(17))
         vendorName.set("Cloudflight")
     }
     kotlin {

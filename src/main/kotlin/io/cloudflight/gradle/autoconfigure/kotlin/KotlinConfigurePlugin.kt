@@ -36,7 +36,9 @@ class KotlinConfigurePlugin : Plugin<Project> {
 
         extensions.getByType(AllOpenExtension::class.java).apply {
             annotation("javax.persistence.Entity")
+            annotation("jakarta.persistence.Entity")
             annotation("javax.persistence.MappedSuperclass")
+            annotation("jakarta.persistence.MappedSuperclass")
         }
 
         val kotlinConfigureExtension = extensions.getByType(KotlinConfigurePluginExtension::class)
