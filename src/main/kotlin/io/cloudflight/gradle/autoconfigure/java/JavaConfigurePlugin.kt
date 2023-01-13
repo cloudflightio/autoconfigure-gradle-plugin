@@ -14,7 +14,6 @@ import io.cloudflight.gradle.autoconfigure.git.GitExtension
 import io.cloudflight.gradle.autoconfigure.util.BuildUtils
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaLibraryPlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.plugins.JavaTestFixturesPlugin
@@ -28,7 +27,7 @@ import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 class JavaConfigurePlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        project.plugins.apply(JavaLibraryPlugin::class)
+        project.plugins.apply(JavaPlugin::class)
         project.plugins.apply(JacocoPlugin::class)
 
         if (project.layout.projectDirectory.dir("src/testFixtures").asFile.exists()) {
