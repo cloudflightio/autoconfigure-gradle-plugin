@@ -183,3 +183,10 @@ lint.js
 
 .angular
 coverage
+
+samples/kotlin-springboot-angular-yarn/skeleton-ui/.yarn/*
+!samples/kotlin-springboot-angular-yarn/skeleton-ui/.yarn/releases
+!samples/kotlin-springboot-angular-yarn/skeleton-ui/.yarn/patches
+!samples/kotlin-springboot-angular-yarn/skeleton-ui/.yarn/plugins
+!samples/kotlin-springboot-angular-yarn/skeleton-ui/.yarn/sdks
+!samples/kotlin-springboot-angular-yarn/skeleton-ui/.yarn/versions

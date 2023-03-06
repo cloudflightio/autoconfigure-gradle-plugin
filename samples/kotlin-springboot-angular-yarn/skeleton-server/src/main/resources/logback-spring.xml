@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="io/cloudflight/platform/spring/logging/clf-base.xml" />
+
+    <logger name="io.cloudflight.platform" level="INFO"/>
+    <logger name="io.cloudflight.skeleton" level="DEBUG"/>
+
+    <root level="warn">
+    </root>
+
+</configuration>

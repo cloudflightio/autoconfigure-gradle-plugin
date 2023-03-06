@@ -80,6 +80,9 @@ class NodeConfigurePlugin : Plugin<Project> {
         const val NPM_BUILD_TASK_NAME = "clfNpmBuild"
         const val NPM_LINT_TASK_NAME = "clfNpmLint"
 
+        const val YARN_BUILD_TASK_NAME = "clfYarnBuild"
+        const val YARN_LINT_TASK_NAME = "clfYarnLinz"
+
         private const val EXTENSION_NAME = "nodeConfigure"
     }
 }
