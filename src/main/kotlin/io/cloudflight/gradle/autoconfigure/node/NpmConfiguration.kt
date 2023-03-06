@@ -32,7 +32,6 @@ internal object NpmConfiguration {
             t.inputs.files(node.inputFiles)
         }
 
-
         val lint = project.tasks.create(NodeConfigurePlugin.NPM_LINT_TASK_NAME, taskClass) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.args.set(listOf("run", "lint"))
