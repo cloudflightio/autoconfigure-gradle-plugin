@@ -49,7 +49,7 @@ internal object YarnConfiguration {
             t.dependsOn(install)
         }
 
-        val build = project.tasks.create(NodeConfigurePlugin.NPM_BUILD_TASK_NAME, taskClass) { t ->
+        val build = project.tasks.create("${taskPrefix}Build", taskClass) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.args.set(listOf("run", "build"))
             t.dependsOn(install)

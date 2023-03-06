@@ -1,9 +1,10 @@
 package io.cloudflight.gradle.autoconfigure.swagger
 
-import com.github.gradle.node.npm.task.NpmTask
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.plugins.create
 import io.cloudflight.gradle.autoconfigure.node.NodeConfigurePlugin.Companion.NPM_BUILD_TASK_NAME
 import io.cloudflight.gradle.autoconfigure.node.NodeConfigurePlugin.Companion.NPM_LINT_TASK_NAME
+import io.cloudflight.gradle.autoconfigure.node.NodeConfigurePlugin.Companion.YARN_BUILD_TASK_NAME
+import io.cloudflight.gradle.autoconfigure.node.NodeConfigurePlugin.Companion.YARN_LINT_TASK_NAME
 import io.cloudflight.gradle.autoconfigure.node.isNodeProject
 import org.gradle.api.*
 import org.gradle.api.artifacts.Configuration
@@ -66,7 +67,8 @@ class SwaggerCodegenConfigurePlugin : Plugin<Project> {
 
             val compileKotlin = tasks.findByName("compileKotlin") as KotlinCompile?
             val generateSwaggerCode = tasks.getByName("generateSwaggerCode") as GenerateSwaggerCode
-            val npmBuild = tasks.findByName(NPM_BUILD_TASK_NAME) as NpmTask?
+            val npmBuild = tasks.findByName(NPM_BUILD_TASK_NAME)
+            val yarnBuild = tasks.findByName(YARN_BUILD_TASK_NAME)
             val resolveSwaggerTemplate = tasks.findByName("resolveSwaggerTemplate") as ResolveSwaggerTemplate?
 
             if (resolveSwaggerTemplate != null) {
@@ -87,6 +89,10 @@ class SwaggerCodegenConfigurePlugin : Plugin<Project> {
                 npmBuild.dependsOn(generateSwaggerCode)
                 val npmLint = tasks.findByName(NPM_LINT_TASK_NAME)
                 npmLint?.dependsOn(generateSwaggerCode)
+            } else if (yarnBuild != null) {
+                yarnBuild.dependsOn(generateSwaggerCode)
+                val yarnLint = tasks.findByName(YARN_LINT_TASK_NAME)
+                yarnLint?.dependsOn(generateSwaggerCode)
             } else if (compileKotlin != null) {
                 compileKotlin.dependsOn(generateSwaggerCode)
             } else if (compileJava != null) {
@@ -145,7 +151,8 @@ class SwaggerCodegenConfigurePlugin : Plugin<Project> {
                         if (isNodeProject(project)) {
                             swaggerGenerator = extension.nodeSwaggerGenerator.get()
                             swaggerLibrary = null
-                            npmBuild!!.inputs.files(project.fileTree(outputDir))
+                            npmBuild?.inputs?.files(project.fileTree(outputDir))
+                            yarnBuild?.inputs?.files(project.fileTree(outputDir))
 
                             if (!sourceSetMain.java.sourceDirectories.any { s -> outputDir.absolutePath.startsWith(s.absolutePath) }) {
                                 sourceSetMain.java.srcDirs(outputDir)
