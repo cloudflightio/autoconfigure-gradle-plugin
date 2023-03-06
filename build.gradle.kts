@@ -1,7 +1,7 @@
 plugins {
     id("java-gradle-plugin")
     id("maven-publish")
-    id("com.gradle.plugin-publish") version "0.18.0"
+    id("com.gradle.plugin-publish") version "1.1.0"
 }
 
 description = "A opinionated approach to configure a gradle project automatically by convention. It supports to automatically configure various plugins to reduce boilerplate code in gradle projects."
@@ -77,13 +77,9 @@ tasks.withType<Test> {
     })
 }
 
-pluginBundle {
-    website = "https://github.com/cloudflightio/autoconfigure-gradle-plugin"
-    vcsUrl = "https://github.com/cloudflightio/autoconfigure-gradle-plugin.git"
-    tags = listOf("autoconfigure", "java", "kotlin")
-}
-
 gradlePlugin {
+    website.set("https://github.com/cloudflightio/autoconfigure-gradle-plugin")
+    vcsUrl.set("https://github.com/cloudflightio/autoconfigure-gradle-plugin.git")
     plugins {
         create("autoconfigure-gradle") {
             id = "io.cloudflight.autoconfigure-gradle"
@@ -91,6 +87,7 @@ gradlePlugin {
             description =
                 "An opinionated approach to configure a gradle project automatically by convention. It supports to automatically configure various plugins to reduce boilerplate code in gradle projects."
             implementationClass = "io.cloudflight.gradle.autoconfigure.AutoConfigureGradlePlugin"
+            tags.set(listOf("autoconfigure", "java", "kotlin"))
         }
         create("autoconfigure-settings") {
             id = "io.cloudflight.autoconfigure-settings"
@@ -98,42 +95,49 @@ gradlePlugin {
             description =
                 "An opinionated approach to configure a gradle project automatically by convention. It supports to automatically configure various plugins to reduce boilerplate code in gradle projects."
             implementationClass = "io.cloudflight.gradle.autoconfigure.AutoConfigureSettingsPlugin"
+            tags.set(listOf("autoconfigure", "java", "kotlin"))
         }
         create("java-configure") {
             id = "io.cloudflight.autoconfigure.java-configure"
             displayName = "Configure Java-Plugin"
             description = "Used to configure a java project."
             implementationClass = "io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin"
+            tags.set(listOf("autoconfigure", "java", "kotlin"))
         }
         create("kotlin-configure") {
             id = "io.cloudflight.autoconfigure.kotlin-configure"
             displayName = "Configure Kotlin-Plugin"
             description = "Used to configure a kotlin project."
             implementationClass = "io.cloudflight.gradle.autoconfigure.kotlin.KotlinConfigurePlugin"
+            tags.set(listOf("autoconfigure", "java", "kotlin"))
         }
         create("node-configure") {
             id = "io.cloudflight.autoconfigure.node-configure"
             displayName = "Configure the Node-Plugin"
             description = "Used to configure a node project."
             implementationClass = "io.cloudflight.gradle.autoconfigure.node.NodeConfigurePlugin"
+            tags.set(listOf("autoconfigure", "java", "kotlin"))
         }
         create("report-configure") {
             id = "io.cloudflight.autoconfigure.report-configure"
             displayName = "Configure global reports"
             description = "Preconfiguring reports for your build"
             implementationClass = "io.cloudflight.gradle.autoconfigure.report.ReportConfigurePlugin"
+            tags.set(listOf("autoconfigure", "java", "kotlin"))
         }
         create("swagger-api-configure") {
             id = "io.cloudflight.autoconfigure.swagger-api-configure"
             displayName = "Configure Swagger API Generation"
             description = "Configure Swagger API Generation"
             implementationClass = "io.cloudflight.gradle.autoconfigure.swagger.SwaggerApiConfigurePlugin"
+            tags.set(listOf("autoconfigure", "java", "kotlin"))
         }
         create("swagger-codegen-configure") {
             id = "io.cloudflight.autoconfigure.swagger-codegen-configure"
             displayName = "Configure Swagger Code Generation"
             description = "Configure Swagger Code Generation"
             implementationClass = "io.cloudflight.gradle.autoconfigure.swagger.SwaggerCodegenConfigurePlugin"
+            tags.set(listOf("autoconfigure", "java", "kotlin"))
         }
     }
 }
