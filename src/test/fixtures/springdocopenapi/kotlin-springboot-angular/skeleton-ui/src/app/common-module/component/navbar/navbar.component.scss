@@ -1,0 +1,16 @@
+:host {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    box-sizing: border-box;
+    padding: 24px;
+
+    height: var(--navbar-height);
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
+}

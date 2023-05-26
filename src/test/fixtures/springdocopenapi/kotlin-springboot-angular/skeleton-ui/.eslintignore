@@ -1,0 +1,8 @@
+**/dist/
+node_modules/
+.eslintrc.js
+.git/
+.angular/
+coverage/
+build/
+storybook-static/

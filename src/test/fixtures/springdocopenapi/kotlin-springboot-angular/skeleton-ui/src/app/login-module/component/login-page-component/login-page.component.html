@@ -1,0 +1,24 @@
+<ng-container *transloco="let t">
+    <div class="form">
+        <h1>Kotlin-Springboot-Angular Skeleton</h1>
+        <div class="fields">
+            <label class="field">
+                {{ t('login') }}
+                <input type="text" class="w-full" pInputText [(ngModel)]="username" />
+            </label>
+            <!-- eslint-disable @angular-eslint/template/accessibility-label-has-associated-control -->
+            <label class="field">
+                {{ t('password') }}
+                <p-password
+                    [(ngModel)]="password"
+                    styleClass="w-full"
+                    inputStyleClass="w-full"
+                    [toggleMask]="true"
+                    [feedback]="false"></p-password>
+            </label>
+        </div>
+        <div>
+            <button type="button" pRipple pButton (click)="login()">{{ t('login') }}</button>
+        </div>
+    </div>
+</ng-container>

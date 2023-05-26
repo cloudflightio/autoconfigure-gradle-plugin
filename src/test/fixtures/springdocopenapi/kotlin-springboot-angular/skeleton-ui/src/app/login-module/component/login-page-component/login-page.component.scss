@@ -1,0 +1,25 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    box-sizing: border-box;
+    padding: 24px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
+}
+
+.fields {
+    display: flex;
+    column-gap: 12px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+}

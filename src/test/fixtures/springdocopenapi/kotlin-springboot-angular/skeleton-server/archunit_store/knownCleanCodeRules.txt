@@ -1,0 +1,12 @@
+logging.no-streams
+logging.no-java-util-logging
+logging.static-final-loggers
+logging.do-not-expose-loggers-via-methods
+logging.do-not-extend-klogging
+jdk.no-generic-exceptions
+jdk.no-jodatime
+jdk.bigdecimal-do-not-call-constructor-with-double-parameter
+spring.context-no-final-components
+spring.web-no-request-mapping-on-interface-top-level
+spring.context-cacheable-annotated-functions-should-not-be-called-from-function-in-same-class
+springboot.context-no-value-annotation

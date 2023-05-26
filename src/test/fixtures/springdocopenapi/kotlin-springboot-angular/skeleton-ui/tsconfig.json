@@ -1,0 +1,29 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": ".",
+        "outDir": "./build/out-tsc",
+        "sourceMap": true,
+        "declaration": false,
+        "downlevelIteration": true,
+        "experimentalDecorators": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "module": "es2020",
+        "moduleResolution": "node",
+        "importHelpers": true,
+        "target": "ES2022",
+        "typeRoots": ["node_modules/@types"],
+        "lib": ["es2021", "dom"],
+        "paths": {
+            "@api": ["build/swagger-code-skeleton-api/index.ts"],
+            "@common/*": ["src/app/common-module/*"]
+        },
+        "useDefineForClassFields": false
+    },
+    "include": ["build/generated-sources/**/*.ts", "src/**/*"],
+    "angularCompilerOptions": {
+        "fullTemplateTypeCheck": true,
+        "strictInjectionParameters": true
+    }
+}

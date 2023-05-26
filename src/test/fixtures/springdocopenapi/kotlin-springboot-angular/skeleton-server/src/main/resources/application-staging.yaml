@@ -1,0 +1,5 @@
+spring:
+#  datasource:
+#    url: jdbc:mariadb://mysql-dev.internal.catalysts.cc/CHANGEME
+#    username: CHANGEME
+#    password: CHANGEME

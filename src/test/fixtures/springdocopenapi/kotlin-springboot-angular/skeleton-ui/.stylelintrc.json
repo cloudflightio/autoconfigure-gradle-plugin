@@ -1,0 +1,5 @@
+{
+    "plugins": ["@cloudflight/stylelint-plugin-angular"],
+    "extends": ["@cloudflight/stylelint-plugin", "@cloudflight/stylelint-plugin-angular/recommended"],
+    "rules": {}
+}

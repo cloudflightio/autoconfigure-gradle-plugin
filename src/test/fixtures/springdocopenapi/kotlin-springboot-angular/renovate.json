@@ -1,0 +1,25 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    ":automergeMinor",
+    ":automergePr",
+    ":automergeRequireAllStatusChecks"
+  ],
+  "schedule": "monthly",
+  "platformAutomerge": true,
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["eslint"],
+      "groupName": "eslint"
+    },
+    {
+      "matchPackagePatterns": ["stylelint", "postcss"],
+      "groupName": "stylelint"
+    },
+    {
+      "matchPackagePatterns": ["angular", "prime"],
+      "excludePackagePatterns": ["eslint", "stylelint"],
+      "groupName": "framework"
+    }
+  ]
+}

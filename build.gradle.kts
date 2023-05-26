@@ -20,6 +20,7 @@ autoConfigure {
 repositories {
     mavenCentral()
     gradlePluginPortal()
+    mavenLocal() // TODO REMOVE to get a locally built springdoc-openapi-gradle plugin
 }
 
 dependencies {
@@ -43,6 +44,9 @@ dependencies {
 
     implementation(libs.swagger.gradle.plugin)
     implementation(libs.swagger.codegen.plugin)
+
+    implementation (libs.springdoc.openapi.plugin)
+    implementation (libs.kotlinx.serialization.json)
 
     testImplementation(libs.bundles.testImplementationDependencies)
 
@@ -138,6 +142,13 @@ gradlePlugin {
             description = "Configure Swagger Code Generation"
             implementationClass = "io.cloudflight.gradle.autoconfigure.swagger.SwaggerCodegenConfigurePlugin"
             tags.set(listOf("autoconfigure", "java", "kotlin"))
+        }
+        create("springdoc-openapi-configure") {
+            id = "io.cloudflight.autoconfigure.springdoc-openapi-configure"
+            displayName = "Configure SpringDoc OpenApi Generation"
+            description = "Configure SpringDoc OpenApi Generation"
+            implementationClass = "io.cloudflight.gradle.autoconfigure.springdoc.openapi.SpringDocOpenApiConfigurePlugin"
+            tags.set(listOf("springdoc", "openapi"))
         }
     }
 }

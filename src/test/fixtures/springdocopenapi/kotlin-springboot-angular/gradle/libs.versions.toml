@@ -1,0 +1,16 @@
+[versions]
+clf-platform-spring = "2.0.4"
+
+[libraries]
+
+cloudflight-platform-spring-bom = { module = "io.cloudflight.platform.spring:platform-spring-bom", version.ref = "clf-platform-spring" }
+cloudflight-platform-spring-test-bom = { module = "io.cloudflight.platform.spring:platform-spring-test-bom", version.ref = "clf-platform-spring" }
+
+springdoc-openapi-starter-webmvc-api = { module = "org.springdoc:springdoc-openapi-starter-webmvc-api", version = "2.1.0"}
+
+swagger-ui = { module = "org.webjars:swagger-ui", version = "4.18.2" }
+swagger-annotations = { module = "io.swagger.core.v3:swagger-annotations", version = "2.1.11" }
+
+[bundles]
+
+[plugins]

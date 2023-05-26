@@ -1,0 +1,20 @@
+/.idea/*
+!.idea/runConfigurations/
+!.idea/Catalysts codestyle.xml
+*.iml
+
+.gradle
+build
+out
+
+node_modules
+**/.angular/cache/
+coverage
+
+skeleton-ui/.npmrc
+skeleton-ui/.yarn/*
+skeleton-ui/storybook-static/*
+!skeleton-ui/.yarn/releases
+!skeleton-ui/.yarn/patches
+!skeleton-ui/.yarn/plugins
+!skeleton-ui/.yarn/sdks

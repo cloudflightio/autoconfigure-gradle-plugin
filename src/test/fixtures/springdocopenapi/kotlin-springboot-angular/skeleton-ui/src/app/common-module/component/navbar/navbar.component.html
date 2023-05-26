@@ -1,0 +1,9 @@
+<ng-container *transloco="let t">
+    <strong>Kotlin-Springboot-Angular Skeleton</strong>
+    <div class="actions">
+        <span *ngIf="user$ | async as user">{{ user.name }}</span>
+        <button type="button" pRipple pButton (click)="logout()" class="p-button-danger">
+            {{ t('logout') }}
+        </button>
+    </div>
+</ng-container>
