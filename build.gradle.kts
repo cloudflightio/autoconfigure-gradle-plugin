@@ -102,42 +102,42 @@ gradlePlugin {
             displayName = "Configure Java-Plugin"
             description = "Used to configure a java project."
             implementationClass = "io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin"
-            tags.set(listOf("autoconfigure", "java", "kotlin"))
+            tags.set(listOf("autoconfigure", "java"))
         }
         create("kotlin-configure") {
             id = "io.cloudflight.autoconfigure.kotlin-configure"
             displayName = "Configure Kotlin-Plugin"
             description = "Used to configure a kotlin project."
             implementationClass = "io.cloudflight.gradle.autoconfigure.kotlin.KotlinConfigurePlugin"
-            tags.set(listOf("autoconfigure", "java", "kotlin"))
+            tags.set(listOf("autoconfigure", "kotlin"))
         }
         create("node-configure") {
             id = "io.cloudflight.autoconfigure.node-configure"
             displayName = "Configure the Node-Plugin"
             description = "Used to configure a node project."
             implementationClass = "io.cloudflight.gradle.autoconfigure.node.NodeConfigurePlugin"
-            tags.set(listOf("autoconfigure", "java", "kotlin"))
+            tags.set(listOf("autoconfigure", "node", "nodejs"))
         }
         create("report-configure") {
             id = "io.cloudflight.autoconfigure.report-configure"
             displayName = "Configure global reports"
             description = "Preconfiguring reports for your build"
             implementationClass = "io.cloudflight.gradle.autoconfigure.report.ReportConfigurePlugin"
-            tags.set(listOf("autoconfigure", "java", "kotlin"))
+            tags.set(listOf("autoconfigure", "report"))
         }
         create("swagger-api-configure") {
             id = "io.cloudflight.autoconfigure.swagger-api-configure"
             displayName = "Configure Swagger API Generation"
             description = "Configure Swagger API Generation"
             implementationClass = "io.cloudflight.gradle.autoconfigure.swagger.SwaggerApiConfigurePlugin"
-            tags.set(listOf("autoconfigure", "java", "kotlin"))
+            tags.set(listOf("autoconfigure", "swagger", "api"))
         }
         create("swagger-codegen-configure") {
             id = "io.cloudflight.autoconfigure.swagger-codegen-configure"
             displayName = "Configure Swagger Code Generation"
             description = "Configure Swagger Code Generation"
             implementationClass = "io.cloudflight.gradle.autoconfigure.swagger.SwaggerCodegenConfigurePlugin"
-            tags.set(listOf("autoconfigure", "java", "kotlin"))
+            tags.set(listOf("autoconfigure", "swagger", "codegen"))
         }
     }
 }
