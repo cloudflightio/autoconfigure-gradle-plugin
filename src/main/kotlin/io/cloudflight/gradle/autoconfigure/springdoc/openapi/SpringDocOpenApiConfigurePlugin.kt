@@ -47,8 +47,8 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
                                           target: Project,
                                           basename: String) {
         with(openapi) {
-            val serverPort = ServerSocket(0).localPort
-            val managementPort = ServerSocket(0).localPort
+            val serverPort = freeServerSocketPort()
+            val managementPort = freeServerSocketPort()
 
             outputDir.set(target.layout.buildDirectory.dir("generated/resources/openapi"))
             logger.debug("outputDir=", outputDir.get())
@@ -66,6 +66,14 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
             }
         }
     }
+
+    private fun freeServerSocketPort(): Int {
+        val serverSocket = ServerSocket(0)
+        return serverSocket.use {
+            serverSocket.localPort
+        }
+    }
+
     private fun configureJsonDocumentPublishing(
         openapi: OpenApiExtension,
         target: Project,
