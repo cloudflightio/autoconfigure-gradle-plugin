@@ -13,7 +13,7 @@ autoConfigure {
         vendorName.set("Cloudflight")
     }
     kotlin {
-        kotlinVersion.set("1.7.10")
+        kotlinVersion.set("1.8.20")
     }
 }
 
