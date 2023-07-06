@@ -27,9 +27,9 @@ class NodeConfigurePlugin : Plugin<Project> {
         val nodeExtension = project.extensions.create(EXTENSION_NAME, NodeConfigurePluginExtension::class).apply {
             nodeVersion.convention(NODE_VERSION)
             downloadNode.convention(true)
-            npm.npmVersion.convention(NPM_VERSION)
-            npm.destinationDir.convention(File(project.buildDir, "/generated-resources/"))
-            npm.inputFiles.convention(
+            npmVersion.convention(NPM_VERSION)
+            destinationDir.convention(File(project.buildDir, "/generated-resources/"))
+            inputFiles.convention(
                 NpmHelper.determineSourceDirs(project).map { project.fileTree(it) } +
                         listOf(
                             project.file(NpmHelper.ANGULAR_JSON),
@@ -38,9 +38,6 @@ class NodeConfigurePlugin : Plugin<Project> {
                             project.file("eslintrc.json")
                         )
             )
-            npmVersion.convention(npm.npmVersion)
-            destinationDir.convention(npm.destinationDir)
-            inputFiles.convention(npm.inputFiles)
         }
 
         project.extensions.getByType(JavaConfigurePluginExtension::class).apply {
