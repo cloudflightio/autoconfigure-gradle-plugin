@@ -20,7 +20,7 @@ shadow-plugin = { module = "com.github.johnrengelman:shadow", version = "8.1.1" 
 node-plugin = { module = "com.github.node-gradle:gradle-node-plugin", version = "5.0.0" }
 
 ci-info = { module = "io.cloudflight.ci.info:ci-info", version = "1.0.0" }
-json-wrapper = { module = "io.cloudflight.json:json-wrapper", version = "0.3.5" }
+json-wrapper = { module = "io.cloudflight.json:json-wrapper", version = "0.5.4" }
 
 maven-artifact = { module = "org.apache.maven:maven-artifact", version.ref = "maven-artifact" }
 
