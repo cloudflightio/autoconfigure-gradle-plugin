@@ -1,11 +1,18 @@
-import io.cloudflight.gradle.util.BuildUtils.isJavaApplied
-import io.cloudflight.gradle.util.BuildUtils.isKotlinApplied
-
 description = "Cloudflight Angular Kotlin Skeleton"
 group = "io.cloudflight.skeleton.angular"
 
-cloudflight {
-    softwareProjectKey.set("cloudflight/skeletons")
+fun isJavaApplied(target: Project): Boolean {
+    return target.plugins.hasPlugin("java")
+}
+
+fun isKotlinApplied(target: Project): Boolean {
+    return target.plugins.hasPlugin("kotlin-jvm")
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
 }
 
 subprojects {

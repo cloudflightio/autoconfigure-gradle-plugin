@@ -1,12 +1,10 @@
 package io.cloudflight.gradle.autoconfigure.springdoc.openapi
 
-import io.cloudflight.gradle.autoconfigure.extentions.kotlin.collections.contains
 import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin
 import io.cloudflight.gradle.autoconfigure.util.addApiDocumentationPublication
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.TaskProvider
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

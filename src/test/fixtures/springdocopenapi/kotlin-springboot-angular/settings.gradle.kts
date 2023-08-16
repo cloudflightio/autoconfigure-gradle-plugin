@@ -5,12 +5,11 @@ pluginManagement {
         maven {
             url = uri("https://artifacts.cloudflight.io/repository/plugins-maven")
         }
-        mavenLocal() // REMOVE
     }
 }
 
 plugins {
-    id("cloudflight-settings-plugin") version "8.0.4"
+    id("io.cloudflight.autoconfigure-settings")
 }
 
 rootProject.name = "kotlin-springboot-angular"

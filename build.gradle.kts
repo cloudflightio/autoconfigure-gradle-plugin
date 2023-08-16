@@ -20,7 +20,6 @@ autoConfigure {
 repositories {
     mavenCentral()
     gradlePluginPortal()
-    mavenLocal() // TODO REMOVE to get a locally built springdoc-openapi-gradle plugin
 }
 
 dependencies {
@@ -45,8 +44,8 @@ dependencies {
     implementation(libs.swagger.gradle.plugin)
     implementation(libs.swagger.codegen.plugin)
 
-    implementation (libs.springdoc.openapi.plugin)
-    implementation (libs.kotlinx.serialization.json)
+    implementation(libs.springdoc.openapi.plugin)
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.bundles.testImplementationDependencies)
 
@@ -66,15 +65,16 @@ tasks.compileTestKotlin.configure {
     }
 }
 
-tasks.test {
-    inputs.dir(layout.projectDirectory.dir("./src/test/fixtures"))
-}
-
 java {
     withJavadocJar()
 }
 
 tasks.withType<Test> {
+    inputs.files(layout.projectDirectory.asFileTree.matching {
+        include("src/test/fixtures/")
+        exclude("**/.gradle/", "**/build")
+    })
+
     // we wanna set the java Launcher to 17 here in order to be able set higher java compatibility
     javaLauncher.set(javaToolchains.launcherFor {
         languageVersion.set(JavaLanguageVersion.of(17))
@@ -148,12 +148,12 @@ gradlePlugin {
             displayName = "Configure SpringDoc OpenApi Generation"
             description = "Configure SpringDoc OpenApi Generation"
             implementationClass = "io.cloudflight.gradle.autoconfigure.springdoc.openapi.SpringDocOpenApiConfigurePlugin"
-            tags.set(listOf("springdoc", "openapi"))
+            tags.set(listOf("springdoc", "openapi", "api"))
         }
     }
 }
 
-tasks.withType<Jar>() {
+tasks.withType<Jar> {
     from(layout.projectDirectory.file("LICENSE"))
     from(layout.projectDirectory.file("NOTICE"))
 }

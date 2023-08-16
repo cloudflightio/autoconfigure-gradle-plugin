@@ -1,5 +1,5 @@
 plugins {
-   id ("io.cloudflight.autoconfigure.springdoc-openapi-configure")
+   id("io.cloudflight.autoconfigure.springdoc-openapi-configure")
 }
 
 dependencies {
@@ -18,12 +18,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
 
-    implementation (libs.springdoc.openapi.starter.webmvc.api)
+    implementation(libs.springdoc.openapi.starter.webmvc.api)
 }
 
-
-/*openApi {
-    customBootRun {
-        args.set(listOf("--debug"))
-    }
-}*/
+tasks.named("forkedSpringBootRun") {
+    doNotTrackState("We cannot track the state during the test since the working directory is already blocked by the test-executing gradle-process.")
+}
