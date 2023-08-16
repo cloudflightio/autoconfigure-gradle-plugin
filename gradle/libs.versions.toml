@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.8.20"
+kotlin = "1.9.0"
 kotlinx-serialization = "1.5.1"
 maven-artifact = "3.5.0"
 jupiter = "5.8.1"
@@ -17,16 +17,16 @@ jackson = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref 
 license-plugin = { module = "io.cloudflight.license.gradle:license-gradle-plugin", version = "1.3.1" }
 
 git-properties-plugin = { module = "com.gorylenko.gradle-git-properties:gradle-git-properties", version = "2.4.1" }
-spring-boot-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.0.1" }
-shadow-plugin = { module = "gradle.plugin.com.github.johnrengelman:shadow", version = "7.1.2" }
-node-plugin = { module = "com.github.node-gradle:gradle-node-plugin", version = "3.5.0" }
+spring-boot-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.1.1" }
+shadow-plugin = { module = "com.github.johnrengelman:shadow", version = "8.1.1" }
+node-plugin = { module = "com.github.node-gradle:gradle-node-plugin", version = "5.0.0" }
 
 ci-info = { module = "io.cloudflight.ci.info:ci-info", version = "1.0.0" }
-json-wrapper = { module = "io.cloudflight.json:json-wrapper", version = "0.3.5" }
+json-wrapper = { module = "io.cloudflight.json:json-wrapper", version = "0.5.4" }
 
 maven-artifact = { module = "org.apache.maven:maven-artifact", version.ref = "maven-artifact" }
 
-reckon-plugin = { module = "org.ajoberstar.reckon:org.ajoberstar.reckon.gradle.plugin", version = "0.17.0-beta.4" }
+reckon-plugin = { module = "org.ajoberstar.reckon:org.ajoberstar.reckon.gradle.plugin", version = "0.18.0" }
 
 # IMPORTANT: do not update, see https://github.com/gigaSproule/swagger-gradle-plugin/issues/186
 swagger-gradle-plugin = { module = "com.benjaminsproule:swagger-gradle-plugin", version = "1.0.8" }
