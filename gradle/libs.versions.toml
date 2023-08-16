@@ -37,9 +37,7 @@ swagger-codegen-plugin = { module = "gradle.plugin.org.hidetake:gradle-swagger-g
 # we need to manually upgrade here in order to have the library compatible with jackson
 swagger-jersey2-jaxrs = { module = "io.swagger:swagger-jersey2-jaxrs", version = { strictly = "1.6.2" } }
 
-# TODO currently needs locally built plugin
-# https://github.com/springdoc/springdoc-openapi-gradle-plugin/pull/115/files
-springdoc-openapi-plugin = { module = "org.springdoc:springdoc-openapi-gradle-plugin", version = "1.6.1-SNAPSHOT" }
+springdoc-openapi-plugin = { module = "org.springdoc:springdoc-openapi-gradle-plugin", version = "1.7.0" }
 
 
 # we need to manually inject this version because of https://github.com/ronmamo/reflections/issues/273 (we would transitively pull 0.9.2 otherwise)
