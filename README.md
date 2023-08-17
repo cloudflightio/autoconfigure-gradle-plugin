@@ -462,7 +462,7 @@ The autoconfiguration for this plugin is applied as follows:
 
 ```groovy
 plugins {
-    id 'io.cloudflight.autoconfigure.swagger-codegen-configure'
+    id 'io.cloudflight.autoconfigure.springdoc-openapi-configure'
 }
 ```
 
@@ -478,10 +478,6 @@ openApi {
     outputDir=buildDir
 }
 ```
-
-
-
-
 
 ## Auto-Configuration
 

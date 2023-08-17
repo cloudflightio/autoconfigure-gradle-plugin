@@ -14,7 +14,6 @@ import org.springframework.boot.gradle.plugin.SpringBootPlugin
 import java.net.ServerSocket
 
 class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
-    val logger: Logger = LoggerFactory.getLogger(SpringDocOpenApiConfigurePlugin::class.java)
     override fun apply(target: Project) {
         target.plugins.apply(JavaConfigurePlugin::class.java)
         target.plugins.apply(SpringBootPlugin::class.java)
@@ -22,38 +21,41 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
 
         val openapi = target.extensions.getByType(OpenApiExtension::class.java)
         configureOpenApiExtension(openapi, target, target.name)
-
-        target.afterEvaluate {
-            val openApiTask=target.tasks.named("generateOpenApiDocs")
-            configureJsonDocumentPublishing(openapi, target, openApiTask)
-            val json2Yaml: TaskProvider<out Task> = target.tasks.register("clfJsonToYaml", Json2YamlTask::class.java) { task ->
+        val openApiTask = target.tasks.named("generateOpenApiDocs")
+        val json2Yaml: TaskProvider<out Task> =
+            target.tasks.register("clfJsonToYaml", Json2YamlTask::class.java) { task ->
                 with(openapi) {
                     task.inputFile.set(outputDir.file(outputFileName))
-                    task.outputFile.set(outputDir.file(outputFileName.get().replace(".json", ".yaml")))
+                    task.outputFile.set(outputDir.file(outputFileName.map { it.replace(".json", ".yaml") }))
                     task.dependsOn(openApiTask)
                 }
             }
-            configureYamlDocumentPublishing(target, openapi, json2Yaml)
 
-            target.tasks.register("clfGenerateOpenApiDocumentation") {
-                it.dependsOn(json2Yaml)
-            }
+        target.tasks.register("clfGenerateOpenApiDocumentation") {
+            it.dependsOn(json2Yaml)
+        }
+
+        target.afterEvaluate {
+            configureJsonDocumentPublishing(openapi, target, openApiTask)
+            configureYamlDocumentPublishing(target, openapi, json2Yaml)
         }
     }
 
-    private fun configureOpenApiExtension(openapi: OpenApiExtension,
-                                          target: Project,
-                                          basename: String) {
+    private fun configureOpenApiExtension(
+        openapi: OpenApiExtension,
+        target: Project,
+        basename: String
+    ) {
         with(openapi) {
             val serverPort = freeServerSocketPort()
             val managementPort = freeServerSocketPort()
 
             outputDir.set(target.layout.buildDirectory.dir("generated/resources/openapi"))
-            logger.debug("outputDir=", outputDir.get())
+            logger.debug("outputDir={}", outputDir.get())
             outputFileName.set("${basename}.json")
-            logger.debug("outputFileName=", outputFileName.get())
+            logger.debug("outputFileName={}", outputFileName.get())
             apiDocsUrl.set("http://localhost:${serverPort}/v3/api-docs")
-            logger.debug("apiDocsUrl=", apiDocsUrl.get())
+            logger.debug("apiDocsUrl={}", apiDocsUrl.get())
 
             mapOf(
                 "--server.port" to serverPort,
@@ -100,6 +102,10 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
             openapi.outputFileName.get().replace(".json", ""),
             "yaml"
         )
+    }
+
+    companion object {
+        val logger: Logger = LoggerFactory.getLogger(SpringDocOpenApiConfigurePlugin::class.java)
     }
 }
 

@@ -23,8 +23,8 @@ class SpringDocOpenApiConfigurePluginTest {
             Unit = springdocFixture("kotlin-springboot-angular") {
         val result = run("clfGenerateOpenApiDocumentation")
 
-        assertThat(buildDir("skeleton-server").resolve("generated/resources/openapi/skeleton-server.json")).exists()
-        assertThat(buildDir("skeleton-server").resolve("generated/resources/openapi/skeleton-server.yaml")).exists()
+        assertThat(buildDir("skeleton-server").resolve("generated/resources/openapi/custom-openapi.json")).exists()
+        assertThat(buildDir("skeleton-server").resolve("generated/resources/openapi/custom-openapi.yaml")).exists()
     }
 }
 

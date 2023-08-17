@@ -24,3 +24,7 @@ dependencies {
 tasks.named("forkedSpringBootRun") {
     doNotTrackState("We cannot track the state during the test since the working directory is already blocked by the test-executing gradle-process.")
 }
+
+openApi {
+    outputFileName.set("custom-openapi.json")
+}
