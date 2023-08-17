@@ -1,0 +1,34 @@
+@use 'primeng/resources/themes/md-light-indigo/theme.css';
+@use 'primeng/resources/primeng.min.css';
+@use 'primeicons/primeicons.css';
+
+// Import the rest of our own styling
+@forward 'variables/colors_impl';
+@forward 'variables/spacing_impl';
+@forward 'variables/typography_impl';
+@forward 'overrides/primeng';
+
+/**
+ * Global Layout Styles
+ */
+
+html {
+    font-size: 14px; // Used by PrimeNG to change the size of everything that is in REM. 1 REM = font-size in px
+}
+
+// Application should use the full screen and any overflow (scrolling) is handled in child components
+html,
+body,
+.app-container {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: var(--font-family);
+    padding: 0;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

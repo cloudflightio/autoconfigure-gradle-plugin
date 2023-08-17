@@ -1,0 +1,14 @@
+* text=auto
+
+# prevent issues with running shellscripts on windows
+*.sh text eol=lf
+# prevent issues with different checksums for migration files
+*.sql text eol=lf
+
+# common files in repositories that should be treated as binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.jar binary
+*.zip binary

@@ -1,0 +1,5 @@
+build
+coverage
+.angular
+storybook-static
+.yarn

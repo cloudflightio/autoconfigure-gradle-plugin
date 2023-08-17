@@ -42,3 +42,4 @@ testem.log
 Thumbs.db
 
 .yarn/versions
+.yarn/install-state.gz

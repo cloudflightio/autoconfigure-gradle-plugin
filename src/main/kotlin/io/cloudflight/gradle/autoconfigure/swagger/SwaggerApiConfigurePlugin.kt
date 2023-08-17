@@ -10,9 +10,8 @@ import com.benjaminsproule.swagger.gradleplugin.reader.ReaderFactory
 import com.benjaminsproule.swagger.gradleplugin.validator.*
 import io.cloudflight.gradle.autoconfigure.AutoConfigureGradlePlugin
 import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin
+import io.cloudflight.gradle.autoconfigure.util.addApiDocumentationPublication
 import org.gradle.api.*
-import org.gradle.api.artifacts.PublishArtifact
-import org.gradle.api.artifacts.dsl.ArtifactHandler
 import org.gradle.api.file.FileCollection
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
@@ -58,7 +57,7 @@ class SwaggerApiConfigurePlugin : Plugin<Project> {
 
             val extension = swagger.apiSourceExtensions.first()
             val outputs = extension.outputFormats.map {
-                addSwaggerPublication(
+                addApiDocumentationPublication(
                     documentationTask,
                     target.artifacts,
                     extension.swaggerDirectory,
@@ -148,23 +147,7 @@ class SwaggerApiConfigurePlugin : Plugin<Project> {
     }
 
 
-    private fun addSwaggerPublication(
-        task: Task,
-        artifacts: ArtifactHandler,
-        targetDir: String,
-        filename: String,
-        format: String
-    ): PublishArtifact {
-        return artifacts.add(
-            JavaPlugin.API_ELEMENTS_CONFIGURATION_NAME,
-            task.project.file("$targetDir/${filename}.${format}")
-        ) {
-            it.name = filename
-            it.classifier = SWAGGER_CLASSIFIER
-            it.type = format
-            it.builtBy(task)
-        }
-    }
+
 
 
     companion object {

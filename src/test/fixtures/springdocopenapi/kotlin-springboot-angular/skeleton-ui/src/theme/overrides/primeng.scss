@@ -1,0 +1,10 @@
+@use 'main';
+
+:root {
+    --primary-color: #{main.$clf-blue};
+    --primary-color-text: #{main.$clf-white};
+}
+
+.p-button {
+    background-color: var(--primary-color);
+}

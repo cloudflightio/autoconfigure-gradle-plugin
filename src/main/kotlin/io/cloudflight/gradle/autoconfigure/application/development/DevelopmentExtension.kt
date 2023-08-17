@@ -16,7 +16,7 @@ object DevelopmentExtension {
                 it.property("development.version", project.version.toString())
                 it.encoding = "UTF-8"
                 it.group = AutoConfigureGradlePlugin.TASK_GROUP
-                it.setOutputFile(project.layout.buildDirectory.file("generated/resources/development/development.properties"))
+                it.destinationFile.set(project.layout.buildDirectory.file("generated/resources/development/development.properties"))
             }
         project.tasks.named(JavaPlugin.PROCESS_RESOURCES_TASK_NAME, ProcessResources::class.java).get()
             .from(propertiesTask)

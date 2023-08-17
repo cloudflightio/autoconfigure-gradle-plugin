@@ -451,6 +451,34 @@ dependencies {
 }
 ````
 
+## SpringDoc OpenApi plugin
+
+This autoconfigures the Gradle plugin provided by the [SpringDoc OpenApi](https://github.com/springdoc/springdoc-openapi-gradle-plugin) project.
+
+SpringDoc OpenApi has a different approach than the above explained swagger plugin.
+It needs a running Spring Boot application that serves the OpenAPI document.
+
+The autoconfiguration for this plugin is applied as follows:
+
+```groovy
+plugins {
+    id 'io.cloudflight.autoconfigure.springdoc-openapi-configure'
+}
+```
+
+The plugin has to be applied to a module that provides a Spring Boot application which the plugin will try to start using a custom Spring Boot run configuration. 
+
+For generating the OpenAPI document the task `clfGenerateOpenApiDocumentation` has to be run.
+
+To provide custom configuration just add the openApi extension configuration block.
+See https://github.com/springdoc/springdoc-openapi-gradle-plugin#customization.
+
+```groovy
+openApi {
+    outputDir=buildDir
+}
+```
+
 ## Auto-Configuration
 
 In multi-module projects, each of the above mentioned plugins can be configured on a per-module basis,
