@@ -1,5 +1,12 @@
 plugins {
-   id("io.cloudflight.autoconfigure.springdoc-openapi-configure")
+    id("io.cloudflight.autoconfigure.springdoc-openapi-configure")
+    id("maven-publish")
+}
+
+group = "io.cloudflight.skeleton.angular"
+
+java {
+    withJavadocJar()
 }
 
 dependencies {
@@ -21,10 +28,14 @@ dependencies {
     implementation(libs.springdoc.openapi.starter.webmvc.api)
 }
 
-tasks.named("forkedSpringBootRun") {
-    doNotTrackState("We cannot track the state during the test since the working directory is already blocked by the test-executing gradle-process.")
-}
-
 openApi {
     outputFileName.set("custom-openapi.json")
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components.getByName("java"))
+        }
+    }
 }

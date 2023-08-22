@@ -1,6 +1,7 @@
 package io.cloudflight.gradle.autoconfigure.springdocopenapi
 
 import io.cloudflight.gradle.autoconfigure.test.util.ProjectFixture
+import io.cloudflight.gradle.autoconfigure.test.util.normalizedOutput
 import io.cloudflight.gradle.autoconfigure.test.util.useFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -17,11 +18,10 @@ class SpringDocOpenApiConfigurePluginTest {
         assertThat(buildDir().resolve("generated/resources/openapi/springdoc-openapi.yaml")).exists()
     }
 
-
     @Test
     fun `the openapi document is created in a multi module project`():
             Unit = springdocFixture("kotlin-springboot-angular") {
-        val result = run("clfGenerateOpenApiDocumentation")
+        val result = run("publishToMavenLocal")
 
         assertThat(buildDir("skeleton-server").resolve("generated/resources/openapi/custom-openapi.json")).exists()
         assertThat(buildDir("skeleton-server").resolve("generated/resources/openapi/custom-openapi.yaml")).exists()

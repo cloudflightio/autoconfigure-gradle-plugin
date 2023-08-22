@@ -146,13 +146,7 @@ class SwaggerApiConfigurePlugin : Plugin<Project> {
         }
     }
 
-
-
-
-
     companion object {
-
-
         private fun getFilesFromSourceSet(project: Project): FileCollection {
             val javaPluginExtension = project.extensions.getByType(JavaPluginExtension::class.java)
             val sourceSetMain = javaPluginExtension.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
