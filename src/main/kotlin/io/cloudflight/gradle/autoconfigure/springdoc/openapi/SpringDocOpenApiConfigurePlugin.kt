@@ -25,21 +25,15 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
         target.plugins.apply(SpringBootPlugin::class.java)
         target.plugins.apply(OpenApiGradlePlugin::class.java)
 
+        val extension = target.extensions.create(EXTENSION_NAME, SpringDocOpenApiConfigureExtension::class.java)
+        extension.fileFormat.convention(OpenApiFormat.YAML);
         val openapi = target.extensions.getByType(OpenApiExtension::class.java)
-        configureOpenApiExtension(openapi, target, target.name)
+        configureOpenApiExtension(openapi, extension, target, target.name)
         val openApiTask = target.tasks.named("generateOpenApiDocs")
-        val json2Yaml: TaskProvider<out Task> =
-            target.tasks.register("clfJsonToYaml", Json2YamlTask::class.java) { task ->
-                with(openapi) {
-                    task.inputFile.set(outputDir.file(outputFileName))
-                    task.outputFile.set(outputDir.file(outputFileName.map { it.replace(".json", ".yaml") }))
-                    task.dependsOn(openApiTask)
-                }
-            }
 
         val documentationTask = target.tasks.register("clfGenerateOpenApiDocumentation") {
             it.group = TASK_GROUP
-            it.dependsOn(json2Yaml)
+            it.dependsOn(openApiTask)
         }
 
         target.tasks.withType(GenerateMavenPom::class) {
@@ -49,8 +43,7 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
         `setupWorkaroundFor#171`(target, openapi)
 
         target.afterEvaluate {
-            configureJsonDocumentPublishing(openapi, target, openApiTask)
-            configureYamlDocumentPublishing(target, openapi, json2Yaml)
+            configureDocumentPublishing(openapi, target, openApiTask)
         }
     }
 
@@ -83,16 +76,24 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
 
     private fun configureOpenApiExtension(
         openapi: OpenApiExtension,
+        configureExtension: SpringDocOpenApiConfigureExtension,
         target: Project,
         basename: String
     ) {
         with(openapi) {
             val serverPort = freeServerSocketPort()
             val managementPort = freeServerSocketPort()
+            val docsUrl = configureExtension.fileFormat.map {
+                val basePath = "http://localhost:${serverPort}/v3/api-docs"
+                when (it) {
+                    OpenApiFormat.JSON -> basePath
+                    else -> "${basePath}.${it.extension}"
+                }
+            }
 
             outputDir.set(target.layout.buildDirectory.dir("generated/resources/openapi"))
-            outputFileName.set("${basename}.json")
-            apiDocsUrl.set("http://localhost:${serverPort}/v3/api-docs")
+            outputFileName.set(configureExtension.fileFormat.map { "${basename}.${it.extension}" })
+            apiDocsUrl.set(docsUrl)
             customBootRun {
                 it.workingDir.set(target.layout.buildDirectory.dir("dummyForkedSpringBootWorkingDir"))
             }
@@ -113,37 +114,36 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
         }
     }
 
-    private fun configureJsonDocumentPublishing(
+    private fun configureDocumentPublishing(
         openapi: OpenApiExtension,
         target: Project,
         task: TaskProvider<Task>,
     ) {
-        addApiDocumentationPublication(
-            target,
-            task,
-            target.artifacts,
-            openapi.outputDir.get().toString(),
-            openapi.outputFileName.get().replace(".json", ""),
-            "json"
-        )
-    }
+        val format = openapi.outputFileName.map {
+            if (it.endsWith(".${OpenApiFormat.YAML.extension}")) {
+                OpenApiFormat.YAML
+            } else if (it.endsWith(".${OpenApiFormat.JSON.extension}")) {
+                OpenApiFormat.JSON
+            } else {
+                throw UnsupportedFormatException("The provided openapi filename '${it}' ends in an unsupported extension. Make sure you use 'yaml' or 'json'")
+            }
+        }
 
-    private fun configureYamlDocumentPublishing(
-        target: Project,
-        openapi: OpenApiExtension,
-        task: TaskProvider<out Task>
-    ) {
+        val basename = openapi.outputFileName.zip(format) { fileName, format ->
+            fileName.replace(".${format.extension}", "")
+        }
+
         addApiDocumentationPublication(
-            target,
             task,
             target.artifacts,
-            openapi.outputDir.get().toString(),
-            openapi.outputFileName.get().replace(".json", ""),
-            "yaml"
+            openapi.outputDir,
+            basename,
+            format
         )
     }
 
     companion object {
+        const val EXTENSION_NAME = "openApiConfigure"
         val logger: Logger = LoggerFactory.getLogger(SpringDocOpenApiConfigurePlugin::class.java)
     }
 }

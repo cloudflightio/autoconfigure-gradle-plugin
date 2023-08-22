@@ -1,11 +1,13 @@
 package io.cloudflight.gradle.autoconfigure.util
 
+import io.cloudflight.gradle.autoconfigure.springdoc.openapi.OpenApiFormat
 import io.cloudflight.gradle.autoconfigure.swagger.SWAGGER_CLASSIFIER
-import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.artifacts.PublishArtifact
 import org.gradle.api.artifacts.dsl.ArtifactHandler
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.TaskProvider
 
 internal fun addApiDocumentationPublication(
@@ -27,20 +29,23 @@ internal fun addApiDocumentationPublication(
 }
 
 internal fun addApiDocumentationPublication(
-    project: Project,
     task: TaskProvider<out Task>,
     artifacts: ArtifactHandler,
-    targetDir: String,
-    basename: String,
-    format: String
+    targetDir: DirectoryProperty,
+    basename: Provider<String>,
+    format: Provider<OpenApiFormat>
 ): PublishArtifact {
+    val fileName = basename.zip(format) { name, format ->
+        "${name}.${format.extension}"
+    }
+
     return artifacts.add(
         JavaPlugin.API_ELEMENTS_CONFIGURATION_NAME,
-        project.file("$targetDir/${basename}.${format}")
+        targetDir.file(fileName)
     ) {
-        it.name = basename
+        it.name = basename.get()
         it.classifier = SWAGGER_CLASSIFIER
-        it.type = format
+        it.type = format.get().extension
         it.builtBy(task.get())
     }
 }
