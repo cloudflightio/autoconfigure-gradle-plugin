@@ -1,3 +1,5 @@
+import io.cloudflight.gradle.autoconfigure.springdoc.openapi.OpenApiFormat
+
 plugins {
 	id 'io.cloudflight.autoconfigure.springdoc-openapi-configure'
 }
@@ -7,6 +9,10 @@ version = '1.0.0'
 
 repositories {
 	mavenCentral()
+}
+
+openApiConfigure {
+	fileFormat = OpenApiFormat.JSON
 }
 
 dependencies {
