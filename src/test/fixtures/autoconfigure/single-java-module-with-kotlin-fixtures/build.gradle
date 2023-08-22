@@ -1,0 +1,23 @@
+plugins {
+    id "io.cloudflight.autoconfigure-gradle"
+    id "java-test-fixtures"
+}
+
+repositories {
+    mavenCentral()
+}
+
+description "The JavaConfigurePlugin is automatically applied and the default configuration of the AutoConfigurePlugin is used"
+group "io.cloudflight.gradle"
+version "1.0.0"
+
+dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+}
+
+def javaConfigurePluginExtension = project.extensions.getByType(io.cloudflight.gradle.autoconfigure.java.JavaConfigurePluginExtension)
+logger.quiet("javaConfigurePluginExtension.languageVersion: {}", javaConfigurePluginExtension.languageVersion.get())
+logger.quiet("javaConfigurePluginExtension.encoding: {}", javaConfigurePluginExtension.encoding.get())
+logger.quiet("javaConfigurePluginExtension.vendorName: {}", javaConfigurePluginExtension.vendorName.get())
+logger.quiet("javaConfigurePluginExtension.applicationBuild: {}", javaConfigurePluginExtension.applicationBuild.get())

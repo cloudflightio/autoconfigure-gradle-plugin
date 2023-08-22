@@ -6,6 +6,7 @@ import io.cloudflight.gradle.autoconfigure.test.util.ProjectFixture
 import io.cloudflight.gradle.autoconfigure.test.util.normalizedOutput
 import io.cloudflight.gradle.autoconfigure.test.util.useFixture
 import org.assertj.core.api.Assertions.assertThat
+import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -83,6 +84,13 @@ class AutoconfigureGradlePluginTest {
         autoconfigureFixture("multi-module") {
             val result = run("-q", "clfPrintVersion", infoLoggerEnabled = false)
             assertThat(result.normalizedOutput.trim()).isEqualTo("1.0.0")
+        }
+
+    @Test
+    fun `recognizes the kotlin sources in the testFixtures and configures kotlin for the project so that the tests work`(): Unit =
+        autoconfigureFixture("single-java-module-with-kotlin-fixtures") {
+            val result = run("clean", "test")
+            assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         }
 
     companion object {
