@@ -65,7 +65,7 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
         // these tasks also need to depend on the createDirTask since they somehow access the dummy folder as well
         val dependingTaskNames = setOf("resolveMainClassName", "processResources", "compileKotlin", "compileJava")
 
-        target.tasks.matching { dependingTaskNames.contains(it.name) }.configureEach {
+        target.tasks.matching { dependingTaskNames.contains(it.name) }.all {
             it.dependsOn(createDirTask)
         }
 
