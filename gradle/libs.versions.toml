@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.9.0"
+kotlin = "1.9.10"
 kotlinx-serialization = "1.5.1"
 maven-artifact = "3.5.0"
 jupiter = "5.8.1"
