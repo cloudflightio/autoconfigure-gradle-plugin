@@ -5,18 +5,16 @@ plugins {
 version = "1.1.1"
 
 nodeConfigure {
-    npm {
-        inputFiles = [
-                fileTree('node_modules'),
-                fileTree('src'),
-                file('package.json'),
-                file('tsconfig.json'),
-                file('tsconfig.app.json'),
-                file('tsconfig.spec.json'),
-                file('angular.json'),
-                file('.eslintrc.json'),
-                file('.browserslistrc'),
-                file('karma.conf.js'),
-        ]
-    }
+    inputFiles = [
+            fileTree('node_modules'),
+            fileTree('src'),
+            file('package.json'),
+            file('tsconfig.json'),
+            file('tsconfig.app.json'),
+            file('tsconfig.spec.json'),
+            file('angular.json'),
+            file('.eslintrc.json'),
+            file('.browserslistrc'),
+            file('karma.conf.js'),
+    ]
 }
