@@ -34,7 +34,7 @@ jobs:
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
       - name: Retrieve module version from Reckon
-        run: echo "VERSION_NAME=$(${{github.workspace}}/gradlew -q clfPrintVersion -Preckon.stage=${{ inputs.stage }})" >> $GITHUB_OUTPUT
+        run: echo "VERSION_NAME=$(${{github.workspace}}/gradlew -q clfPrintVersion -Preckon.scope=major -Preckon.stage=${{ inputs.stage }})" >> $GITHUB_OUTPUT
         id: retrieve_version
       - name: Publish module version to Github Step Summary
         run: |
@@ -42,7 +42,7 @@ jobs:
       - name: Publish Plugin + Create Tag
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: check reckonTagPush publishPlugin -Preckon.stage=${{ inputs.stage }}
+          arguments: check reckonTagPush publishPlugin -Preckon.stage=${{ inputs.stage }} -Preckon.scope=major
           cache-read-only: true
         env:
           GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
