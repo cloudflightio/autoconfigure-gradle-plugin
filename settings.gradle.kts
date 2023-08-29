@@ -5,5 +5,5 @@ plugins {
 rootProject.name = "autoconfigure"
 
 configure<org.ajoberstar.reckon.gradle.ReckonExtension> {
-    setScopeCalc(calcScopeFromProp().or(calcScopeFromCommitMessages()))
+    setScopeCalc(calcScopeFromCommitMessages())
 }
