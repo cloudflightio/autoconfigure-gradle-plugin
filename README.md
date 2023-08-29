@@ -210,9 +210,13 @@ You can configure this plugin with the `NodeConfigurePluginExtension` as follows
 nodeConfigure {
     nodeVersion = "16.15.1"
     downloadNode = true
-    npm {
-        npmVersion = "6.14.10"
-    }
+    npmVersion = "6.14.10"
+    inputFiles = [
+        fileTree('node_modules'),
+        fileTree('src'),
+        file('package.json'),
+        file('tsconfig.json')
+    ]    
 }
 ````
 
