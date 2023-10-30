@@ -504,7 +504,31 @@ openApiConfigure {
 
 For generating the OpenAPI document the task `clfGenerateOpenApiDocumentation` has to be run.
 
-To provide custom configuration just add the openApi extension configuration block.
+### Grouped Apis
+
+In case you are using [grouped api configuration](https://springdoc.org/faq.html#_how_can_i_define_multiple_openapi_definitions_in_one_spring_boot_project) in your project, instead of something like this (as described in [springdoc gradle plugin](https://github.com/springdoc/springdoc-openapi-gradle-plugin#customization))
+
+```groovy
+openApi {
+    groupedApiMappings = [
+            "http://localhost:8080/v3/api-docs/groupA": "groupA.yaml",
+            "http://localhost:8080/v3/api-docs/groupB": "groupB.yaml"
+    ]
+}
+```
+
+you have to use the configuration provided by this plugin, since the port of the spring application will be randomly selected
+
+```groovy
+openApiConfigure {
+    groupedApiMappings = [
+            "/v3/api-docs/groupA": "groupA.yaml",
+            "/v3/api-docs/groupB": "groupB.yaml"
+    ]
+}
+```
+
+To provide other custom configuration just add the openApi extension configuration block.
 See https://github.com/springdoc/springdoc-openapi-gradle-plugin#customization.
 
 ```groovy
