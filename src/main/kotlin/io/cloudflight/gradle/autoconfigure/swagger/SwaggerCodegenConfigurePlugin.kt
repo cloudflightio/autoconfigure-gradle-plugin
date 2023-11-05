@@ -218,7 +218,7 @@ class SwaggerCodegenConfigurePlugin : Plugin<Project> {
                     generateSwaggerCode.inputs.file(apiDescriptor.swaggerPath!!)
                     generateSwaggerCode.outputs.dir(it.code.outputDir)
 
-                    clean.doFirst { t ->
+                    clean.doFirst { _ ->
                         project.delete(it.code.outputDir)
                     }
                 }

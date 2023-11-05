@@ -35,8 +35,8 @@ internal fun addApiDocumentationPublication(
     basename: Provider<String>,
     format: Provider<OpenApiFormat>
 ): PublishArtifact {
-    val fileName = basename.zip(format) { name, format ->
-        "${name}.${format.extension}"
+    val fileName = basename.zip(format) { name, f ->
+        "${name}.${f.extension}"
     }
 
     return artifacts.add(
