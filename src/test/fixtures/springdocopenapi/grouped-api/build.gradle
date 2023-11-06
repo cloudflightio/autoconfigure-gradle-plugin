@@ -1,0 +1,26 @@
+plugins {
+    id 'io.cloudflight.autoconfigure.springdoc-openapi-configure'
+}
+
+group = 'io.cloudflight.gradle'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+openApiConfigure {
+    groupedApiMappings = [
+            "/v3/api-docs/groupA": "groupA.yaml",
+            "/v3/api-docs/groupB": "groupB.yaml"
+    ]
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.7.12'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.0'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

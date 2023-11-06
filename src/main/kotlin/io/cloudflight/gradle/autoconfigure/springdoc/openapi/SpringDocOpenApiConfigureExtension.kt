@@ -1,5 +1,6 @@
 package io.cloudflight.gradle.autoconfigure.springdoc.openapi
 
+import org.gradle.api.provider.MapProperty
 import org.gradle.api.provider.Property
 
 enum class OpenApiFormat(val extension: String) {
@@ -9,4 +10,5 @@ enum class OpenApiFormat(val extension: String) {
 
 abstract class SpringDocOpenApiConfigureExtension {
     abstract val fileFormat: Property<OpenApiFormat>
+    abstract val groupedApiMappings: MapProperty<String, String>
 }

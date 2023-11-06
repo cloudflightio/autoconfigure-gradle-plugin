@@ -10,7 +10,6 @@ public class SpringDocOpenApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringDocOpenApiApplication.class, args);
 	}
-
 }
 
 @RestController

@@ -4,7 +4,7 @@ plugins {
     id("com.gradle.plugin-publish") version "1.1.0"
 }
 
-description = "A opinionated approach to configure a gradle project automatically by convention. It supports to automatically configure various plugins to reduce boilerplate code in gradle projects."
+description = "An opinionated approach to configure a gradle project automatically by convention. It supports to automatically configure various plugins to reduce boilerplate code in gradle projects."
 group = "io.cloudflight.gradle"
 
 autoConfigure {

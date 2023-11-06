@@ -27,11 +27,11 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
         target.plugins.apply(OpenApiGradlePlugin::class.java)
 
         val extension = target.extensions.create(EXTENSION_NAME, SpringDocOpenApiConfigureExtension::class.java)
-        extension.fileFormat.convention(OpenApiFormat.YAML);
+        extension.fileFormat.convention(OpenApiFormat.YAML)
+        extension.groupedApiMappings.convention(emptyMap())
         val openapi = target.extensions.getByType(OpenApiExtension::class.java)
         configureOpenApiExtension(openapi, extension, target, target.name)
         val openApiTask = target.tasks.named("generateOpenApiDocs", OpenApiGeneratorTask::class)
-        makeOpenApiTaskReactive(openApiTask, openapi)
 
         val documentationTask = target.tasks.register("clfGenerateOpenApiDocumentation") {
             it.group = TASK_GROUP
@@ -47,23 +47,6 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
         target.afterEvaluate {
             configureDocumentPublishing(openapi, target, openApiTask)
         }
-    }
-
-    private fun makeOpenApiTaskReactive(openApiTask: TaskProvider<OpenApiGeneratorTask>, openapi: OpenApiExtension) {
-        // for some reason the springdoc plugin reads the values from the extension during task initialization and uses that as convention for the task properties,
-        // which results in some values being incorrect. Because of that we reconfigure the properties conventions to directly use the extension properties. And
-        // add conventions to the extension properties to the expected default values see: https://github.com/springdoc/springdoc-openapi-gradle-plugin/blob/master/src/main/kotlin/org/springdoc/openapi/gradle/plugin/OpenApiGeneratorTask.kt#L46
-        openApiTask.configure {
-            it.apiDocsUrl.convention(openapi.apiDocsUrl)
-            it.outputFileName.convention(openapi.outputFileName)
-            it.groupedApiMappings.convention(openapi.groupedApiMappings)
-            it.outputDir.convention(openapi.outputDir)
-        }
-
-        openapi.apiDocsUrl.convention("http://localhost:8080/v3/api-docs")
-        openapi.outputFileName.convention("openapi.json")
-        openapi.groupedApiMappings.convention(emptyMap())
-        openapi.outputDir.convention(openApiTask.flatMap { it.project.layout.buildDirectory })
     }
 
     private fun `setupWorkaroundFor#171`(target: Project, openapi: OpenApiExtension) {
@@ -102,14 +85,21 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
         val serverPort = freeServerSocketPort()
         val managementPort = freeServerSocketPort()
         val outputFileName = configureExtension.fileFormat.map { "${basename}.${it.extension}" }
+        val urlPrefix = "http://localhost:${serverPort}"
         val docsUrl = openapi.outputFileName.map {
-            val basePath = "http://localhost:${serverPort}/v3/api-docs"
+            val basePath = "$urlPrefix/v3/api-docs"
             when {
                 it.endsWith(".${OpenApiFormat.JSON.extension}") -> basePath
                 it.endsWith(".${OpenApiFormat.YAML.extension}") -> "${basePath}.${OpenApiFormat.YAML.extension}"
                 else -> throw UnsupportedFormatException("The provided openapi filename '${it}' ends in an unsupported extension. Make sure you use 'yaml' or 'json'")
             }
         }
+
+        openapi.groupedApiMappings.set(
+            configureExtension.groupedApiMappings.map { actualMap ->
+                actualMap.mapKeys { "$urlPrefix${it.key}" }
+            }
+        )
 
         openapi.outputDir.set(target.layout.buildDirectory.dir("generated/resources/openapi"))
         openapi.outputFileName.set(outputFileName)
