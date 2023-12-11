@@ -91,7 +91,15 @@ a source folder `src/main/java`).
 ### Java Plugin
 
 If the plugin detects either the folder `src/main/java` or `src/test/java` in a module, it automatically
-applies the `java-library` plugin and applies the following configuration:
+applies the `java` plugin. If you need the `java-library` plugin in a specific module
+you can apply it by adding the following to the module's `build.gradle.kts`:
+```kotlin
+plugins{
+    id("java-library")
+}
+```
+
+The `java` plugin applies the following configuration:
 
 #### Configuration
 
