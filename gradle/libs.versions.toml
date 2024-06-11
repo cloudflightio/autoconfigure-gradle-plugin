@@ -4,7 +4,7 @@ kotlinx-serialization = "1.7.0"
 maven-artifact = "3.9.7"
 jupiter = "5.10.0"
 assertj = "3.26.0"
-jackson = "2.14.2"
+jackson = "2.17.1"
 
 [libraries]
 kotlin-allopen = { module = "org.jetbrains.kotlin:kotlin-allopen", version.ref = "kotlin" }
