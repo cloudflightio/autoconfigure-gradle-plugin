@@ -3,7 +3,7 @@ kotlin = "2.0.0"
 kotlinx-serialization = "1.7.0"
 maven-artifact = "3.9.7"
 jupiter = "5.10.0"
-assertj = "3.22.0"
+assertj = "3.26.0"
 jackson = "2.14.2"
 
 [libraries]
