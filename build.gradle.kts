@@ -55,7 +55,6 @@ dependencies {
     constraints {
         api(libs.jackson)
         api(libs.swagger.jersey2.jaxrs)
-        api(libs.reflections)
         api(libs.commons.text) // https://securitylab.github.com/advisories/GHSL-2022-018_Apache_Commons_Text/
     }
 }
