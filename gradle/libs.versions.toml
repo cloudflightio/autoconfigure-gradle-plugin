@@ -5,6 +5,7 @@ maven-artifact = "3.9.7"
 jupiter = "5.10.0"
 assertj = "3.26.0"
 jackson = "2.17.1"
+spring-boot-plugin = "3.3.0"
 
 [libraries]
 kotlin-allopen = { module = "org.jetbrains.kotlin:kotlin-allopen", version.ref = "kotlin" }
@@ -17,7 +18,7 @@ jackson = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref 
 license-plugin = { module = "io.cloudflight.license.gradle:license-gradle-plugin", version = "1.3.2" }
 
 git-properties-plugin = { module = "com.gorylenko.gradle-git-properties:gradle-git-properties", version = "2.4.1" }
-spring-boot-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version = "3.1.5" }
+spring-boot-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version.ref = "spring-boot-plugin" }
 shadow-plugin = { module = "com.github.johnrengelman:shadow", version = "8.1.1" }
 node-plugin = { module = "com.github.node-gradle:gradle-node-plugin", version = "7.0.1" }
 
