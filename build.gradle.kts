@@ -46,7 +46,6 @@ dependencies {
 
     implementation(libs.springdoc.openapi.plugin)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.exec.fork.plugin)
 
     testImplementation(libs.bundles.testImplementationDependencies)
 

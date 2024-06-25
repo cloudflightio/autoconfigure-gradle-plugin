@@ -39,7 +39,6 @@ swagger-codegen-plugin = { module = "gradle.plugin.org.hidetake:gradle-swagger-g
 swagger-jersey2-jaxrs = { module = "io.swagger:swagger-jersey2-jaxrs", version = { strictly = "1.6.2" } }
 
 springdoc-openapi-plugin = { module = "org.springdoc:springdoc-openapi-gradle-plugin", version = "1.9.0" }
-exec-fork-plugin = { module = "com.github.psxpaul:gradle-execfork-plugin", version = "0.2.0" }
 
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jupiter" }
 junit-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "jupiter" }

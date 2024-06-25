@@ -478,28 +478,7 @@ plugins {
 }
 ```
 
-The plugin has to be applied to a module that provides a Spring Boot application which the plugin will try to start using a custom Spring Boot run configuration.   
-This custom run configuration will be started in a dummy working directory to work around a issue currently present in the springdoc plugin. You can find more information [here](https://github.com/cloudflightio/autoconfigure-gradle-plugin/issues/171).
-The dummy working directory is created with a task called `createDummyForkedSpringBootWorkingDir`. Various other tasks are automatically configured to depend on this, since they access the dummy directory for some reason.
-
-<details>
-<summary>If you run into some problems with the task, try adding it as a dependency to your task by adding the following.</summary>
-
-```groovy
-tasks.named("your-task-name") {
-    dependsOn("createDummyForkedSpringBootWorkingDir")
-}
-```
-
-If you have multiple tasks that need to depend on it you can do:
-
-```groovy
-def taskList = ["your-task-1", "your-task-2"]
-tasks.matching { taskList.contains(it.name) }.all {
-    dependsOn("createDummyForkedSpringBootWorkingDir")
-}
-```
-</details>
+The plugin has to be applied to a module that provides a Spring Boot application which the plugin will try to start using a custom Spring Boot run configuration.
 
 The springdoc plugin is automatically configured to generate the open-api spec in `YAML` format. If you prefer the `JSON` format you can easily change that by using our extension:
 ```groovy
