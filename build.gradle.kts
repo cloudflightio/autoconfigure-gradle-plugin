@@ -1,7 +1,7 @@
 plugins {
     id("java-gradle-plugin")
     id("maven-publish")
-    id("com.gradle.plugin-publish") version "1.1.0"
+    id("com.gradle.plugin-publish") version "1.2.1"
 }
 
 description = "An opinionated approach to configure a gradle project automatically by convention. It supports to automatically configure various plugins to reduce boilerplate code in gradle projects."
@@ -13,7 +13,7 @@ autoConfigure {
         vendorName.set("Cloudflight")
     }
     kotlin {
-        kotlinVersion.set("1.9.20")
+        kotlinVersion.set("2.0.0")
     }
 }
 
@@ -46,7 +46,6 @@ dependencies {
 
     implementation(libs.springdoc.openapi.plugin)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.exec.fork.plugin)
 
     testImplementation(libs.bundles.testImplementationDependencies)
 
@@ -55,7 +54,6 @@ dependencies {
     constraints {
         api(libs.jackson)
         api(libs.swagger.jersey2.jaxrs)
-        api(libs.reflections)
         api(libs.commons.text) // https://securitylab.github.com/advisories/GHSL-2022-018_Apache_Commons_Text/
     }
 }

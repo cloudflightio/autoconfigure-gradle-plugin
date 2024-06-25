@@ -1,6 +1,5 @@
 package io.cloudflight.gradle.autoconfigure.springdoc.openapi
 
-import com.github.psxpaul.task.JavaExecFork
 import io.cloudflight.gradle.autoconfigure.AutoConfigureGradlePlugin.Companion.TASK_GROUP
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.tasks.named
 import io.cloudflight.gradle.autoconfigure.extentions.gradle.api.tasks.withType
@@ -18,7 +17,6 @@ import org.springdoc.openapi.gradle.plugin.OpenApiGeneratorTask
 import org.springdoc.openapi.gradle.plugin.OpenApiGradlePlugin
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 import java.net.ServerSocket
-import java.nio.file.Files
 
 class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -42,37 +40,8 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
             it.dependsOn(documentationTask)
         }
 
-        `setupWorkaroundFor#171`(target, openapi)
-
         target.afterEvaluate {
             configureDocumentPublishing(openapi, target, openApiTask)
-        }
-    }
-
-    private fun `setupWorkaroundFor#171`(target: Project, openapi: OpenApiExtension) {
-        val forkedSpringBootRun = target.tasks.named("forkedSpringBootRun", JavaExecFork::class)
-
-        val createDirTask = target.tasks.register("createDummyForkedSpringBootWorkingDir") { task ->
-            // use same working dir resolution as plugin itself: https://github.com/springdoc/springdoc-openapi-gradle-plugin/blob/master/src/main/kotlin/org/springdoc/openapi/gradle/plugin/OpenApiGradlePlugin.kt#L98
-            val workingDirProvider = openapi.customBootRun.workingDir.zip(forkedSpringBootRun) { dir, forked ->
-                dir?.asFile ?: forked.workingDir
-            }
-            task.outputs.dir(workingDirProvider)
-            task.doFirst {
-                val workingDir = workingDirProvider.get()
-                Files.createDirectories(workingDir.toPath())
-            }
-        }
-
-        // these tasks also need to depend on the createDirTask since they somehow access the dummy folder as well
-        val dependingTaskNames = setOf("resolveMainClassName", "processResources", "compileKotlin", "compileJava")
-
-        target.tasks.matching { dependingTaskNames.contains(it.name) }.all {
-            it.dependsOn(createDirTask)
-        }
-
-        forkedSpringBootRun.configure {
-            it.dependsOn(createDirTask)
         }
     }
 
@@ -104,9 +73,6 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
         openapi.outputDir.set(target.layout.buildDirectory.dir("generated/resources/openapi"))
         openapi.outputFileName.set(outputFileName)
         openapi.apiDocsUrl.set(docsUrl)
-        openapi.customBootRun {
-            it.workingDir.set(target.layout.buildDirectory.dir("dummyForkedSpringBootWorkingDir"))
-        }
 
         mapOf(
             "--server.port" to serverPort,

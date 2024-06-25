@@ -11,6 +11,7 @@ import org.gradle.jvm.toolchain.JavaToolchainSpec
 import org.jetbrains.kotlin.allopen.gradle.AllOpenExtension
 import org.jetbrains.kotlin.allopen.gradle.SpringGradleSubplugin
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.internal.Kapt3GradleSubplugin
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
@@ -71,12 +72,14 @@ class KotlinConfigurePlugin : Plugin<Project> {
         }
 
         project.afterEvaluate {
-            val kotlinVersion = kotlinConfigureExtension.kotlinVersion.get()
-            val kotlinMajorMinor = kotlinVersion.toMajorMinor()
+            val kotlinMajorMinor = kotlinConfigureExtension.kotlinVersion.get().toMajorMinor()
+            val kotlinVersion = KotlinVersion.fromVersion(kotlinMajorMinor)
 
             tasks.withType(KotlinCompile::class.java).configureEach {
-                it.kotlinOptions.apiVersion = kotlinMajorMinor
-                it.kotlinOptions.languageVersion = kotlinMajorMinor
+                it.compilerOptions {
+                    apiVersion.set(kotlinVersion)
+                    languageVersion.set(kotlinVersion)
+                }
             }
         }
     }
