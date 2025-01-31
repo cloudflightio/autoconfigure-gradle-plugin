@@ -291,7 +291,7 @@ dependencies {
 }
 ````
 
-By doing this, the build will generate API definitions in JSON and YAML format to the directory `skeleton-api/build/generated-resources/openapi`.
+By doing this, the build will generate API definitions in JSON and YAML format to the directory `skeleton-api/build/generated/resources/openapi`.
 The task which is doing this, is called `clfGenerateSwaggerDocumentation` and it is triggered 
 automatically before calling the `jar` task.
 
