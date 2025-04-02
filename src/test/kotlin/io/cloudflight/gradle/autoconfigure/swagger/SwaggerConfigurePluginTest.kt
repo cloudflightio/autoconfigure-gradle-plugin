@@ -3,13 +3,11 @@ package io.cloudflight.gradle.autoconfigure.swagger
 import io.cloudflight.gradle.autoconfigure.test.util.ProjectFixture
 import io.cloudflight.gradle.autoconfigure.test.util.useFixture
 import org.assertj.core.api.Assertions.assertThat
-import org.gradle.language.base.plugins.LifecycleBasePlugin
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.nio.file.Paths
 import java.util.stream.Stream
 
 data class TestOptions(
@@ -27,6 +25,8 @@ class SwaggerConfigurePluginTest {
     ): Unit = swaggerFixture(options.fixtureName) {
         val result = runCleanBuild()
 
+        assertThat(result).isNotNull
+
         assertThat(buildDir().resolve("generated/resources/openapi/${options.swaggerFileName}.json")).exists()
         assertThat(buildDir().resolve("generated/resources/openapi/${options.swaggerFileName}.yaml")).exists()
     }
@@ -35,12 +35,16 @@ class SwaggerConfigurePluginTest {
     fun `create client from file`(): Unit = swaggerFixture("generate-swagger-from-file") {
         val result = runCleanBuild()
 
+        assertThat(result).isNotNull
+
         assertThat(buildDir("petstore-client").resolve("swagger-code-petstore-api/src/main/java/io/cloudflight/petstore/client/ApiClient.java")).exists()
     }
 
     @Test
     fun `create client from file with custom node generator`(): Unit = swaggerFixture("generate-swagger-from-file") {
         val result = runCleanBuild()
+
+        assertThat(result).isNotNull
 
         assertThat(buildDir("petstore-client-node-overwrite").resolve("swagger-code-petstore-api/api.ts")).exists()
     }

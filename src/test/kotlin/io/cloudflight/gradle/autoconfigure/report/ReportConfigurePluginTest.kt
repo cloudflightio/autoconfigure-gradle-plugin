@@ -23,6 +23,8 @@ class ReportConfigurePluginTest {
     ): Unit = javaFixture(options.fixtureName, options.gradleVersion) {
         val result = run("clean", "build", ReportConfigurePlugin.REPORT_TASK_NAME)
 
+        assertThat(result).isNotNull
+
         val reportDirPath = buildDir().resolve("reports/jacoco/testCodeCoverageReport/html")
 
         val htmlReportPath = reportDirPath.resolve("index.html")

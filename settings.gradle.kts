@@ -1,5 +1,5 @@
 plugins {
-    id("io.cloudflight.autoconfigure-settings") version "1.0.0"
+    id("io.cloudflight.autoconfigure-settings") version "1.1.2"
 }
 
 rootProject.name = "autoconfigure"

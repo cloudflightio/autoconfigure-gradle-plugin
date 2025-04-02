@@ -28,7 +28,7 @@ class NodeConfigurePlugin : Plugin<Project> {
             nodeVersion.convention(NODE_VERSION)
             downloadNode.convention(true)
             npmVersion.convention(NPM_VERSION)
-            destinationDir.convention(File(project.buildDir, "/generated-resources/"))
+            destinationDir.convention(File(project.layout.buildDirectory.asFile.get(), "/generated-resources/"))
             inputFiles.convention(
                 NpmHelper.determineSourceDirs(project).map { project.fileTree(it) } +
                         listOf(

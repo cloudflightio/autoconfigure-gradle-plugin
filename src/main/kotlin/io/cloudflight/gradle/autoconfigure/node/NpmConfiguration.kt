@@ -19,7 +19,7 @@ internal object NpmConfiguration {
 
         val install = project.tasks.getByName(NpmInstallTask.NAME) as NpmInstallTask
 
-        val updateVersion = project.tasks.create("${taskPrefix}UpdateVersion", taskClass) { t ->
+        val updateVersion = project.tasks.register("${taskPrefix}UpdateVersion", taskClass) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.npmCommand.set(listOf("version"))
             t.args.set(project.provider {
@@ -32,7 +32,7 @@ internal object NpmConfiguration {
             t.inputs.files(node.inputFiles)
         }
 
-        val lint = project.tasks.create(NodeConfigurePlugin.NPM_LINT_TASK_NAME, taskClass) { t ->
+        val lint = project.tasks.register(NodeConfigurePlugin.NPM_LINT_TASK_NAME, taskClass) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.args.set(listOf("run", "lint"))
             t.dependsOn(install)
@@ -40,13 +40,13 @@ internal object NpmConfiguration {
             t.outputs.upToDateWhen { true }
         }
 
-        project.tasks.create("${taskPrefix}BuildDev", taskClass) { t ->
+        project.tasks.register("${taskPrefix}BuildDev", taskClass) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.args.set(listOf("run", "build:dev"))
             t.dependsOn(install)
         }
 
-        val build = project.tasks.create(NodeConfigurePlugin.NPM_BUILD_TASK_NAME, taskClass) { t ->
+        val build = project.tasks.register(NodeConfigurePlugin.NPM_BUILD_TASK_NAME, taskClass) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.args.set(listOf("run", "build"))
             t.dependsOn(install)
@@ -54,7 +54,7 @@ internal object NpmConfiguration {
             t.outputs.dir(node.destinationDir)
         }
 
-        project.tasks.create("${taskPrefix}Audit", taskClass) { t ->
+        project.tasks.register("${taskPrefix}Audit", taskClass) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.args.set(listOf("audit"))
             t.dependsOn(install)
@@ -77,7 +77,7 @@ internal object NpmConfiguration {
         sourceSetMain.output.dir(mapOf("builtBy" to build), node.destinationDir)
 
         if (NpmHelper.hasScript("test", project.file(NpmHelper.PACKAGE_JSON))) {
-            val npmTest = project.tasks.create("${taskPrefix}Test", taskClass) { t ->
+            val npmTest = project.tasks.register("${taskPrefix}Test", taskClass) { t ->
                 t.group = AutoConfigureGradlePlugin.TASK_GROUP
                 t.args.set(listOf("run", "test"))
                 t.dependsOn(listOf(install, build))
