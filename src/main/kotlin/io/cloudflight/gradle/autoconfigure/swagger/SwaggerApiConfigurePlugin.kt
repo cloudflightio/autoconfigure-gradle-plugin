@@ -7,11 +7,21 @@ import com.benjaminsproule.swagger.gradleplugin.model.ApiSourceExtension
 import com.benjaminsproule.swagger.gradleplugin.model.InfoExtension
 import com.benjaminsproule.swagger.gradleplugin.model.SwaggerExtension
 import com.benjaminsproule.swagger.gradleplugin.reader.ReaderFactory
-import com.benjaminsproule.swagger.gradleplugin.validator.*
+import com.benjaminsproule.swagger.gradleplugin.validator.ApiSourceValidator
+import com.benjaminsproule.swagger.gradleplugin.validator.ExternalDocsValidator
+import com.benjaminsproule.swagger.gradleplugin.validator.InfoValidator
+import com.benjaminsproule.swagger.gradleplugin.validator.LicenseValidator
+import com.benjaminsproule.swagger.gradleplugin.validator.ScopeValidator
+import com.benjaminsproule.swagger.gradleplugin.validator.SecurityDefinitionValidator
+import com.benjaminsproule.swagger.gradleplugin.validator.TagValidator
 import io.cloudflight.gradle.autoconfigure.AutoConfigureGradlePlugin
 import io.cloudflight.gradle.autoconfigure.java.JavaConfigurePlugin
 import io.cloudflight.gradle.autoconfigure.util.addApiDocumentationPublication
-import org.gradle.api.*
+import org.gradle.api.Action
+import org.gradle.api.GradleException
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.file.FileCollection
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
@@ -20,6 +30,7 @@ import org.gradle.internal.classloader.MultiParentClassLoader
 import java.io.File
 import java.net.URLClassLoader
 
+@Suppress("unused")
 class SwaggerApiConfigurePlugin : Plugin<Project> {
     override fun apply(target: Project) {
         target.plugins.apply(JavaConfigurePlugin::class.java)
@@ -51,40 +62,37 @@ class SwaggerApiConfigurePlugin : Plugin<Project> {
                 }
             }
 
-            val documentationTask =
-                target.tasks.create("clfGenerateSwaggerDocumentation", GenerateSwaggerDocsTask::class.java)
-
-
-            val extension = swagger.apiSourceExtensions.first()
-            val outputs = extension.outputFormats.map {
-                addApiDocumentationPublication(
-                    documentationTask,
-                    target.artifacts,
-                    extension.swaggerDirectory,
-                    extension.swaggerFileName,
-                    it
-                )
-            }
-
-            with(documentationTask) {
-                group = AutoConfigureGradlePlugin.TASK_GROUP
-                classFinder = ClassFinder(target)
-                readerFactory = ReaderFactory(classFinder, ClassFinder(target, javaClass.classLoader))
-                generatorFactory = GeneratorFactory(classFinder)
-                apiSourceValidator = ApiSourceValidator(
+            val documentationTask = target.tasks.register("clfGenerateSwaggerDocumentation", GenerateSwaggerDocsTask::class.java) { task ->
+                task.group = AutoConfigureGradlePlugin.TASK_GROUP
+                task.classFinder = ClassFinder(target)
+                task.readerFactory = ReaderFactory(task.classFinder, ClassFinder(target, javaClass.classLoader))
+                task.generatorFactory = GeneratorFactory(task.classFinder)
+                task.apiSourceValidator = ApiSourceValidator(
                     InfoValidator(LicenseValidator()), SecurityDefinitionValidator(
                         ScopeValidator()
                     ), TagValidator(ExternalDocsValidator())
                 )
 
-                inputFiles = getFilesFromSourceSet(target)
-                outputDirectories = listOf(target.file(swagger.apiSourceExtensions.first().swaggerDirectory))
-                outputFile = outputs.map { it.file }
+                task.inputFiles = getFilesFromSourceSet(target)
+                task.outputDirectories = listOf(target.file(swagger.apiSourceExtensions.first().swaggerDirectory))
 
-                doFirst(ConfigureSwaggerAction)
+                val extension = swagger.apiSourceExtensions.first()
+                val outputs = extension.outputFormats.map {
+                    addApiDocumentationPublication(
+                        task,
+                        target.artifacts,
+                        extension.swaggerDirectory,
+                        extension.swaggerFileName,
+                        it
+                    )
+                }
+
+                task.outputFile = outputs.map { it.file }
+
+                task.doFirst(ConfigureSwaggerAction)
             }
 
-            jarTask.dependsOn(documentationTask)
+            jarTask.dependsOn(documentationTask.get())
         }
     }
 

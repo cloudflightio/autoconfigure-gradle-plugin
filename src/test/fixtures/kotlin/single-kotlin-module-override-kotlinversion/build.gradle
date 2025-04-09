@@ -11,13 +11,13 @@ group "io.cloudflight.gradle"
 version "1.0.0"
 
 javaConfigure {
-    languageVersion = JavaLanguageVersion.of(11)
+    languageVersion = JavaLanguageVersion.of(8)
     encoding = "UTF-8"
     vendorName = "Cloudflight XYZ"
 }
 
 kotlinConfigure {
-    kotlinVersion = "1.5.20"
+    kotlinVersion = "1.6.0"
 }
 
 tasks.compileKotlin.doLast {

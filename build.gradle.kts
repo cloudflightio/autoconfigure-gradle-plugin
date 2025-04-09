@@ -9,11 +9,11 @@ group = "io.cloudflight.gradle"
 
 autoConfigure {
     java {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
         vendorName.set("Cloudflight")
     }
     kotlin {
-        kotlinVersion.set("1.9.20")
+        kotlinVersion.set(libs.versions.kotlin.get())
     }
 }
 
@@ -56,7 +56,7 @@ dependencies {
         api(libs.jackson)
         api(libs.swagger.jersey2.jaxrs)
         api(libs.reflections)
-        api(libs.commons.text) // https://securitylab.github.com/advisories/GHSL-2022-018_Apache_Commons_Text/
+        api(libs.commons.text)
     }
 }
 
@@ -76,9 +76,8 @@ tasks.withType<Test> {
         exclude("**/.gradle/", "**/build")
     })
 
-    // we wanna set the java Launcher to 17 here in order to be able set higher java compatibility
     javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
     })
 }
 

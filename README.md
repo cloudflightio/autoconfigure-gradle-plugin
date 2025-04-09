@@ -14,7 +14,7 @@ The idea is similar to Spring Boot, where beans are being auto-generated and aut
 
 ## Requirements
 
-This plugin requires at least Gradle 7.4 and Java 17. You can still configure this plugin to use Java 8 (or any other Java version)
+This plugin requires at least Gradle 8.13 and Java 21. You can still configure this plugin to use Java 8 (or any other Java version)
 to compile your codebase.
 
 ## Installation
@@ -108,7 +108,7 @@ your `build.gradle.kts`:
 
 ````kotlin
 javaConfigure {
-    languageVersion.set(JavaLanguageVersion.of(17))
+    languageVersion.set(JavaLanguageVersion.of(21))
     vendorName.set("Cloudflight")
     applicationBuild.set(false)
     encoding.set("UTF-8")
@@ -121,7 +121,7 @@ The usage of those properties will be explained in the sections below:
 #### Java Compatibility
 
 Based on the `langageVersion` in your `JavaConfigurePluginExtension` we will set the [Java Toolchain](https://docs.gradle.org/current/userguide/toolchains.html)
-for you and also use it in the Manifest, the default being Java 17. 
+for you and also use it in the Manifest, the default being Java 21. 
 
 The encoding will be set automatically to all source sets, the default being UTF-8.
 

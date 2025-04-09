@@ -17,8 +17,6 @@ internal class ProjectFixture(
 
     fun runCleanBuild(): BuildResult = run(LifecycleBasePlugin.CLEAN_TASK_NAME, LifecycleBasePlugin.BUILD_TASK_NAME)
 
-    fun runBuild(): BuildResult = run(LifecycleBasePlugin.BUILD_TASK_NAME)
-
     fun runTasks() = run("tasks")
 
     fun run(
@@ -41,7 +39,7 @@ internal class ProjectFixture(
         }
         val runner = createRunner(arguments)
         return runner.build().also {
-            // do some checks that should be true for each biuld
+            // do some checks that should be true for each build
             assertThat(it.normalizedOutput).doesNotContain("Execution optimizations have been disabled for task")
         }
     }

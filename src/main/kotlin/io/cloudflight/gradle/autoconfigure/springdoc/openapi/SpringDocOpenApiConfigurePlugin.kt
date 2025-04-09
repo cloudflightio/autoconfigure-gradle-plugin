@@ -128,7 +128,7 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
         target: Project,
         task: TaskProvider<out Task>,
     ) {
-        val format = openapi.outputFileName.map {
+        val formatProvider = openapi.outputFileName.map {
             if (it.endsWith(".${OpenApiFormat.YAML.extension}")) {
                 OpenApiFormat.YAML
             } else if (it.endsWith(".${OpenApiFormat.JSON.extension}")) {
@@ -138,7 +138,7 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
             }
         }
 
-        val basename = openapi.outputFileName.zip(format) { fileName, format ->
+        val basename = openapi.outputFileName.zip(formatProvider) { fileName, format ->
             fileName.replace(".${format.extension}", "")
         }
 
@@ -147,7 +147,7 @@ class SpringDocOpenApiConfigurePlugin : Plugin<Project> {
             target.artifacts,
             openapi.outputDir,
             basename,
-            format
+            formatProvider
         )
     }
 

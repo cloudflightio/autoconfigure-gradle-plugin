@@ -6,7 +6,11 @@ import io.cloudflight.gradle.autoconfigure.node.NodeConfigurePlugin.Companion.NP
 import io.cloudflight.gradle.autoconfigure.node.NodeConfigurePlugin.Companion.YARN_BUILD_TASK_NAME
 import io.cloudflight.gradle.autoconfigure.node.NodeConfigurePlugin.Companion.YARN_LINT_TASK_NAME
 import io.cloudflight.gradle.autoconfigure.node.isNodeProject
-import org.gradle.api.*
+import org.gradle.api.GradleException
+import org.gradle.api.NamedDomainObjectContainer
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ModuleDependency
 import org.gradle.api.artifacts.ProjectDependency
@@ -26,7 +30,7 @@ import org.hidetake.gradle.swagger.generator.SwaggerSource
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 
-
+@Suppress("UNCHECKED_CAST", "unused")
 class SwaggerCodegenConfigurePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.apply(SwaggerGeneratorPlugin::class.java)
@@ -100,8 +104,7 @@ class SwaggerCodegenConfigurePlugin : Plugin<Project> {
             }
             sourcesJar?.dependsOn(generateSwaggerCode)
 
-            val swaggerSources =
-                extensions.getByName(EXTENSION_SWAGGER_SOURCES) as NamedDomainObjectContainer<SwaggerSource>
+            val swaggerSources = extensions.getByName(EXTENSION_SWAGGER_SOURCES) as NamedDomainObjectContainer<SwaggerSource>
 
             apiDescriptors.forEach { apiDescriptor ->
                 // find tasks
@@ -124,6 +127,7 @@ class SwaggerCodegenConfigurePlugin : Plugin<Project> {
                 swaggerSources.maybeCreate(apiDescriptor.swaggerName).also {
                     it.setInputFile(apiDescriptor.swaggerPath)
                     with(it.code) {
+                        val buildDir = project.layout.buildDirectory.asFile.get()
                         if (outputDir == null) {
                             outputDir = project.file("${buildDir}/generated-sources/${apiDescriptor.swaggerName}")
                         }
@@ -239,6 +243,7 @@ class SwaggerCodegenConfigurePlugin : Plugin<Project> {
         LOG.debug("property: '$property', value: '${code.additionalProperties[property]}', default: '$value'")
     }
 
+    @Suppress("SameParameterValue")
     private fun maybeSetComponents(code: GenerateSwaggerCode, property: String, value: String) {
         if (code.components == null) code.components = mutableMapOf<String, String>()
 
@@ -261,6 +266,7 @@ class SwaggerCodegenConfigurePlugin : Plugin<Project> {
 
             if (dependency is ProjectDependency) {
 
+                @Suppress("DEPRECATION")
                 swaggerProject = dependency.dependencyProject
 
                 val configuration = swaggerProject.configurations.getByName(JavaPlugin.API_ELEMENTS_CONFIGURATION_NAME)

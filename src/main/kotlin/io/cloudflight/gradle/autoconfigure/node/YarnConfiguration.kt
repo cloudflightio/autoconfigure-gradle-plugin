@@ -23,7 +23,7 @@ internal object YarnConfiguration {
             install.args.set(listOf("--immutable", "--check-cache"))
         }
 
-        val updateVersion = project.tasks.create("${taskPrefix}UpdateVersion", taskClass) { t ->
+        val updateVersion = project.tasks.register("${taskPrefix}UpdateVersion", taskClass) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.yarnCommand.set(project.provider {
                 listOf(
@@ -34,7 +34,7 @@ internal object YarnConfiguration {
             t.inputs.files(node.inputFiles)
         }
 
-        val lint = project.tasks.create(NodeConfigurePlugin.YARN_LINT_TASK_NAME, taskClass) { t ->
+        val lint = project.tasks.register(NodeConfigurePlugin.YARN_LINT_TASK_NAME, taskClass) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.args.set(listOf("run", "lint"))
             t.dependsOn(install)
@@ -42,13 +42,13 @@ internal object YarnConfiguration {
             t.outputs.upToDateWhen { true }
         }
 
-        project.tasks.create("${taskPrefix}BuildDev", taskClass) { t ->
+        project.tasks.register("${taskPrefix}BuildDev", taskClass) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.args.set(listOf("run", "build:dev"))
             t.dependsOn(install)
         }
 
-        val build = project.tasks.create("${taskPrefix}Build", taskClass) { t ->
+        val build = project.tasks.register("${taskPrefix}Build", taskClass) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.args.set(listOf("run", "build"))
             t.dependsOn(install)
@@ -56,7 +56,7 @@ internal object YarnConfiguration {
             t.outputs.dir(node.destinationDir)
         }
 
-        project.tasks.create("${taskPrefix}Audit", taskClass) { t ->
+        project.tasks.register("${taskPrefix}Audit", taskClass) { t ->
             t.group = AutoConfigureGradlePlugin.TASK_GROUP
             t.args.set(listOf("audit"))
             t.dependsOn(install)
@@ -79,7 +79,7 @@ internal object YarnConfiguration {
         sourceSetMain.output.dir(mapOf("builtBy" to build), node.destinationDir)
 
         if (NpmHelper.hasScript("test", project.file(NpmHelper.PACKAGE_JSON))) {
-            val npmTest = project.tasks.create("${taskPrefix}Test", taskClass) { t ->
+            val npmTest = project.tasks.register("${taskPrefix}Test", taskClass) { t ->
                 t.group = AutoConfigureGradlePlugin.TASK_GROUP
                 t.args.set(listOf("run", "test"))
                 t.dependsOn(listOf(install, build))
