@@ -2,7 +2,6 @@ package io.cloudflight.gradle.autoconfigure.node
 
 import io.cloudflight.gradle.autoconfigure.test.util.ProjectFixture
 import io.cloudflight.gradle.autoconfigure.test.util.useFixture
-import io.cloudflight.gradle.autoconfigure.util.EnvironmentUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.language.base.plugins.LifecycleBasePlugin
 import org.gradle.testkit.runner.TaskOutcome
@@ -17,7 +16,7 @@ data class TestOptions(
     val environment: Map<String, String> = emptyMap(),
     val nodeVersion: String = NODE_VERSION,
     val tasksThatShouldHaveRun: Set<String> = emptySet(),
-    val assertUpToDateRerun: Boolean = true
+    val assertUpToDateRerun: Boolean = true,
 )
 
 class NodeConfigurePluginTest {
@@ -25,11 +24,9 @@ class NodeConfigurePluginTest {
     @ParameterizedTest
     @MethodSource("singleNodeModuleArguments")
     fun `the supplied options are used to configure the NodePlugin`(
-        options: TestOptions
+        options: TestOptions,
     ): Unit = nodeFixture(options.fixtureName, options.environment) {
         val result = run(LifecycleBasePlugin.CLEAN_TASK_NAME, LifecycleBasePlugin.BUILD_TASK_NAME)
-
-        println(result.output)
 
         val map = result.tasks.map { it.path.substringAfterLast(":") }
         if (options.tasksThatShouldHaveRun.isNotEmpty()) {
@@ -57,30 +54,30 @@ class NodeConfigurePluginTest {
                 arguments(
                     TestOptions(
                         fixtureName = "single-ts-module",
-                        assertUpToDateRerun = false // TODO check why this does not work on Github CI
-                    )
+                        assertUpToDateRerun = false, // TODO check why this does not work on Github CI
+                    ),
                 ),
                 arguments(
                     TestOptions(
                         fixtureName = "single-ts-module",
                         environment = mapOf("GITHUB_ACTIONS" to true.toString()),
                         tasksThatShouldHaveRun = setOf("clfNpmUpdateVersion"),
-                        assertUpToDateRerun = false
-                    )
+                        assertUpToDateRerun = false,
+                    ),
                 ),
                 arguments(
                     TestOptions(
                         fixtureName = "single-ts-module-yarn",
-                        assertUpToDateRerun = false // TODO check why this does not work on Github CI
-                    )
+                        assertUpToDateRerun = false, // TODO check why this does not work on Github CI
+                    ),
                 ),
                 arguments(
                     TestOptions(
                         fixtureName = "single-ts-module-yarn",
                         environment = mapOf("GITHUB_ACTIONS" to true.toString()),
                         tasksThatShouldHaveRun = setOf("clfYarnUpdateVersion"),
-                        assertUpToDateRerun = false
-                    )
+                        assertUpToDateRerun = false,
+                    ),
                 ),
             )
         }
@@ -91,6 +88,6 @@ class NodeConfigurePluginTest {
 private fun <T : Any> nodeFixture(
     fixtureName: String,
     environment: Map<String, String>,
-    testWork: ProjectFixture.() -> T
+    testWork: ProjectFixture.() -> T,
 ): T =
     useFixture("node", fixtureName, null, environment, testWork)

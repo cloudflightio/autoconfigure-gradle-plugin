@@ -30,8 +30,6 @@ class AutoconfigureGradlePluginTest {
         autoconfigureFixture(options.fixtureName) {
             val result = runTasks()
 
-            println(result.normalizedOutput)
-
             assertThat(result.normalizedOutput).contains(JavaConfigurePlugin::class.simpleName).contains(
                 """
                 javaConfigurePluginExtension.languageVersion: ${options.languageVersion}
@@ -46,8 +44,6 @@ class AutoconfigureGradlePluginTest {
     fun `in a multi module project the JavaConfigurePlugin is only applied to java project`(): Unit =
         autoconfigureFixture("multi-module") {
             val result = runTasks()
-
-            println(result.normalizedOutput)
 
             assertThat(result.normalizedOutput)
                 .contains("Auto-applied JavaConfigurePlugin to java-module")

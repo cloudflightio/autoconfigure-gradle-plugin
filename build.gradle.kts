@@ -1,7 +1,8 @@
 plugins {
     id("java-gradle-plugin")
     id("maven-publish")
-    id("com.gradle.plugin-publish") version "1.1.0"
+    id("groovy")
+    id("com.gradle.plugin-publish") version "2.0.0"
 }
 
 description = "An opinionated approach to configure a gradle project automatically by convention. It supports to automatically configure various plugins to reduce boilerplate code in gradle projects."
@@ -51,8 +52,14 @@ dependencies {
     testImplementation(libs.bundles.testImplementationDependencies)
 
     testRuntimeOnly(libs.junit.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
 
     constraints {
+        // TODO: remove when upgrading io.cloudflight.autoconfigure-settings in settings.gradle.kts
+        // io.cloudflight.autoconfigure-settings 1.2.0 pulls in kotlin gradle plugin 2.1.20
+        // this breaks the build as it depends on features only available up to gradle 8.13
+        implementation(libs.kotlin.gradleplugin)
+
         api(libs.jackson)
         api(libs.swagger.jersey2.jaxrs)
         api(libs.reflections)
@@ -61,8 +68,8 @@ dependencies {
 }
 
 tasks.compileTestKotlin.configure {
-    kotlinOptions {
-        freeCompilerArgs += "-opt-in=kotlin.io.path.ExperimentalPathApi"
+    compilerOptions {
+        optIn.add("kotlin.io.path.ExperimentalPathApi")
     }
 }
 

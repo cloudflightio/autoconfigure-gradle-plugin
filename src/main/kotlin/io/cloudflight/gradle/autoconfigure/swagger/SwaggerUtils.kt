@@ -11,3 +11,4 @@ internal data class SwaggerApiDescriptor(
 
 internal const val SWAGGER_CLASSIFIER = "swagger"
 internal const val YAML = "yaml"
+internal const val JSON = "json"

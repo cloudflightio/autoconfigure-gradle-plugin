@@ -60,6 +60,7 @@ internal class ProjectFixture(
             .withProjectDir(fixtureDir.toFile())
             .withPluginClasspath()
             .withEnvironment(sysEnv)
+            .forwardOutput()
             // we need to ensure that we start a new gradle daemon on every run in order to not re-use the class io.cloudflight.ci.info.CI which intializes itself
             // once at startup with the current environment, but if the environment changes (which can't be the case in a real-life scenario) then
             // we don't recognize this any more. And the only - very dirty - way to ensure we're not re-using a daemon turns our to be

@@ -8,7 +8,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.lang.AssertionError
 import java.util.jar.Attributes.Name
 import java.util.jar.Manifest
 import java.util.stream.Stream
@@ -27,7 +26,7 @@ internal data class TestOptions(
     val environment: Map<String, String> = emptyMap(),
     val checkConfigurationInTestOutput: Boolean = true,
     val classpath: String = "",
-    val additionalChecks: (ProjectFixture.() -> (Unit))? = null
+    val additionalChecks: (ProjectFixture.() -> (Unit))? = null,
 )
 
 internal class JavaConfigurePluginTest {
@@ -43,7 +42,7 @@ internal class JavaConfigurePluginTest {
     @ParameterizedTest
     @MethodSource("singleJavaModuleArguments")
     fun `the supplied options are used to configure the JavaPlugin`(
-        options: TestOptions
+        options: TestOptions,
     ): Unit = javaFixture(options.fixtureName, options.gradleVersion, options.environment) {
         val result = runCleanBuild()
         try {
@@ -54,11 +53,11 @@ internal class JavaConfigurePluginTest {
                 javaPluginExtension.sourceCompatibility: ${options.languageVersion.toJavaVersion()}
                 javaPluginExtension.targetCompatibility: ${options.languageVersion.toJavaVersion()}
                 compileJava.options.encoding: ${options.encoding}
-            """.trimIndent()
+            """.trimIndent(),
                 ).contains(
                     """
                 compileTestJava.options.encoding: ${options.encoding}
-            """.trimIndent()
+            """.trimIndent(),
                 )
             }
 
@@ -91,7 +90,6 @@ internal class JavaConfigurePluginTest {
 
             options.additionalChecks?.invoke(this)
         } catch (e: AssertionError) {
-            println(result.normalizedOutput)
             throw e
         }
     }
@@ -108,8 +106,8 @@ internal class JavaConfigurePluginTest {
                         encoding = "UTF-8",
                         createsSourceJar = true,
                         implementationVendor = "Cloudflight XYZ",
-                        inferModulePath = true
-                    )
+                        inferModulePath = true,
+                    ),
                 ),
                 arguments(
                     TestOptions(
@@ -118,8 +116,8 @@ internal class JavaConfigurePluginTest {
                         encoding = "UTF-8",
                         createsSourceJar = false,
                         implementationVendor = "Cloudflight XYZ",
-                        inferModulePath = true
-                    )
+                        inferModulePath = true,
+                    ),
                 ),
                 arguments(
                     TestOptions(
@@ -130,8 +128,8 @@ internal class JavaConfigurePluginTest {
                         implementationVendor = "",
                         inferModulePath = true,
                         checkConfigurationInTestOutput = false,
-                        classpath = "commons-io-2.8.0.jar"
-                    )
+                        classpath = "commons-io-2.8.0.jar",
+                    ),
                 ),
                 arguments(
                     TestOptions(
@@ -140,8 +138,8 @@ internal class JavaConfigurePluginTest {
                         encoding = "UTF-8",
                         createsSourceJar = true,
                         implementationVendor = "",
-                        inferModulePath = true
-                    )
+                        inferModulePath = true,
+                    ),
                 ),
                 arguments(
                     TestOptions(
@@ -151,8 +149,8 @@ internal class JavaConfigurePluginTest {
                         createsSourceJar = true,
                         implementationVendor = "",
                         inferModulePath = true,
-                        checkConfigurationInTestOutput = false
-                    )
+                        checkConfigurationInTestOutput = false,
+                    ),
                 ),
                 arguments(
                     TestOptions(
@@ -162,8 +160,8 @@ internal class JavaConfigurePluginTest {
                         createsSourceJar = true,
                         implementationVendor = "Cloudflight",
                         inferModulePath = true,
-                        checkConfigurationInTestOutput = false
-                    )
+                        checkConfigurationInTestOutput = false,
+                    ),
                 ),
                 arguments(
                     TestOptions(
@@ -179,8 +177,8 @@ internal class JavaConfigurePluginTest {
                             val developmentProperties =
                                 buildDir().resolve("resources/main/development.properties")
                             assertThat(developmentProperties).doesNotExist()
-                        }
-                    )
+                        },
+                    ),
                 ),
                 arguments(
                     TestOptions(
@@ -194,8 +192,8 @@ internal class JavaConfigurePluginTest {
                             val developmentProperties =
                                 buildDir().resolve("resources/main/development.properties")
                             assertThat(developmentProperties).exists()
-                        }
-                    )
+                        },
+                    ),
                 ),
                 arguments(
                     TestOptions(
@@ -205,8 +203,8 @@ internal class JavaConfigurePluginTest {
                         createsSourceJar = true,
                         successfulTestCount = 1,
                         implementationVendor = "",
-                        inferModulePath = true
-                    )
+                        inferModulePath = true,
+                    ),
                 ),
                 arguments(
                     TestOptions(
@@ -216,8 +214,8 @@ internal class JavaConfigurePluginTest {
                         createsSourceJar = true,
                         successfulTestCount = 1,
                         implementationVendor = "",
-                        inferModulePath = true
-                    )
+                        inferModulePath = true,
+                    ),
                 ),
                 arguments(
                     TestOptions(
@@ -227,8 +225,8 @@ internal class JavaConfigurePluginTest {
                         createsSourceJar = true,
                         successfulTestCount = 1,
                         implementationVendor = "",
-                        inferModulePath = true
-                    )
+                        inferModulePath = true,
+                    ),
                 ),
                 arguments(
                     TestOptions(
@@ -238,8 +236,8 @@ internal class JavaConfigurePluginTest {
                         createsSourceJar = true,
                         successfulTestCount = 1,
                         implementationVendor = "",
-                        inferModulePath = true
-                    )
+                        inferModulePath = true,
+                    ),
                 ),
             )
         }
@@ -250,6 +248,6 @@ private fun <T : Any> javaFixture(
     fixtureName: String,
     gradleVersion: String?,
     environment: Map<String, String>,
-    testWork: ProjectFixture.() -> T
+    testWork: ProjectFixture.() -> T,
 ): T =
     useFixture("java", fixtureName, gradleVersion, environment, testWork)

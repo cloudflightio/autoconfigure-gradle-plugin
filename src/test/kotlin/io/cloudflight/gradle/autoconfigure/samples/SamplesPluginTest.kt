@@ -42,6 +42,5 @@ class SamplesPluginTest {
 
 private val SAMPLES_FIXTURE_PATH = Paths.get("samples")
 
-
 private fun <T : Any> swaggerFixture(fixtureName: String, testWork: ProjectFixture.() -> T): T =
     useFixture(SAMPLES_FIXTURE_PATH.resolve(fixtureName), fixtureName, null, emptyMap(), testWork)

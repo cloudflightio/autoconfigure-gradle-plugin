@@ -14,7 +14,7 @@ allprojects {
 
 autoConfigure {
     java {
-        languageVersion.set(JavaLanguageVersion.of(17)) // TODO adjust sample to support java 21
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
